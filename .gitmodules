@@ -1,3 +1,6 @@
 [submodule "nn_xdsl/xdsl"]
 	path = nn_xdsl/xdsl
 	url = git@github.com:xdslproject/xdsl.git
+[submodule "nn_xdsl/stardew"]
+	path = nn_xdsl/stardew
+	url = git@github.com:Groverkss/stardew.git
