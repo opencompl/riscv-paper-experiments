@@ -9,7 +9,7 @@ poly_bench_flags="-DMINI_DATASET -DDATA_TYPE_IS_FLOAT -DPOLYBENCH_DUMP_ARRAYS"
 opt_lvl=-O3
 out_dir=./out
 
-clang="$(which clang) || clang="ERROR_NOT_FOUND""
+clang=$(which clang) || clang="ERROR_NOT_FOUND"
 cgeist=$(which cgeist) || cgeist="ERROR_NOT_FOUND"
 mlir_opt=$(which mlir-opt) || mlir_opt="ERROR_NOT_FOUND"
 
