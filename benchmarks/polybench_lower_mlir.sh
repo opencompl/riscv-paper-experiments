@@ -18,10 +18,17 @@ if [ ! -d $out_dir ]; then
 fi
 rm -rf $out_dir/*
 
+if [ "$clang" == "ERROR_NOT_FOUND" ] || \
+   [ "$cgeist" == "ERROR_NOT_FOUND" ] || \
+   [ "$mlir_opt" == "ERROR_NOT_FOUND" ]; then
+    printf "Please make sure that you satistfy all the requirements!" 
+    exit 1;
+fi
+
 src=$1
 src_name=$(basename ${src%.*})
 $cgeist -resource-dir=$($clang -print-resource-dir) -I $polybench_utils_folder -I$($clang -print-resource-dir)/include \
-    -S --memref-fullrank -O3 $poly_bench_flags $src >$out_dir/$src_name\_affine.mlir
+    -S --memref-fullrank $opt_lvl $poly_bench_flags $src >$out_dir/$src_name\_affine.mlir
 
 $mlir_opt $out_dir/$src_name\_affine.mlir --eliminate-alloc-tensors \
     --empty-tensor-to-alloc-tensor --buffer-loop-hoisting \
