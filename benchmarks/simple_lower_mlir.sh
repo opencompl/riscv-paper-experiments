@@ -1,11 +1,5 @@
 #!/bin/bash
 
-polybench_utils_folder=./polybench-c-4.2.1-beta/utilities
-# Options for the polybench suite:
-# MINI_DATASET -> 32x32 matrices
-# DATA_TYPE_IS_FLOAT -> use float everywhere since we don't support doubles on xdsl yet
-# POLYBENCH_DUMP_ARRAYS -> outputs the returning arrays of the benchmark into stderr.
-poly_bench_flags="-DMINI_DATASET -DDATA_TYPE_IS_FLOAT -DPOLYBENCH_DUMP_ARRAYS"
 opt_lvl=-O3
 out_dir=./out
 
@@ -20,15 +14,16 @@ fi
 if [ "$clang" == "ERROR_NOT_FOUND" ] || \
    [ "$cgeist" == "ERROR_NOT_FOUND" ] || \
    [ "$mlir_opt" == "ERROR_NOT_FOUND" ]; then
-    printf "Please make sure that you satistfy all the requirements!" 
+    printf "Please make sure that you satistfy all the requirements!";
     exit 1;
 fi
 
 src=$1
 src_name=$(basename ${src%.*})
-$cgeist -resource-dir=$($clang -print-resource-dir) -I $polybench_utils_folder -I$($clang -print-resource-dir)/include \
-    -S --memref-fullrank --c-style-memref $opt_lvl $poly_bench_flags $src \
+$cgeist -resource-dir=$($clang -print-resource-dir)-I$($clang -print-resource-dir)/include \
+    -S --memref-fullrank --c-style-memref $opt_lvl $src \
     | $mlir_opt --mlir-print-op-generic > $out_dir/$src_name\_affine.mlir
+
 
 $mlir_opt $out_dir/$src_name\_affine.mlir --eliminate-alloc-tensors \
     --empty-tensor-to-alloc-tensor --buffer-loop-hoisting \
