@@ -31,7 +31,7 @@ $cgeist -resource-dir=$($clang -print-resource-dir) -I $polybench_utils_folder -
     | $mlir_opt --mlir-print-op-generic > $out_dir/$src_name\_affine.mlir
 
 $mlir_opt $out_dir/$src_name\_affine.mlir --eliminate-alloc-tensors \
-    --empty-tensor-to-alloc-tensor --buffer-loop-hoisting \
+    --empty-tensor-to-alloc-tensor \
     --convert-vector-to-scf --affine-scalrep --canonicalize \
     --cse -convert-linalg-to-loops -convert-scf-to-cf \
     --simplify-extract-strided-metadata -lower-affine \
