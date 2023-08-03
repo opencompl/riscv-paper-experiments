@@ -4,3 +4,6 @@
 [submodule "nn_xdsl/stardew"]
 	path = nn_xdsl/stardew
 	url = git@github.com:Groverkss/stardew.git
+[submodule "snitch"]
+	path = snitch
+	url = https://github.com/nazavode/snitch/
