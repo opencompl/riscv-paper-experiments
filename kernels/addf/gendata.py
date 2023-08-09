@@ -4,18 +4,31 @@ import numpy as np
 import argparse
 
 MEMREF_GLOBAL = """
-memref.global @{name} : memref<{shape}x{type}> = dense<[
+memref.global constant @{symbol} : memref<{shape}x{type}> = dense<[
 {initializer}
 ]>
 """
 
 
-def to_memref_shape(array):
+def array_to_memref_shape(array):
     return "x".join(str(dim) for dim in array.shape)
 
 
-def to_memref_initializer(array):
+def array_to_memref_initializer(array):
     return ",\n".join(f"  {np.array2string(row, separator=', ')}" for row in array)
+
+
+def array_to_memref_dtype(array):
+    return "f32"
+
+
+def array_to_memref(array, symbol=None):
+    return MEMREF_GLOBAL.format(
+        symbol=symbol or "array",
+        type=array_to_memref_dtype(array),
+        shape=array_to_memref_shape(array),
+        initializer=array_to_memref_initializer(array),
+    )
 
 
 if __name__ == "__main__":
@@ -33,29 +46,7 @@ if __name__ == "__main__":
     )
     B = A / 2.0
     ADD = A + B
-    np.set_printoptions(linewidth=150, formatter={"float": lambda x: f"{x:>6}"})
-    print(
-        MEMREF_GLOBAL.format(
-            name="A",
-            type="f32",
-            shape=to_memref_shape(A),
-            initializer=to_memref_initializer(A),
-        )
-    )
-
-    print(
-        MEMREF_GLOBAL.format(
-            name="B",
-            type="f32",
-            shape=to_memref_shape(B),
-            initializer=to_memref_initializer(B),
-        )
-    )
-    print(
-        MEMREF_GLOBAL.format(
-            name="A_PLUS_B",
-            type="f32",
-            shape=to_memref_shape(ADD),
-            initializer=to_memref_initializer(ADD),
-        )
-    )
+    np.set_printoptions(linewidth=None, formatter={"float": lambda x: f"{x:>6}"})
+    print(array_to_memref(A, "A"))
+    print(array_to_memref(B, "B"))
+    print(array_to_memref(ADD, "A_PLUS_B"))
