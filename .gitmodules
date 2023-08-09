@@ -7,3 +7,6 @@
 [submodule "snitch"]
 	path = snitch
 	url = https://github.com/nazavode/snitch/
+[submodule "libxsmm"]
+	path = libxsmm
+	url = https://github.com/libxsmm/libxsmm.git
