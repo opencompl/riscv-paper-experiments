@@ -19,19 +19,27 @@ if [ "$clang" == "ERROR_NOT_FOUND" ] || \
 fi
 
 src=$1
-src_name=$(basename ${src%.*})
-$cgeist -resource-dir=$($clang -print-resource-dir)-I$($clang -print-resource-dir)/include \
-    -S --memref-fullrank --c-style-memref $opt_lvl $src \
-    | $mlir_opt --mlir-print-op-generic > $out_dir/$src_name\_affine.mlir
+fn=$2
 
+src_name=$(basename ${src%.*})
+if [ "$fn" == "" ]; then
+$cgeist -resource-dir=$($clang -print-resource-dir)-I$($clang -print-resource-dir)/include \
+    -S --memref-fullrank --c-style-memref --raise-scf-to-affine $opt_lvl  $src \
+    | $mlir_opt --affine-simplify-structures --mlir-print-op-generic > $out_dir/$src_name\_affine.mlir
+
+else
+$cgeist -resource-dir=$($clang -print-resource-dir)-I$($clang -print-resource-dir)/include \
+    -S --memref-fullrank --c-style-memref --raise-scf-to-affine --function=$fn $opt_lvl $src \
+    | $mlir_opt --affine-simplify-structures --mlir-print-op-generic > $out_dir/$src_name\_affine.mlir
+fi
 
 $mlir_opt $out_dir/$src_name\_affine.mlir --eliminate-alloc-tensors \
     --empty-tensor-to-alloc-tensor \
     --convert-vector-to-scf --affine-scalrep --canonicalize \
-    --cse -convert-linalg-to-loops -convert-scf-to-cf \
+    --cse -convert-linalg-to-loops \
     --simplify-extract-strided-metadata -lower-affine \
-    -convert-scf-to-cf --mlir-print-op-generic \
-    > $out_dir/$src_name\_base.mlir
+    --mlir-print-op-generic \
+    > $out_dir/$src_name\_scf.mlir
 
 
 # xDSL doesn't support the dlti dialect yet, which add attributes to the module
@@ -40,9 +48,9 @@ $mlir_opt $out_dir/$src_name\_affine.mlir --eliminate-alloc-tensors \
 module_end="}) : () -> ()"
 
 sed -i '$ d' $out_dir/$src_name\_affine.mlir
-sed -i '$ d' $out_dir/$src_name\_base.mlir
+sed -i '$ d' $out_dir/$src_name\_scf.mlir
 sed -i '$ d' $out_dir/$src_name\_affine.mlir
-sed -i '$ d' $out_dir/$src_name\_base.mlir
+sed -i '$ d' $out_dir/$src_name\_scf.mlir
 
 echo $module_end >> $out_dir/$src_name\_affine.mlir
-echo $module_end >> $out_dir/$src_name\_base.mlir
+echo $module_end >> $out_dir/$src_name\_scf.mlir
