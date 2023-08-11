@@ -1,9 +1,8 @@
-# for every file in the target directory objdump it in the same file
-
+#!/bin/bash
 
 for file in ../../raw/gemm/*.mxm
 do
-    echo "objdumping $file"
+    echo "[libxsmm objdump] dumping $file"
     filename=$(basename -- "$file")
     extension="${filename##*.}"
     filename="${filename%.*}"
