@@ -7,11 +7,12 @@ which acts as frontend for C/C++ code.
 
 ## Usage
 
-Run `./lower_mlir.sh [file]` to get the output MLIR in `out`.
+Run `./simple_lower_mlir.sh [file] [target_function]?` to get the output MLIR in `out`.
 
 ## Suite of Benchmarks
 
-- Polybench (30 kernels with stencils, ...)
+- Polybench (30 kernels with stencils, ...) [Out of scope currently]
+- Handwritten kernels (currently gemm implementations with different loop transformations)
 
 ## Scope
 
