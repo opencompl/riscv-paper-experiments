@@ -1,0 +1,85 @@
+
+../../raw/gemm/libxsmm_abi1_hsw_f64_nn_4x9x4_4_4_4_a1_b1_p0_br0_sa0_sb0_uh0_si0_tc-abid_avnni0_bvnni0_cvnni0.mxm:     file format binary
+
+
+Disassembly of section .data:
+
+00000000 <.data>:
+   0:	53                   	push   %rbx
+   1:	41 54                	push   %r12
+   3:	41 55                	push   %r13
+   5:	41 56                	push   %r14
+   7:	41 57                	push   %r15
+   9:	4c 8b ff             	mov    %rdi,%r15
+   c:	49 8b 7f 20          	mov    0x20(%r15),%rdi
+  10:	49 8b 77 40          	mov    0x40(%r15),%rsi
+  14:	49 8b 57 60          	mov    0x60(%r15),%rdx
+  18:	55                   	push   %rbp
+  19:	48 8b ec             	mov    %rsp,%rbp
+  1c:	48 81 ec a8 00 00 00 	sub    $0xa8,%rsp
+  23:	49 ba c0 ff ff ff ff 	movabs $0xffffffffffffffc0,%r10
+  2a:	ff ff ff 
+  2d:	49 23 e2             	and    %r10,%rsp
+  30:	48 81 ec 40 00 00 00 	sub    $0x40,%rsp
+  37:	48 89 65 98          	mov    %rsp,-0x68(%rbp)
+  3b:	48 81 ec 40 00 00 00 	sub    $0x40,%rsp
+  42:	48 89 65 90          	mov    %rsp,-0x70(%rbp)
+  46:	49 c7 c3 00 00 00 00 	mov    $0x0,%r11
+  4d:	49 81 c3 03 00 00 00 	add    $0x3,%r11
+  54:	49 c7 c2 00 00 00 00 	mov    $0x0,%r10
+  5b:	49 81 c2 04 00 00 00 	add    $0x4,%r10
+  62:	c4 21 fd 10 2a       	vmovupd (%rdx),%ymm13
+  67:	c4 21 fd 10 72 20    	vmovupd 0x20(%rdx),%ymm14
+  6d:	c4 21 fd 10 7a 40    	vmovupd 0x40(%rdx),%ymm15
+  73:	c4 a1 fd 10 1f       	vmovupd (%rdi),%ymm3
+  78:	48 81 c7 20 00 00 00 	add    $0x20,%rdi
+  7f:	c4 a2 7d 19 06       	vbroadcastsd (%rsi),%ymm0
+  84:	c4 22 fd b8 eb       	vfmadd231pd %ymm3,%ymm0,%ymm13
+  89:	c4 a2 7d 19 4e 20    	vbroadcastsd 0x20(%rsi),%ymm1
+  8f:	c4 22 f5 b8 f3       	vfmadd231pd %ymm3,%ymm1,%ymm14
+  94:	c4 a2 7d 19 56 40    	vbroadcastsd 0x40(%rsi),%ymm2
+  9a:	c4 22 ed b8 fb       	vfmadd231pd %ymm3,%ymm2,%ymm15
+  9f:	c4 a1 fd 10 1f       	vmovupd (%rdi),%ymm3
+  a4:	48 81 c7 20 00 00 00 	add    $0x20,%rdi
+  ab:	c4 a2 7d 19 46 08    	vbroadcastsd 0x8(%rsi),%ymm0
+  b1:	c4 22 fd b8 eb       	vfmadd231pd %ymm3,%ymm0,%ymm13
+  b6:	c4 a2 7d 19 4e 28    	vbroadcastsd 0x28(%rsi),%ymm1
+  bc:	c4 22 f5 b8 f3       	vfmadd231pd %ymm3,%ymm1,%ymm14
+  c1:	c4 a2 7d 19 56 48    	vbroadcastsd 0x48(%rsi),%ymm2
+  c7:	c4 22 ed b8 fb       	vfmadd231pd %ymm3,%ymm2,%ymm15
+  cc:	c4 a1 fd 10 1f       	vmovupd (%rdi),%ymm3
+  d1:	48 81 c7 20 00 00 00 	add    $0x20,%rdi
+  d8:	c4 a2 7d 19 46 10    	vbroadcastsd 0x10(%rsi),%ymm0
+  de:	c4 22 fd b8 eb       	vfmadd231pd %ymm3,%ymm0,%ymm13
+  e3:	c4 a2 7d 19 4e 30    	vbroadcastsd 0x30(%rsi),%ymm1
+  e9:	c4 22 f5 b8 f3       	vfmadd231pd %ymm3,%ymm1,%ymm14
+  ee:	c4 a2 7d 19 56 50    	vbroadcastsd 0x50(%rsi),%ymm2
+  f4:	c4 22 ed b8 fb       	vfmadd231pd %ymm3,%ymm2,%ymm15
+  f9:	c4 a1 fd 10 1f       	vmovupd (%rdi),%ymm3
+  fe:	48 81 c7 20 00 00 00 	add    $0x20,%rdi
+ 105:	c4 a2 7d 19 46 18    	vbroadcastsd 0x18(%rsi),%ymm0
+ 10b:	c4 22 fd b8 eb       	vfmadd231pd %ymm3,%ymm0,%ymm13
+ 110:	c4 a2 7d 19 4e 38    	vbroadcastsd 0x38(%rsi),%ymm1
+ 116:	c4 22 f5 b8 f3       	vfmadd231pd %ymm3,%ymm1,%ymm14
+ 11b:	c4 a2 7d 19 56 58    	vbroadcastsd 0x58(%rsi),%ymm2
+ 121:	c4 22 ed b8 fb       	vfmadd231pd %ymm3,%ymm2,%ymm15
+ 126:	c4 21 fd 11 2a       	vmovupd %ymm13,(%rdx)
+ 12b:	c4 21 fd 11 72 20    	vmovupd %ymm14,0x20(%rdx)
+ 131:	c4 21 fd 11 7a 40    	vmovupd %ymm15,0x40(%rdx)
+ 137:	48 81 c2 20 00 00 00 	add    $0x20,%rdx
+ 13e:	48 81 ef 60 00 00 00 	sub    $0x60,%rdi
+ 145:	49 81 fa 04 00 00 00 	cmp    $0x4,%r10
+ 14c:	0f 8c 09 ff ff ff    	jl     0x5b
+ 152:	48 81 c2 40 00 00 00 	add    $0x40,%rdx
+ 159:	48 81 c6 60 00 00 00 	add    $0x60,%rsi
+ 160:	48 81 ef 20 00 00 00 	sub    $0x20,%rdi
+ 167:	49 81 fb 09 00 00 00 	cmp    $0x9,%r11
+ 16e:	0f 8c d9 fe ff ff    	jl     0x4d
+ 174:	48 8b e5             	mov    %rbp,%rsp
+ 177:	5d                   	pop    %rbp
+ 178:	41 5f                	pop    %r15
+ 17a:	41 5e                	pop    %r14
+ 17c:	41 5d                	pop    %r13
+ 17e:	41 5c                	pop    %r12
+ 180:	5b                   	pop    %rbx
+ 181:	c3                   	ret
