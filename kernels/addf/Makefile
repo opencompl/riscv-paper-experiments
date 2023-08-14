@@ -10,14 +10,17 @@ LDFLAGS =
 LDFLAGS += -Wl,-syslibroot,/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk
 
 OPTFLAGS =
+OPTFLAGS += -opaque-pointers=0
 OPTFLAGS += --convert-linalg-to-loops
 OPTFLAGS += --convert-scf-to-cf
 OPTFLAGS += --canonicalize
 OPTFLAGS += --cse
 OPTFLAGS += --convert-math-to-llvm
-OPTFLAGS += --convert-memref-to-llvm#=use-generic-functions
-OPTFLAGS += --convert-func-to-llvm=use-bare-ptr-memref-call-conv
+OPTFLAGS += --convert-memref-to-llvm='use-generic-functions index-bitwidth=32'
+OPTFLAGS += --convert-func-to-llvm='use-bare-ptr-memref-call-conv index-bitwidth=32'
 OPTFLAGS += --convert-index-to-llvm=index-bitwidth=32
+OPTFLAGS += --convert-cf-to-llvm=index-bitwidth=32
+OPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
 OPTFLAGS += --reconcile-unrealized-casts
 
 .PRECIOUS: %.s %.ll.mlir
@@ -26,7 +29,7 @@ OPTFLAGS += --reconcile-unrealized-casts
 	$(OPT) $(OPTFLAGS) -o $@ $<
 
 %.ll: %.ll.mlir
-	$(TRANSLATE) --mlir-to-llvmir -o $@ $<
+	$(TRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
 
 %.S: %.ll
 	$(CLANG) $(CFLAGS) -c -S -masm=intel -o $@ $<
