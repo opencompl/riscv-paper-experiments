@@ -8,11 +8,11 @@
   iterator_types = ["parallel", "parallel"]
 }
 
-func.func @addf(%A: memref<26x13xf32>,
-                %B: memref<26x13xf32>) -> () {
+func.func @addf(%A: memref<13x26xf32>,
+                %B: memref<13x26xf32>) -> () {
   linalg.generic #add_attributes
-  ins(%B: memref<26x13xf32>)
-  outs(%A: memref<26x13xf32>) {
+  ins(%B: memref<13x26xf32>)
+  outs(%A: memref<13x26xf32>) {
   ^bb0(%b: f32, %a: f32):
     %res = arith.addf %a, %b : f32
     linalg.yield %res : f32    
