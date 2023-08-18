@@ -5,7 +5,7 @@
 
 include ../../Makefile.rules
 
-SNITCH_RUNTIME_PREFIX ?= ../../install
+SNITCH_RUNTIME_PREFIX ?= /opt/snitch-runtime
 
 OBJS =
 OBJS += echo.o
@@ -20,5 +20,10 @@ echo.x: $(OBJS)
 run: echo.x
 	/opt/snitch-rtl/bin/snitch_cluster.vlt $<
 
+logs/trace_hart_%.txt: logs/trace_hart_%.dasm ../../gentrace.py
+	/opt/snitch-spike/bin/spike-dasm < $< | ../../gentrace.py > $@
+
+traces: $(shell (ls logs/trace_hart_*.dasm 2>/dev/null | sed 's/\.dasm/\.txt/') || echo "")
+
 clean:
-	rm -f *.o *.a *.ll12 echo.x
+	rm -fr *.o *.a *.ll12 echo.x logs/

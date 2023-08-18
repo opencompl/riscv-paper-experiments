@@ -2,7 +2,7 @@ MLIR_RUNTIME_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(MLIR_RUNTIME_DIRNAME)/../Makefile.rules
 
 # Default install prefix:
-PREFIX ?= $(MLIR_RUNTIME_DIRNAME)/install
+PREFIX ?= /opt/snitch-runtime
 
 OBJS = mlir-memref-alloc.o
 

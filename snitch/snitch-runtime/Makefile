@@ -2,7 +2,7 @@ SNITCH_RUNTIME_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 include $(SNITCH_RUNTIME_DIRNAME)/../Makefile.rules
 
 # Default install prefix:
-PREFIX ?= $(SNITCH_RUNTIME_DIRNAME)/install
+PREFIX ?= /opt/snitch-runtime
 
 OBJS =
 OBJS += alloc.o
