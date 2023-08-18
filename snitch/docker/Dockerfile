@@ -15,11 +15,11 @@ RUN mkdir /src \
  # spike
  && cd /src/sw/vendor/riscv-isa-sim \
  && ./configure --prefix=/opt/snitch-spike \
- && make install
+ && make install \
  # clang+llvm+lld
  && mkdir -p /opt/snitch-llvm \
  && wget -qO- https://github.com/pulp-platform/llvm-project/releases/download/0.12.0/riscv32-pulp-llvm-ubuntu1804-0.12.0.tar.gz | \
-    tar xz --strip-components=1 -C /opt/snitch-llvm \
+    tar xz --strip-components=1 -C /opt/snitch-llvm
 
 FROM ubuntu:18.04 as toolchain
 COPY --from=builder /src/hw/system/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
