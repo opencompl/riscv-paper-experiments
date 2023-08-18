@@ -1,4 +1,4 @@
-# MLIR for Snitch
+# Snitch toolchain for MLIR
 
 Tools to build MLIR and LLVM IR sources for Snitch, and run them via Verilator.
 
