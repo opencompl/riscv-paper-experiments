@@ -1,3 +1,41 @@
+# Verilator tmp files
+*.rtlbinary
+
+# LLVM IR preprocessed stuff
+# These are the files converted to LLVM IR 12.x by the
+# snitch/tollvm12.py script.
+*.ll12
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.x
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -1,0 +1,2 @@
+# Tell github that *.rules are Makefiles
+*.rules linguist-language=Makefile

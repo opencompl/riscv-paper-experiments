@@ -1,0 +1,55 @@
+# NOTE: we are using the absolute path from the Docker container
+CC     = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+LD     = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+AR     = /opt/snitch-llvm/bin/llvm-ar
+RANLIB = /opt/snitch-llvm/bin/llvm-ranlib
+
+CFLAGS =
+# Mixing .c and .ll files makes some flags, useful for the former,
+# unused for the latter (e.g. -I)
+CFLAGS += -Wno-unused-command-line-argument
+# Common flags
+CFLAGS += -mcpu=snitch
+CFLAGS += -mcmodel=medany
+CFLAGS += -ffast-math
+CFLAGS += -fno-builtin-printf
+CFLAGS += -fno-common
+CFLAGS += -ffunction-sections
+CFLAGS += -static
+CFLAGS += -mllvm -enable-misched=false
+CFLAGS += -mno-relax
+CFLAGS += -menable-experimental-extensions
+CFLAGS += -O3
+# FIXME parametrize debug symbols and lto
+CFLAGS += -flto=thin
+CFLAGS += -g
+
+# Make sure we are finding the right linker script
+# even if we are included in another Makefile
+MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+LDSCRIPT := $(MAKEFILE_RULES_DIRNAME)/cluster.ld
+
+LDFLAGS =
+LDFLAGS += -fuse-ld=lld
+LDFLAGS += -flto=thin
+LDFLAGS += -mcpu=snitch
+LDFLAGS += -nostartfiles
+LDFLAGS += -Wl,--image-base=0x80000000
+LDFLAGS += -static
+LDFLAGS += -Wl,-z,norelro
+LDFLAGS += -Wl,--gc-sections
+LDFLAGS += -Wl,--no-relax
+LDFLAGS += -T $(LDSCRIPT)
+LDFLAGS += -lm
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+%.ll12: %.ll
+	$(MAKEFILE_RULES_DIRNAME)/tollvm12.py < $< > $@
+
+%.o: %.ll12
+	$(CC) $(CFLAGS) -x ir -c $< -o $@
+
+%.o: %.S
+	$(CC) $(CFLAGS) -c $< -o $@
