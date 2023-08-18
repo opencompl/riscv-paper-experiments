@@ -40,10 +40,9 @@ if __name__ == "__main__":
     parser.add_argument("-c", "--columns", type=int, default=16, help="number of rows")
     parser.add_argument("-r", "--rows", type=int, default=16, help="number of columns")
     args = parser.parse_args()
-    print(args)
     A = np.arange(0, args.rows * args.columns, dtype=np.float32).reshape(
         args.rows, args.columns
-    )
+    ) / 10.
     B = A / 2.0
     ADD = A + B
     np.set_printoptions(linewidth=None, formatter={"float": lambda x: f"{x:>6}"})

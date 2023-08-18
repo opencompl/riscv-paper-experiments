@@ -17,12 +17,9 @@ declare void @addf(float*, float*)
 
 declare i32 @memref_diff(float*, float*, float)
 
-declare void @snrt_alloc_init()
-
 declare i32 @snrt_cluster_compute_core_idx()
 
 define i32 @main() {
-  call void @snrt_alloc_init()
   %1 = call i32 @snrt_cluster_compute_core_idx()
   %2 = icmp eq i32 %1, 0
   br i1 %2, label %3, label %16
