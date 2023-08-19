@@ -1,0 +1,21 @@
+BasedOnStyle: Google
+IndentWidth: 4
+ColumnLimit: 90
+---
+Language: Cpp
+SortIncludes: CaseInsensitive
+IncludeBlocks: Regroup
+# Note: regexes are in Posix Extended format, test here:
+# https://www.regextester.com/99203
+IncludeCategories:
+  - Regex:           '"([A-Za-z0-9.\Q/-_\E])+"'
+    Priority:        1
+  # Snitch runtime
+  - Regex:           '<snitch/([A-Za-z0-9.\Q/-_\E])+>'
+    Priority:        2
+  # Other headers in <> with extension
+  - Regex:           '<([A-Za-z0-9.\Q/-_\E])+>'
+    Priority:        3
+  # Headers in <> without extension (std)
+  - Regex:           '<([A-Za-z0-9\Q/-_\E])+>'
+    Priority:        4
