@@ -6,7 +6,8 @@ Let's start by spinning up the `snitch-toolchain` Docker container and mounting
 a clone of this repo inside it at `/src`:
 
 ```shell
-$ docker run --volume ${THISREPO}:/src ghcr.io/nazavode/snitch-toolchain bash
+$ git clone https://github.com/opencompl/riscv-paper-experiments.git ${CLONE}
+$ docker run --volume ${CLONE}:/src ghcr.io/nazavode/snitch-toolchain bash
 ```
 
 *Note: `opencompl` members seems not to have enough rights to push packages to the organization's
