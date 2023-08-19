@@ -28,8 +28,6 @@ OBJS += data.o
 OBJS += memref_diff.o
 OBJS += main_snitch.o
 
-.PRECIOUS: %.s %.ll.mlir
-
 main_snitch.x: $(OBJS)
 	$(LD) $(LDFLAGS) $(SNITCH_RUNTIME_PREFIX)/lib/libsnitch-runtime.a $(MLIR_RUNTIME_PREFIX)/lib/libmlir-runtime.a $^ -o $@
 
@@ -48,4 +46,4 @@ logs/trace_hart_%.txt: logs/trace_hart_%.dasm
 traces: $(shell (ls logs/trace_hart_*.dasm 2>/dev/null | sed 's/\.dasm/\.txt/') || echo "")
 
 clean:
-	rm -fr *.o *.a *.ll12 addf.x logs/
+	rm -fr *.o *.a *.ll12 *.ll.mlir main_snitch.x logs/
