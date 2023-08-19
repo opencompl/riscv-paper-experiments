@@ -6,8 +6,8 @@ Let's start by spinning up the `snitch-toolchain` Docker container and mounting
 a clone of this repo inside it at `/src`:
 
 ```shell
-$ git clone https://github.com/opencompl/riscv-paper-experiments.git ${CLONE}
-$ docker run --volume ${CLONE}:/src ghcr.io/nazavode/snitch-toolchain bash
+$ git clone https://github.com/opencompl/riscv-paper-experiments.git
+$ docker run --volume ${PWD}/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain bash
 ```
 
 *Note: `opencompl` members seems not to have enough rights to push packages to the organization's
@@ -67,7 +67,7 @@ $ echo $?
 
 *Note: while the `main` function is run by all the compute cores in the cluster,
 the current startup code **returns the integer return value of the core no. 0 only**,
-**return values of cores other than no. 0 are ignored**.*
+**return values of cores other than no. 0 are discarded**.*
 
 To disassemble and decode the execution traces:
 
