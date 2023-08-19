@@ -14,6 +14,8 @@ $ docker run --volume ${CLONE}:/src ghcr.io/nazavode/snitch-toolchain bash
 package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docker/Dockerfile) is currently made available at:
 [`ghcr.io/nazavode/snitch-toolchain:latest`](https://github.com/users/nazavode/packages/container/package/snitch-toolchain)*
 
+*Note: if on macOS, be aware that the official Docker app is trash, [OrbStack](https://orbstack.dev/) is highly recommended.*
+
 To run binaries on Snitch we need to firsly build both the Snitch and MLIR runtimes:
 
 ```shell
