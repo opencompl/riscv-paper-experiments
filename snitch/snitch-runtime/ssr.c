@@ -3,19 +3,20 @@
 // SPDX-License-Identifier: Apache-2.0
 #include <snitch/runtime.h>
 
-static uint32_t read_ssr_cfg(uint32_t reg, uint32_t dm) {
-    // scfgr t0, t0
-    register uint32_t t0 asm("t0") = reg << 5 | dm;
-    asm volatile(
-        ".word (0b0000000 << 25) | \
-               (      (5) << 20) | \
-               (  0b00001 << 15) | \
-               (    0b001 << 12) | \
-               (      (5) <<  7) | \
-               (0b0101011 <<  0)   \n"
-        : "+r"(t0));
-    return t0;
-}
+// Currently unused. Leave it here for reference.
+// static uint32_t read_ssr_cfg(uint32_t reg, uint32_t dm) {
+//     // scfgr t0, t0
+//     register uint32_t t0 asm("t0") = reg << 5 | dm;
+//     asm volatile(
+//         ".word (0b0000000 << 25) | \
+//                (      (5) << 20) | \
+//                (  0b00001 << 15) | \
+//                (    0b001 << 12) | \
+//                (      (5) <<  7) | \
+//                (0b0101011 <<  0)   \n"
+//         : "+r"(t0));
+//     return t0;
+// }
 
 static void write_ssr_cfg(uint32_t reg, uint32_t dm, uint32_t value) {
     register uint32_t t0 asm("t0") = reg << 5 | dm;
