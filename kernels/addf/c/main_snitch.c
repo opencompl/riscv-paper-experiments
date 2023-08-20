@@ -13,6 +13,7 @@ int main(void) {
     if (core_idx != test_core_idx) return 0;
     float* a = snrt_l1alloc(M * N * sizeof(float));
     if (a == NULL) return 1;
+    (void)snrt_memcpy(a, A, M * N * sizeof(float));
     addf(a, B);
     uint32_t ndiff = diff(a, A_PLUS_B, 0.001f /*should be proper eps*/);
     return (int)ndiff;
