@@ -16,6 +16,14 @@ package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docke
 
 *Note: if on macOS, be aware that the official Docker app is trash, [OrbStack](https://orbstack.dev/) is highly recommended.*
 
+*Note: if you're running Docker on an architecture other than `x86_64` (e.g.: Apple Silicon),
+it's likely that your `docker run` command will complain about the image being `linux/amd64`.
+Add the following option to explicitly ask for a specific platform and avoid issues:
+
+```shell
+$docker run --platform linux/amd64 ...
+```
+
 To run binaries on Snitch we need to firsly build both the Snitch and MLIR runtimes:
 
 ```shell
