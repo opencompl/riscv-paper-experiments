@@ -18,7 +18,7 @@ package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docke
 
 *Note: if you're running Docker on an architecture other than `x86_64` (e.g.: Apple Silicon),
 it's likely that your `docker run` command will complain about the image being `linux/amd64`.
-Add the following option to explicitly ask for a specific platform and avoid issues:
+Add the following option to explicitly ask for a specific platform and avoid issues:*
 
 ```shell
 $docker run --platform linux/amd64 ...
