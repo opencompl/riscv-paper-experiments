@@ -91,7 +91,7 @@ extern snrt_slice_t snrt_zero_memory();
 extern void snrt_bcast_send(void *data, size_t len);
 extern void snrt_bcast_recv(void *data, size_t len);
 
-extern void *snrt_memcpy(void *dst, const void *src, size_t n);
+void *snrt_memcpy(void *restrict dst, const void *restrict src, size_t n);
 
 /// DMA runtime functions.
 /// A DMA transfer identifier.
@@ -284,7 +284,7 @@ static inline void snrt_mutex_release(volatile uint32_t *pmtx) {
 //================================================================================
 
 #define printf printf_
-int printf_(const char* format, ...);
+int printf_(const char *format, ...);
 
 #ifdef __clang__
 #pragma clang diagnostic pop
