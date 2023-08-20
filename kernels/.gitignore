@@ -1,4 +1,7 @@
+# Build byproducts, not really useful up to now
 *.ll.mlir
 *.ll
 *.S
-*.x
+
+# Verilator traces directory
+logs/
