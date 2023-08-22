@@ -13,7 +13,7 @@ def execute(cmd, cwd):
         if return_code:
             raise subprocess.CalledProcessError(return_code, cmd)
     for line in command(cmd, cwd):
-        print(line)
+        print(line, end="")
 
 
 @pytest.mark.parametrize("example", ["addf", "echo"])
