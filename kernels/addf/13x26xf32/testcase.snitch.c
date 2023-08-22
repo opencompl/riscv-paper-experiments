@@ -43,8 +43,20 @@ static int32_t testcase_run_args(const struct testcase* test, struct counters* c
     // Sum reduce differences from expected
     int32_t ndiff = 0;
     for (uint32_t i = 0; i < test->m * test->n; ++i) {
-        float d = fabs(a[i] - test->Expected[i]);
-        if (d > 0.001f /*should be proper eps*/) ++ndiff;
+        float value = a[i];
+        float expected = test->Expected[i];
+        // It looks like std fp classification functions don't work
+        // on Snitch (fpclassify, isnan, etc...)
+        if (value != value /*poor man's isnan()*/) goto mismatch;
+        if (expected != expected /*poor man's isnan()*/) goto mismatch;
+        float d = fabs(value - expected);
+        if (d != d /*poor man's isnan()*/) goto mismatch;
+        // Make sure to have the happy path on the taken branch
+        // here, so any comparison with NaN would end up
+        // counted as a difference:
+        if (d <= 0.001f /*should be proper eps*/) continue;
+    mismatch:
+        ++ndiff;
     }
     return ndiff;
 }
