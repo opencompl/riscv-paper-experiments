@@ -1,6 +1,7 @@
 TESTS =
 TESTS += addf_13x26xf32_clang.x
 TESTS += addf_13x26xf32_clang_noalias.x
+TESTS += addf_13x26xf32_clang_ssr1d.x
 TESTS += addf_13x26xf32_mliropt.x
 
 include ../../../snitch/Makefile.rules
