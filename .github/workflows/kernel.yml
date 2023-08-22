@@ -16,10 +16,10 @@ jobs:
         with:
           path: /src
       - run: make install
-        working-directory: /src/snitch/snitch-runtime
+        working-directory: snitch/snitch-runtime
       - run: make install
-        working-directory: /src/snitch/mlir-runtime
+        working-directory: snitch/mlir-runtime
       - run: make
-        working-directory: /src/kernels/addf/13x26xf32
+        working-directory: kernels/addf/13x26xf32
       - run: make run
-        working-directory: /src/kernels/addf/13x26xf32
+        working-directory: kernels/addf/13x26xf32
