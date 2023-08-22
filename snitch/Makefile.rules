@@ -1,8 +1,15 @@
+MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+
 # NOTE: we are using the absolute path from the Docker container
-CC     = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
-LD     = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
-AR     = /opt/snitch-llvm/bin/llvm-ar
-RANLIB = /opt/snitch-llvm/bin/llvm-ranlib
+CC       = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+LD       = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+AR       = /opt/snitch-llvm/bin/llvm-ar
+RANLIB   = /opt/snitch-llvm/bin/llvm-ranlib
+GENTRACE = $(MAKEFILE_RULES_DIRNAME)/gentrace.py
+
+# Make sure we are finding the right linker script
+# even if we are included in another Makefile
+LDSCRIPT := $(MAKEFILE_RULES_DIRNAME)/cluster.ld
 
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
@@ -23,11 +30,6 @@ CFLAGS += -O3
 # FIXME parametrize debug symbols and lto
 CFLAGS += -flto=thin
 CFLAGS += -g
-
-# Make sure we are finding the right linker script
-# even if we are included in another Makefile
-MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
-LDSCRIPT := $(MAKEFILE_RULES_DIRNAME)/cluster.ld
 
 LDFLAGS =
 LDFLAGS += -fuse-ld=lld
