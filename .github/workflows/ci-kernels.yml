@@ -1,0 +1,23 @@
+name: Build and run kernels
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-run-kernels:
+    runs-on: ubuntu-latest
+    # FIXME use an explicit hash to pin the image version
+    container: ghcr.io/nazavode/snitch-toolchain:latest
+    steps:
+      - uses: actions/checkout@v3
+      - run: make install
+        working-directory: snitch/snitch-runtime
+      - run: make install
+        working-directory: snitch/mlir-runtime
+      - run: make
+        working-directory: kernels/addf/13x26xf32
+      - run: make run
+        working-directory: kernels/addf/13x26xf32
