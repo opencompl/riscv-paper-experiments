@@ -8,9 +8,10 @@ FROM ghcr.io/pulp-platform/snitch@sha256:1a361160886ddee785ca809d0b9d30a283d0116
 
 RUN mkdir /src \
  && wget -qO- https://github.com/pulp-platform/snitch/archive/b9fe5550e26ea878fb734cfc37d161f564252305.tar.gz | \
-    tar xz --strip-components 1 -C /src \
+    tar xz --strip-components 1 -C /src
  # verilator
- && cd /src/hw/system/snitch_cluster \
+COPY single.core.hjson /src/hw/system/snitch_cluster/cfg/cluster.default.hjson
+RUN cd /src/hw/system/snitch_cluster \
  && make bin/snitch_cluster.vlt \
  # spike
  && cd /src/sw/vendor/riscv-isa-sim \
