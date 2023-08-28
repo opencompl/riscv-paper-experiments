@@ -12,11 +12,7 @@ jobs:
     container: ghcr.io/nazavode/snitch-toolchain:1.0
     steps:
       - uses: actions/checkout@v3
-      - run: make install
-        working-directory: snitch/snitch-runtime
-      - run: make install
-        working-directory: snitch/mlir-runtime
-      - run: make
-        working-directory: kernels/addf/13x26xf32
-      - run: make run
-        working-directory: kernels/addf/13x26xf32
+      # - run: make install
+      #   working-directory: snitch/mlir-runtime
+      - run: make allrun
+        working-directory: kernels/axpy/64xf32
