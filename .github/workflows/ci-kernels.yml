@@ -9,8 +9,7 @@ on:
 jobs:
   build-and-run-kernels:
     runs-on: ubuntu-latest
-    # FIXME use an explicit hash to pin the image version
-    container: ghcr.io/nazavode/snitch-toolchain:latest
+    container: ghcr.io/nazavode/snitch-toolchain:sha256:6c2860a12d9c790ad4bb4adf8cdb231ef3b60b056ad20e89f31a99efc54b67b6
     steps:
       - uses: actions/checkout@v3
       - run: make install
