@@ -1,3 +1,7 @@
+# Verilator traces
+*.logs/
+logs/
+
 # Verilator tmp files
 *.rtlbinary
 
