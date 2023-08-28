@@ -1,48 +1,55 @@
 MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
-# NOTE: we are using the absolute path from the Docker container
-CC       = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
-LD       = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
-AR       = /opt/snitch-llvm/bin/llvm-ar
-RANLIB   = /opt/snitch-llvm/bin/llvm-ranlib
-GENTRACE = $(MAKEFILE_RULES_DIRNAME)/gentrace.py
-
-# Make sure we are finding the right linker script
-# even if we are included in another Makefile
-LDSCRIPT := $(MAKEFILE_RULES_DIRNAME)/cluster.ld
+# NOTE: we are using  absolute paths from the Docker container
+CC            = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+LD            = /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+AR            = /opt/snitch-llvm/bin/llvm-ar
+RANLIB        = /opt/snitch-llvm/bin/llvm-ranlib
+VLTSIM        = /opt/snitch-rtl/bin/snitch_cluster.vlt
+DASM          = /opt/snitch-spike/bin/spike-dasm
+GENTRACE      = /opt/snitch_cluster/util/trace/gen_trace.py
+MLIROPT       = mlir-opt-16
+MLIRTRANSLATE = mlir-translate-16
 
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
 # unused for the latter (e.g. -I)
 CFLAGS += -Wno-unused-command-line-argument
 # Common flags
+CFLAGS += -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
+CFLAGS += -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
+CFLAGS += -I/opt/snitch_cluster/sw/snRuntime/api
+CFLAGS += -I/opt/snitch_cluster/sw/snRuntime/src
+CFLAGS += -I/opt/snitch_cluster/sw/snRuntime/src/omp/
+CFLAGS += -I/opt/snitch_cluster/sw/snRuntime/api/omp/
+CFLAGS += -I/opt/snitch_cluster/sw/math/arch/riscv64/bits/
+CFLAGS += -I/opt/snitch_cluster/sw/math/arch/generic
+CFLAGS += -I/opt/snitch_cluster/sw/math/src/include
+CFLAGS += -I/opt/snitch_cluster/sw/math/src/internal
+CFLAGS += -I/opt/snitch_cluster/sw/math/include/bits
+CFLAGS += -I/opt/snitch_cluster/sw/math/include
+CFLAGS += -D__DEFINED_uint64_t
+CFLAGS += -menable-experimental-extensions
 CFLAGS += -mcpu=snitch
+CFLAGS += -mabi=ilp32d
 CFLAGS += -mcmodel=medany
+CFLAGS += -ftls-model=local-exec
 CFLAGS += -ffast-math
 CFLAGS += -fno-builtin-printf
 CFLAGS += -fno-common
-CFLAGS += -ffunction-sections
-CFLAGS += -static
-CFLAGS += -mllvm -enable-misched=false
-CFLAGS += -mno-relax
-CFLAGS += -menable-experimental-extensions
 CFLAGS += -O3
-# FIXME parametrize debug symbols and lto
-CFLAGS += -flto=thin
-CFLAGS += -g
 
 LDFLAGS =
-LDFLAGS += -fuse-ld=lld
-LDFLAGS += -flto=thin
-LDFLAGS += -mcpu=snitch
+LDFLAGS += -fuse-ld=/opt/snitch-llvm/bin/ld.lld
+LDFLAGS += -L/opt/snitch-llvm/lib/clang/12.0.1/lib/
+LDFLAGS += -T/opt/snitch_cluster/sw/snRuntime/base.ld
+LDFLAGS += -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
+LDFLAGS += -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
 LDFLAGS += -nostartfiles
-LDFLAGS += -Wl,--image-base=0x80000000
-LDFLAGS += -static
-LDFLAGS += -Wl,-z,norelro
-LDFLAGS += -Wl,--gc-sections
-LDFLAGS += -Wl,--no-relax
-LDFLAGS += -T $(LDSCRIPT)
-LDFLAGS += -lm
+LDFLAGS += -nostdlib
+LDFLAGS += -lclang_rt.builtins-riscv32
+LDFLAGS += -lc
+LDFLAGS += -lsnRuntime
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -55,3 +62,36 @@ LDFLAGS += -lm
 
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# MLIR
+
+MLIROPTFLAGS =
+MLIROPTFLAGS += -opaque-pointers=0
+MLIROPTFLAGS += --convert-linalg-to-loops
+MLIROPTFLAGS += --convert-scf-to-cf
+MLIROPTFLAGS += --canonicalize
+MLIROPTFLAGS += --cse
+MLIROPTFLAGS += --convert-math-to-llvm
+MLIROPTFLAGS += --convert-memref-to-llvm='use-generic-functions index-bitwidth=32'
+MLIROPTFLAGS += --convert-func-to-llvm='use-bare-ptr-memref-call-conv index-bitwidth=32'
+MLIROPTFLAGS += --convert-index-to-llvm=index-bitwidth=32
+MLIROPTFLAGS += --convert-cf-to-llvm=index-bitwidth=32
+MLIROPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
+MLIROPTFLAGS += --reconcile-unrealized-casts
+
+%.ll.mlir: %.mlir
+	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $<
+
+%.ll: %.ll.mlir
+	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
+
+# Trace rules
+
+%.trace.txt %.trace.json: %.dasm
+	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
+
+define get_trace_targets
+	$(addsuffix .trace.txt, $(basename $(shell find $(1) -name 'trace_hart_*.dasm')))
+endef
+
+traces: $(call get_trace_targets,.)
