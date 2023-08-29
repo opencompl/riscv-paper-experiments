@@ -41,9 +41,8 @@ void axpy(float a, float* x, float* y, float* z) {
     // deal with 2x float values per iteration would be to have
     // proper SIMD instructions. Since we are dealing with a *frugal*
     // architecture, the best we can do is use packed SIMD custom
-    // instructions. Beware that these instructions are not documented
-    // anywhere, the only source of information is the actual Snitch RTL
-    // and/or the Snitch LLVM repository.
+    // instructions:
+    // https://iis-git.ee.ethz.ch/smach/smallFloat-spec
     asm volatile(
         "frep.o  %[nfrep], 2, 0, 0 \n"
         "vfmul.s %[vtmp], %[va], ft0\n"
