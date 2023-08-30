@@ -16,13 +16,23 @@ RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /s
  # clang+llvm+lld
  && mkdir -p /opt/snitch-llvm \
  && wget -qO- https://github.com/pulp-platform/llvm-project/releases/download/0.12.0/riscv32-pulp-llvm-ubuntu1804-0.12.0.tar.gz | \
-    tar xz --strip-components=1 -C /opt/snitch-llvm
+    tar xz --strip-components=1 -C /opt/snitch-llvm \
+# python 3.11
+ && apt update -y \
+ && apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev \
+ && mkdir -p /tmp/python-src \
+ && wget -qO- https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz | \
+    tar xz --strip-components=1 -C /tmp/python-src \
+ && cd /tmp/python-src \
+ && ./configure --prefix=/opt/python3.11 \
+ && make install
 
 FROM ubuntu:18.04 as toolchain
 # Runtime dependencies
 COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
+COPY --from=builder /opt/python3.11 /opt/python3.11
 COPY --from=builder /src/util/trace /opt/snitch_cluster/util/trace
 # Compile and link time dependencies
 COPY --from=builder /src/sw/snRuntime /opt/snitch_cluster/sw/snRuntime
@@ -35,6 +45,8 @@ COPY --from=builder /src/sw/deps/printf /opt/snitch_cluster/sw/deps/printf
 
 RUN apt-get -y update \
  && apt-get -y upgrade \
+ # python (copied from builder) runtime dependencies
+ && apt-get -y install wget zlib1g libncurses5 libgdbm libnss3 libssl libreadline libffi libsqlite3 libbz2 \
  # mlir
  && apt-get -y install wget lsb-release software-properties-common gnupg \
  && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
