@@ -19,7 +19,18 @@ RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /s
     tar xz --strip-components=1 -C /opt/snitch-llvm \
 # python 3.11
  && apt update -y \
- && apt install -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev \
+ && apt install -y \
+      build-essential \
+      zlib1g-dev \
+      libncurses5-dev \
+      libgdbm-dev \
+      libnss3-dev \
+      libssl-dev \
+      libreadline-dev \
+      libffi-dev \
+      libsqlite3-dev \
+      wget \
+      libbz2-dev \
  && mkdir -p /tmp/python-src \
  && wget -qO- https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz | \
     tar xz --strip-components=1 -C /tmp/python-src \
@@ -45,8 +56,20 @@ COPY --from=builder /src/sw/deps/printf /opt/snitch_cluster/sw/deps/printf
 
 RUN apt-get -y update \
  && apt-get -y upgrade \
- # python (copied from builder) runtime dependencies
- && apt-get -y install wget zlib1g libncurses5 libgdbm libnss3 libssl libreadline libffi libsqlite3 libbz2 \
+ # python runtime dependencies
+ && apt-get -y install \
+      wget \
+      zlib1g \
+      libncurses5 \
+      libgdbm5 \
+      libnss3 \
+      libssl1.1 \
+      libreadline7 \
+      libffi6 \
+      libsqlite3-0 \
+      bzip2 \
+ # make pip able to install via git
+ && apt-get -y install git \
  # mlir
  && apt-get -y install wget lsb-release software-properties-common gnupg \
  && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
