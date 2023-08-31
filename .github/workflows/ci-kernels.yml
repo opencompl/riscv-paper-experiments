@@ -12,10 +12,12 @@ jobs:
     container: ghcr.io/nazavode/snitch-toolchain:2.1
     steps:
       - uses: actions/checkout@v3
-      - name: Install python requirements
-        run: /opt/python3.11/bin/python3 -m pip install -r requirements.txt
-      - name: Filecheck tests
-        run: lit -v tests/filecheck
+      - name: xDSL filecheck tests
+        run: |
+          /opt/python3.11/bin/python3 -m venv venv
+          source venv/bin/activate
+          pip3 install -r requirements.txt
+          lit -v tests/filecheck
       - name: Build and run kernel 'axpy'
         run: make allrun
         working-directory: kernels/axpy/64xf32
