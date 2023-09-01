@@ -13,7 +13,7 @@
 // * There are (usually) three data movers, i.e., there may be at most
 //   three streams active at the same time.
 
-void axpy(float a, float* x, float* y, float* z) {
+void saxpy(float a, float* x, float* y, float* z) {
     // Due to the SSR limitation of moving 64 bits at a time,
     // when dealing with a data type smaller than double
     // we are forced to unroll the loop (by a factor of
@@ -33,6 +33,7 @@ void axpy(float a, float* x, float* y, float* z) {
 
     v2f32 vtmp;
     v2f32 va = {a, a};
+    uint32_t nfrep = niter - 1;  // Beware: frep executes nfrep + 1 iterations!
 
     snrt_ssr_enable();
 
@@ -42,15 +43,16 @@ void axpy(float a, float* x, float* y, float* z) {
     // architecture, the best we can do is use packed SIMD custom
     // instructions:
     // https://iis-git.ee.ethz.ch/smach/smallFloat-spec
-    for (int i = 0; i < niter; ++i) {
-        asm volatile(
-            "vfmul.s %[vtmp], %[va], ft0\n"
-            "vfadd.s ft2, %[vtmp], ft1\n"
-            : [vtmp] "=&f"(vtmp)  // see [1]
-            : [va] "f"(va)
-            : "ft0", "ft1", "ft2", "memory");
-    }
+    asm volatile(
+        "frep.o  %[nfrep], 2, 0, 0 \n"
+        "vfmul.s %[vtmp], %[va], ft0\n"
+        "vfadd.s ft2, %[vtmp], ft1\n"
+        : [vtmp] "=&f"(vtmp)  // see [1]
+        : [nfrep] "r"(nfrep), [va] "f"(va)
+        : "ft0", "ft1", "ft2", "memory");
 
+    snrt_fpu_fence();  // Syncronize integer and floating point pipelines that
+                       // operate indipendently during frep loops
     snrt_ssr_disable();
 }
 

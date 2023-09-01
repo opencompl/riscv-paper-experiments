@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void fadd(float* x, float* y, float* z) {
+void ssum(float* x, float* y, float* z) {
     typedef float v2f32 __attribute__((vector_size(2 * sizeof(float))));
     const uint32_t m = M;
     const uint32_t n = N / 2;
