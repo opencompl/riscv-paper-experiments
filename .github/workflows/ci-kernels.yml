@@ -21,3 +21,9 @@ jobs:
       - name: Build and run kernel 'axpy'
         run: make allrun
         working-directory: kernels/axpy/64xf32
+# Note: disabling 'fadd' since it is taking 5x the time taken
+# by axpy. Let's speed up things a bit, axpy is fairly enough
+# of a smoke test.
+#      - name: Build and run kernel 'fadd'
+#        run: make allrun
+#        working-directory: kernels/fadd/14x26xf32

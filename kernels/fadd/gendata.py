@@ -2,6 +2,7 @@
 
 import numpy as np
 import argparse
+import sys
 
 MEMREF_GLOBAL = """
 memref.global constant @{symbol} : memref<{shape}x{type}> = dense<[
@@ -39,7 +40,7 @@ def array_to_c(array: np.array, *, symbol=None):
         symbol=symbol or "array",
         type="float",  # FIXME handle properly
         # shape="*".join(str(dim) for dim in array.shape),
-        shape="M * N",
+        shape="N * M",
         initializer=array_to_c_initializer(array),
     )
 
@@ -47,35 +48,47 @@ def array_to_c(array: np.array, *, symbol=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="gendata.py",
-        description="Generate literal initializer for a 2d memref",
+        description="Generate literal initializers for a fictional BLAS faddmm "
+        "(elementwise matrix-matrix single precision add) on 2d memrefs",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    parser.add_argument("-M", "--rows", type=int, default=16, help="number of rows")
     parser.add_argument(
-        "-N", "--columns", type=int, default=16, help="number of columns"
+        "-r",
+        "--range",
+        type=float,
+        nargs=2,
+        default=(-1000.0, 1000.0),
+        help="uniform distribution range",
+    )
+    parser.add_argument("-m", "--rows", type=int, default=16, help="number of rows")
+    parser.add_argument(
+        "-n", "--columns", type=int, default=16, help="number of columns"
     )
     parser.add_argument(
-        "--format", default="mlir", choices=["mlir", "c"], help="output format"
+        "--format", default="c", choices=["mlir", "c"], help="output format"
     )
     args = parser.parse_args()
-    A = (
-        np.arange(0, args.rows * args.columns, dtype=np.float32).reshape(
-            args.rows, args.columns
-        )
-        / 10.0
-    )
-    B = A / 2.0
-    ADD = A + B
+
+    rmin, rmax = args.range
+    m = args.rows
+    n = args.columns
+    np.random.seed(0)
+    x = np.random.uniform(rmin, rmax, m * n).astype(np.float32).reshape((m, n))
+    y = np.random.uniform(rmin, rmax, m * n).astype(np.float32).reshape((m, n))
+
+    g = x + y
+
+    printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
-        formatter = array_to_c
-        np.set_printoptions(linewidth=None, formatter={"float": lambda x: f"{x:.10f}f"})
-        # Bounds macros:
-        print(f"#define M {args.rows}")
-        print(f"#define N {args.columns}")
+        fmt = array_to_c
+        print(f"#define M {m}")
+        print(f"#define N {n}")
+        printopts["formatter"] = {"float": lambda x: f"{x:+}f"}
     else:
         assert args.format == "mlir"
-        formatter = array_to_memref
-        np.set_printoptions(linewidth=None, formatter={"float": lambda x: f"{x:>6}"})
-    print(formatter(A, symbol="A"))
-    print(formatter(B, symbol="B"))
-    print(formatter(ADD, symbol="A_PLUS_B"))
+        fmt = array_to_memref
+        printopts["sign"] = "+"
+    np.set_printoptions(**printopts)
+    print(fmt(x, symbol="X"))
+    print(fmt(y, symbol="Y"))
+    print(fmt(g, symbol="G"))
