@@ -1,3 +1,8 @@
+# lit tests results
+**/.lit_test_times.txt
+tests/**/Output/*
+*.out
+
 # Verilator traces
 *.logs/
 logs/
