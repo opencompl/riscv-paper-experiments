@@ -1,2 +1,2 @@
 numpy
-git+https://github.com/xdslproject/xdsl.git@sasha/riscv/regalloc/add-instead-of-refactor#egg=xdsl[extras]
+xdsl[extras]
