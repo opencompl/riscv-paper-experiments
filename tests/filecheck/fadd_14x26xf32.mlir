@@ -1,4 +1,4 @@
-// RUN: xdsl-opt -p "convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers{allocation_strategy=BlockNaive},canonicalize,lower-riscv-func{insert_exit_syscall=true},lower-riscv-scf-to-labels" -t riscv-asm %s | filecheck %s
+// RUN: xdsl-opt -p "convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers{allocation_strategy=LivenessBlockNaive},canonicalize,lower-riscv-func{insert_exit_syscall=true},lower-riscv-scf-to-labels" -t riscv-asm %s | filecheck %s
 
 "builtin.module"() ({
   "func.func"() ({
@@ -23,47 +23,51 @@
   }) {function_type = (memref<14x26xf32>, memref<14x26xf32>, memref<14x26xf32>) -> (), sym_name = "ssum", sym_visibility = "public"} : () -> ()
 }) : () -> ()
 
-// CHECK:ssum:
-// CHECK-NEXT:    mv s1, a0
-// CHECK-NEXT:    mv s2, a1
-// CHECK-NEXT:    mv s3, a2
-// CHECK-NEXT:    li s4, 14
-// CHECK-NEXT:    li s5, 1
-// CHECK-NEXT:    li s6, 26
-// CHECK-NEXT:    mv t6, zero
-// CHECK-NEXT:scf_cond_0_for:
-// CHECK-NEXT:    bge t6, s4, scf_body_end_0_for
-// CHECK-NEXT:scf_body_0_for:
-// CHECK-NEXT:    mv t5, zero
-// CHECK-NEXT:scf_cond_1_for:
-// CHECK-NEXT:    bge t5, s6, scf_body_end_1_for
-// CHECK-NEXT:scf_body_1_for:
-// CHECK-NEXT:    li s7, 26
-// CHECK-NEXT:    mul s8, s7, t6
-// CHECK-NEXT:    add s9, s8, t5
-// CHECK-NEXT:    li s10, 4
-// CHECK-NEXT:    mul s11, s9, s10                             # multiply by element size
-// CHECK-NEXT:    add a0, s1, s11
-// CHECK-NEXT:    flw ft9, 0(a0)                               # load value from memref of shape (14, 26)
-// CHECK-NEXT:    li a1, 26
-// CHECK-NEXT:    mul a2, a1, t6
-// CHECK-NEXT:    add a3, a2, t5
-// CHECK-NEXT:    li a4, 4
-// CHECK-NEXT:    mul a5, a3, a4                               # multiply by element size
-// CHECK-NEXT:    add a6, s2, a5
-// CHECK-NEXT:    flw ft10, 0(a6)                              # load value from memref of shape (14, 26)
-// CHECK-NEXT:    fadd.s ft11, ft9, ft10
-// CHECK-NEXT:    li a7, 26
-// CHECK-NEXT:    mul t0, a7, t6
-// CHECK-NEXT:    add t1, t0, t5
-// CHECK-NEXT:    li t2, 4
-// CHECK-NEXT:    mul t3, t1, t2                               # multiply by element size
-// CHECK-NEXT:    add t4, s3, t3
-// CHECK-NEXT:    fsw ft11, 0(t4)                              # store float value to memref of shape (14, 26)
-// CHECK-NEXT:    add t5, t5, s5
-// CHECK-NEXT:    blt t5, s6, scf_body_1_for
-// CHECK-NEXT:scf_body_end_1_for:
-// CHECK-NEXT:    add t6, t6, s5
-// CHECK-NEXT:    blt t6, s4, scf_body_0_for
-// CHECK-NEXT:scf_body_end_0_for:
-// CHECK-NEXT:    ret
+// CHECK: .text
+// CHECK-NEXT: .globl ssum
+// CHECK-NEXT: .p2align 2
+// CHECK-NEXT: ssum:
+// CHECK-NEXT:     mv s10, a0
+// CHECK-NEXT:     mv s11, a1
+// CHECK-NEXT:     mv t3, a2
+// CHECK-NEXT:     li t6, 0
+// CHECK-NEXT:     li s8, 14
+// CHECK-NEXT:     li t4, 1
+// CHECK-NEXT:     li t5, 26
+// CHECK-NEXT:     mv s9, t6
+// CHECK-NEXT: scf_cond_0_for:
+// CHECK-NEXT:     bge s9, s8, scf_body_end_0_for
+// CHECK-NEXT: scf_body_0_for:
+// CHECK-NEXT:     mv s7, t6
+// CHECK-NEXT: scf_cond_1_for:
+// CHECK-NEXT:     bge s7, t5, scf_body_end_1_for
+// CHECK-NEXT: scf_body_1_for:
+// CHECK-NEXT:     li s6, 26
+// CHECK-NEXT:     mul s6, s6, s9
+// CHECK-NEXT:     add s6, s6, s7
+// CHECK-NEXT:     li s5, 4
+// CHECK-NEXT:     mul s6, s6, s5                               # multiply by element size
+// CHECK-NEXT:     add s6, s10, s6
+// CHECK-NEXT:     flw ft11, 0(s6)                              # load value from memref of shape (14, 26)
+// CHECK-NEXT:     li s6, 26
+// CHECK-NEXT:     mul s6, s6, s9
+// CHECK-NEXT:     add s6, s6, s7
+// CHECK-NEXT:     li s5, 4
+// CHECK-NEXT:     mul s6, s6, s5                               # multiply by element size
+// CHECK-NEXT:     add s6, s11, s6
+// CHECK-NEXT:     flw ft10, 0(s6)                              # load value from memref of shape (14, 26)
+// CHECK-NEXT:     fadd.s ft11, ft11, ft10
+// CHECK-NEXT:     li s6, 26
+// CHECK-NEXT:     mul s6, s6, s9
+// CHECK-NEXT:     add s6, s6, s7
+// CHECK-NEXT:     li s5, 4
+// CHECK-NEXT:     mul s6, s6, s5                               # multiply by element size
+// CHECK-NEXT:     add s6, t3, s6
+// CHECK-NEXT:     fsw ft11, 0(s6)                              # store float value to memref of shape (14, 26)
+// CHECK-NEXT:     add s7, s7, t4
+// CHECK-NEXT:     blt s7, t5, scf_body_1_for
+// CHECK-NEXT: scf_body_end_1_for:
+// CHECK-NEXT:     add s9, s9, t4
+// CHECK-NEXT:     blt s9, s8, scf_body_0_for
+// CHECK-NEXT: scf_body_end_0_for:
+// CHECK-NEXT:     ret
