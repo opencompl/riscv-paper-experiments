@@ -29,13 +29,13 @@ $docker run --platform linux/amd64 ...
 To build a RISC-V executable, start from one of the kernels:
 
 ```shell
-$ cd /src/kernels/axpy/64xf32/
+$ cd /src/kernels/saxpy/64xf32/
 $ make linalg.x
 $ ls *.x
 linalg.x
 ```
 
-The [Makefile](kernels/axpy/64xf32/Makefile) performs the following steps:
+The [Makefile](kernels/saxpy/64xf32/Makefile) performs the following steps:
 
 1. `.mlir` -> `.ll.mlir` (a.k.a. MLIR source that uses the LLVM dialect only) via `mlir-opt`
 2. `.ll.mlir` -> `.ll` via `mlir-translate`
@@ -85,7 +85,7 @@ Snitch custom instructions: while side effects are reported correctly, they show
 `unknown` in the decoded trace.*
 
 For each `snrt_mcycle()` call, the cycle timeline for the core is split in two regions,
-before and after the call. In our [test runner](kernels/axpy/64xf32/main.c)
+before and after the call. In our [test runner](kernels/saxpy/64xf32/main.c)
 where we call `snrt_mcycle()` right before and after the measured kernel, we have the
 following sequence of sections with the middle one being the one related to the kernel itself:
 

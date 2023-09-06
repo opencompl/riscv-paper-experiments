@@ -7,7 +7,7 @@
   iterator_types = ["parallel"]
 }
 
-func.func public @axpy(%a: f32,
+func.func public @saxpy(%a: f32,
                        %X: memref<64xf32>,
                        %Y: memref<64xf32>,
                        %Z: memref<64xf32>) -> () {

@@ -20,10 +20,10 @@
       "scf.yield"() : () -> ()
     }) : (index, index, index) -> ()
     "func.return"() : () -> ()
-  }) {function_type = (memref<14x26xf32>, memref<14x26xf32>, memref<14x26xf32>) -> (), sym_name = "fadd", sym_visibility = "public"} : () -> ()
+  }) {function_type = (memref<14x26xf32>, memref<14x26xf32>, memref<14x26xf32>) -> (), sym_name = "ssum", sym_visibility = "public"} : () -> ()
 }) : () -> ()
 
-// CHECK:fadd:
+// CHECK:ssum:
 // CHECK-NEXT:    mv s1, a0
 // CHECK-NEXT:    mv s2, a1
 // CHECK-NEXT:    mv s3, a2

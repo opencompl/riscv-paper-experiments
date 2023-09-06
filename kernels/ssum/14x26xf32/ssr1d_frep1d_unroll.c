@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void fadd(float* restrict x, float* restrict y, float* restrict z) {
+void ssum(float* restrict x, float* restrict y, float* restrict z) {
     typedef float v2f32 __attribute__((vector_size(2 * sizeof(float))));
     const uint32_t niter = (M * N) / 2;
 

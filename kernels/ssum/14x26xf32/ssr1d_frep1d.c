@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void fadd(float* x, float* y, float* z) {
+void ssum(float* x, float* y, float* z) {
     typedef float v2f32 __attribute__((vector_size(2 * sizeof(float))));
     const uint32_t niter = (M * N) / 2;
 
@@ -16,9 +16,14 @@ void fadd(float* x, float* y, float* z) {
 
     snrt_ssr_enable();
 
-    for (int i = 0; i < niter; ++i) {
-        asm volatile("vfadd.s ft2, ft0, ft1\n" : : : "ft0", "ft1", "ft2", "memory");
-    }
+    asm volatile(
+        "frep.o  %[nfrep], 1, 0, 0 \n"
+        "vfadd.s ft2, ft0, ft1\n"
+        :
+        : [nfrep] "r"(niter - 1)
+        : "ft0", "ft1", "ft2", "memory");
+
+    snrt_fpu_fence();
 
     snrt_ssr_disable();
 }

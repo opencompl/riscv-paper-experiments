@@ -1,4 +1,4 @@
-#fadd_attributes = {
+#kernel_attributes = {
   indexing_maps = [
     affine_map<(m, n) -> (m, n)>,
     affine_map<(m, n) -> (m, n)>,
@@ -7,10 +7,10 @@
   iterator_types = ["parallel", "parallel"]
 }
 
-func.func public @fadd(%X: memref<14x26xf32>,
+func.func public @ssum(%X: memref<14x26xf32>,
                        %Y: memref<14x26xf32>,
                        %Z: memref<14x26xf32>) -> () {
-  linalg.generic #fadd_attributes
+  linalg.generic #kernel_attributes
   ins(%X, %Y: memref<14x26xf32>, memref<14x26xf32>)
   outs(%Z: memref<14x26xf32>) {
   ^bb0(%x: f32, %y: f32, %z: f32):

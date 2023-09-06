@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void fadd(float *x, float *y, float *z);
+void ssum(float *x, float *y, float *z);
 
 int main() {
     // Allocate shared local memory
@@ -29,7 +29,7 @@ int main() {
     if (thiscore != 0) return 0;
 
     (void)snrt_mcycle();
-    fadd(local_x, local_y, local_z);
+    ssum(local_x, local_y, local_z);
     (void)snrt_mcycle();
 
     // Correctness check
