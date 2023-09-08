@@ -18,7 +18,7 @@ jobs:
         run: |
           /opt/python3.11/bin/python3 -m venv venv
           . venv/bin/activate
-          pip3 install -e /src/xdsl[extras]
+          pip3 install -e ./xdsl[extras]
           lit -v tests/filecheck
       - name: Build and run kernel 'saxpy'
         run: make allrun
