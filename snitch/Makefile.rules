@@ -10,6 +10,7 @@ DASM          = /opt/snitch-spike/bin/spike-dasm
 GENTRACE      = /opt/snitch_cluster/util/trace/gen_trace.py
 MLIROPT       = mlir-opt-16
 MLIRTRANSLATE = mlir-translate-16
+XDSLOPT       = /opt/python3.11/bin/xdsl-opt
 
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
@@ -62,6 +63,16 @@ LDFLAGS += -lsnRuntime
 
 %.o: %.S
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# XDSL
+
+XDSLOPTFLAGS =
+XDSLOPTFLAGS = -p
+XDSLOPTFLAGS += convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
+XDSLOPTFLAGS += -t riscv-asm
+
+%.S: %.xdsl.mlir
+	$(XDSLOPT) $(XDSLOPTFLAGS) $< > $@
 
 # MLIR
 
