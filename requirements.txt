@@ -1,2 +1,0 @@
-numpy
-git+https://github.com/xdslproject/xdsl.git@main#egg=xdsl[extras]

@@ -1,4 +1,4 @@
-FROM ghcr.io/pulp-platform/snitch_cluster:latest@sha256:9978f9d0e3e6b7ad1b2c1f0eb628a113226e8443bc42ae8b4ddd3f34d9528e96 as builder
+FROM ghcr.io/pulp-platform/snitch_cluster@sha256:9978f9d0e3e6b7ad1b2c1f0eb628a113226e8443bc42ae8b4ddd3f34d9528e96 as builder
 
 RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /src \
  && cd /src \
@@ -68,8 +68,6 @@ RUN apt-get -y update \
       libffi6 \
       libsqlite3-0 \
       bzip2 \
- # make pip able to install via git
- && apt-get -y install git \
  # mlir
  && apt-get -y install wget lsb-release software-properties-common gnupg \
  && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
@@ -84,5 +82,11 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
  && apt-get -y install mlir-16-tools \
  # misc stuff
  && apt-get -y install make \
- #
+ # make sure we have the latest git version,
+ # otherwise github actions would have lots of issues
+ # (e.g.: with recursive clones)
+ && add-apt-repository -y ppa:git-core/ppa \
+ && apt-get -y update \
+ && apt-get -y install git \
+ # cleanup
  && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
