@@ -10,6 +10,7 @@ TESTS += ssr1d_frep1d.x
 TESTS += ssr1d_frep1d_unroll.x
 TESTS += ssr2d.x
 TESTS += linalg.x
+TESTS += scf.x
 
 CFLAGS += -std=gnu11
 CFLAGS += -Wall -Wextra
