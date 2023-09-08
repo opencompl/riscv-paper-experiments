@@ -7,3 +7,6 @@
 [submodule "libxsmm"]
 	path = libxsmm
 	url = https://github.com/libxsmm/libxsmm.git
+[submodule "xsdl"]
+	path = xdsl
+	url = https://github.com/xdslproject/xdsl.git
