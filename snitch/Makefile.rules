@@ -74,6 +74,9 @@ XDSLOPTFLAGS += -t riscv-asm
 %.S: %.xdsl.mlir
 	$(XDSLOPT) $(XDSLOPTFLAGS) $< > $@
 
+%.S: %.c
+	$(CC) $(CFLAGS) -S $< -o $@
+
 # MLIR
 
 MLIROPTFLAGS =
