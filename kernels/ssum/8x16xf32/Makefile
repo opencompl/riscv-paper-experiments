@@ -6,6 +6,7 @@ PRES =
 PRES += pres_0_llvm.x
 PRES += pres_1_llvm_clean.x
 PRES += pres_2_vectorized.x
+PRES += pres_3_ssr_loop.x
 
 TESTS = $(PRES)
 TESTS += baseline.x
