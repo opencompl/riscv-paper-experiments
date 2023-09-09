@@ -8,6 +8,7 @@ PRES += pres_1_llvm_clean.x
 PRES += pres_2_vectorized.x
 PRES += pres_3_ssr_loop.x
 PRES += pres_4_ssr_unrolled.x
+PRES += pres_5_ssr_frep.x
 
 TESTS = $(PRES)
 TESTS += baseline.x
