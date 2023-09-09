@@ -1,0 +1,41 @@
+# SSR Loop Unrolled (150 cycles)
+
+	.text
+	.attribute	4, 16
+	.attribute	5, "rv32i2p0_m2p0_a2p0_f2p0_d2p0_zfh0p1"
+	.file	"ssr1d.c"
+	.globl	ssum                            # -- Begin function ssum
+	.p2align	2
+	.type	ssum,@function
+ssum:                                   # @ssum
+# Setup Snitch
+	addi	a3, zero, 63
+	scfgwi	a3, 95
+	addi	a3, zero, 8
+	scfgwi	a3, 223
+	scfgwi	a0, 768
+	scfgwi	a1, 769
+	scfgwi	a2, 898
+	csrsi	1984, 1
+# Loop
+	addi	a0, zero, 8              # a0 <- 8
+.loop_body:
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	vfadd.s	ft2, ft0, ft1            # stream sum
+	addi	a0, a0, -1               # a0 <- a0 - 1
+	bnez	a0, .loop_body           # if a0 > 0 repeat
+# end_loop:
+	csrci	1984, 1
+	ret
+.Lfunc_end0:
+	.size	ssum, .Lfunc_end0-ssum
+                                        # -- End function
+	.ident	"clang version 12.0.1 (git@github.com:pulp-platform/llvm-project.git d2f0eff9be1f58bb186499e2055eb6888ce88dcc)"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig
