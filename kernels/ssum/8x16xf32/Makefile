@@ -4,6 +4,7 @@ include ../../../snitch/Makefile.rules
 
 PRES =
 PRES += pres_0_llvm.x
+PRES += pres_1_llvm_clean.x
 
 TESTS = $(PRES)
 TESTS += baseline.x
