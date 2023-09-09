@@ -1,4 +1,4 @@
-# SSR + FREP (123 cycles)
+# SSR + FREP (118 cycles)
 
 	.text
 	.attribute	4, 16
@@ -18,14 +18,9 @@ ssum:                                   # @ssum
 	scfgwi	a2, 898
 	csrsi	1984, 1
 # Loop
-	addi	a0, zero, 8              # a0 <- 8
-    addi	a1, zero, 7              # a1 <- 8 - 1
-.loop_body:
-    frep.o	a1, 1, 0, 0              # repeat next instruction 8 times
+    addi	a1, zero, 63             # a1 <- 63
+    frep.o	a1, 1, 0, 0              # repeat next instruction 63 + 1 times
 	vfadd.s	ft2, ft0, ft1            # stream sum
-	addi	a0, a0, -1               # a0 <- a0 - 1
-	bnez	a0, .loop_body           # if a0 > 0 repeat
-# end_loop:
 	csrci	1984, 1
 	ret
 .Lfunc_end0:
