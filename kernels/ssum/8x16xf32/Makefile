@@ -2,7 +2,10 @@
 
 include ../../../snitch/Makefile.rules
 
-TESTS =
+PRES =
+PRES += pres_0_llvm.x
+
+TESTS = $(PRES)
 TESTS += baseline.x
 TESTS += noalias.x
 TESTS += ssr1d.x
@@ -29,6 +32,15 @@ $(RUN): run_%: sim_%
 all: $(TESTS)
 
 allrun: $(RUN)
+
+
+RUN_PRES = $(addprefix run_, $(PRES))
+$(RUN_PRES): run_%: sim_%
+	mv logs $(subst sim_,,$<).logs
+
+all-pres: $(PRES)
+
+allrun-pres: $(RUN_PRES)
 
 clean:
 	rm -fr *.ll12 *.x *.o *.logs/ logs/
