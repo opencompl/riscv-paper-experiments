@@ -10,7 +10,7 @@ DASM          = /opt/snitch-spike/bin/spike-dasm
 GENTRACE      = /opt/snitch_cluster/util/trace/gen_trace.py
 MLIROPT       = mlir-opt-16
 MLIRTRANSLATE = mlir-translate-16
-XDSLOPT       = /opt/python3.11/bin/xdsl-opt
+XDSLOPT       = xdsl-opt
 
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
