@@ -1,0 +1,30 @@
+# Vectorized (613 cycles)
+
+	.text
+	.attribute	4, 16
+	.attribute	5, "rv32i2p0_m2p0_a2p0_f2p0_d2p0_zfh0p1"
+	.file	"baseline.c"
+	.globl	ssum                            # -- Begin function ssum
+	.p2align	2
+	.type	ssum,@function
+ssum:
+	mv	a3, zero                     # a3  <- 0
+	addi	a4, zero, 1024           # a4  <- 512
+.loop_body:
+	add	a5, a0, a3                   # a5  <- a0 + a3
+	fld	ft0, 0(a5)                   # ft0 <- *a5
+	add	a5, a1, a3                   # a5  <- a1 + a3
+	fld	ft1, 0(a5)                   # ft1 <- *a5
+	fadd.d	ft0, ft1, ft0            # ft0 <- ft1 + ft0
+	add	a5, a2, a3                   # a5  <- a2 + a3
+	addi	a3, a3, 8                # a3  <- a3 + 8
+	fsd	ft0, 0(a5)                   # *a5 <- ft0
+	bne	a3, a4, .loop_body           # if a3 < a4 repeat
+# end_loop:
+	ret
+.Lfunc_end0:
+	.size	ssum, .Lfunc_end0-ssum
+                                        # -- End function
+	.ident	"clang version 12.0.1 (git@github.com:pulp-platform/llvm-project.git d2f0eff9be1f58bb186499e2055eb6888ce88dcc)"
+	.section	".note.GNU-stack","",@progbits
+	.addrsig
