@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 void ssum(float* x, float* y, float* z) {
-    const uint32_t niter = (M * N) / 2;
+    const uint32_t niter = M * N;
 
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, niter, sizeof(double));
 
