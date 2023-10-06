@@ -7,10 +7,10 @@ a clone of this repo inside it at `/src`:
 
 ```shell
 $ git clone https://github.com/opencompl/riscv-paper-experiments.git
-$ docker run -ti --volume ${PWD}/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 bash
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 bash
 ```
 
-*Note: `opencompl` members seems not to have enough rights to push packages to the organization's
+*Note: `opencompl` members seem not to have enough rights to push packages to the organization's
 package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docker/Dockerfile) is
 currently made available at:
 [`ghcr.io/nazavode/snitch-toolchain:latest`](https://github.com/users/nazavode/packages/container/package/snitch-toolchain)*
@@ -23,7 +23,7 @@ it's likely that your `docker run` command will complain about the image being `
 Add the following option to explicitly ask for a specific platform:*
 
 ```shell
-$docker run --platform linux/amd64 ...
+$ docker run --platform linux/amd64 ...
 ```
 
 To build a RISC-V executable, start from one of the kernels:
@@ -74,7 +74,7 @@ To disassemble and decode the execution traces:
 
 ```shell
 $ make traces
-$ ls linalg.x.logs/*
+$ ls linalg.x.logs/
 linalg.x.logs/trace_hart_00000000.trace.txt  # decoded trace
 linalg.x.logs/trace_hart_00000000.trace.json # json performance data per section 
 # ...
@@ -90,7 +90,7 @@ where we call `snrt_mcycle()` right before and after the measured kernel, we hav
 following sequence of sections with the middle one being the one related to the kernel itself:
 
 ```shell
-$ cat logs/trace_hart_00000000.trace.json
+$ cat linalg.x.logs/trace_hart_00000000.trace.json
 Performance metrics for section 0 @ (12, 719):
 # ...
 
