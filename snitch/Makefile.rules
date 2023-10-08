@@ -68,11 +68,11 @@ LDFLAGS += -lsnRuntime
 
 XDSLOPTFLAGS =
 XDSLOPTFLAGS = -p
-XDSLOPTFLAGS += convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
+XDSLOPTFLAGS += convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-scf-loop-range-folding,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
 XDSLOPTFLAGS += -t riscv-asm
 
 %.S: %.xdsl.mlir
-	$(XDSLOPT) $(XDSLOPTFLAGS) $< > $@
+	cd /src/xdsl; pwd; . ../venv/bin/activate; python -m docs.Toy.toy --emit=snitch-asm $(abspath $<) --ir > $(abspath $@)
 
 %.S: %.c
 	$(CC) $(CFLAGS) -S $< -o $@

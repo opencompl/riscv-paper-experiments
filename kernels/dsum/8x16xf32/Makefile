@@ -17,6 +17,7 @@ TESTS += ssr2d.x
 TESTS += linalg.x
 TESTS += vector.x
 TESTS += scf.x
+TESTS += linalg_2.x
 
 CFLAGS += -std=gnu11
 CFLAGS += -Wall -Wextra
