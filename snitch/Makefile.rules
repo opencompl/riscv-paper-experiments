@@ -76,8 +76,10 @@ XDSLOPTFLAGS = -p
 XDSLOPTFLAGS += convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
 XDSLOPTFLAGS += -t riscv-asm
 
+# Assembly rules
+
 %.S: %.xdsl.mlir
-	$(XDSLOPT) $(XDSLOPTFLAGS) $< > $@
+	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
 
 %.S: %.c
 	$(CC) $(CFLAGS) -S $< -o $@
