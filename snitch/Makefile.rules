@@ -1,3 +1,8 @@
+
+# vim: set ft=make:
+
+.PHONY: traces
+
 MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
 # NOTE: we are using  absolute paths from the Docker container
