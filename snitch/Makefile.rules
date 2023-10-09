@@ -71,9 +71,25 @@ LDFLAGS += -lsnRuntime
 
 # XDSL
 
+XDSLOPT_PASSES = 
+XDSLOPT_PASSES += convert-func-to-riscv-func
+XDSLOPT_PASSES += convert-memref-to-riscv
+XDSLOPT_PASSES += convert-arith-to-riscv
+XDSLOPT_PASSES += convert-scf-to-riscv-scf
+XDSLOPT_PASSES += dce
+XDSLOPT_PASSES += reconcile-unrealized-casts
+XDSLOPT_PASSES += canonicalize
+XDSLOPT_PASSES += riscv-allocate-registers
+XDSLOPT_PASSES += canonicalize
+XDSLOPT_PASSES += lower-riscv-func
+XDSLOPT_PASSES += lower-riscv-scf-to-labels
+
+space := $(null) #
+comma := ,
+XDSLOPT_PASSES_LIST := $(subst $(space),$(comma),$(strip $(XDSLOPT_PASSES)))
+
 XDSLOPTFLAGS =
-XDSLOPTFLAGS = -p
-XDSLOPTFLAGS += convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,canonicalize,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
+XDSLOPTFLAGS = -p $(XDSLOPT_PASSES_LIST)
 XDSLOPTFLAGS += -t riscv-asm
 
 # Assembly rules
