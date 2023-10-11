@@ -150,3 +150,46 @@ $ grep fmul\.s linalg.x.logs/trace_hart_00000001.trace.txt  | wc -l
 The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
+
+## Scripts
+
+### Setup
+
+Setup and activate a Python virtual environment for the scripts:
+
+```shell
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
+
+### Collecting Results
+
+We can collect results from the Verilator JSON trace logs in a CSV file with:
+
+```shell
+$ scripts/harvest_results.py -s kernels/ -f kernel size version cycles -e cycles -o output.csv
+```
+
+- `-f` is list of strings that are going to be used as a header row in the CSV file.
+- `-e` is list of strings that define field names in the JSON trace to be extracted.
+
+The script assumes that the root search directory follows a directory structure as follows:
+
+`[KERNEL]/[SIZE]/[EXECUTABLE_NAME].x.logs/`
+
+where `KERNEL` is the microkernel name and `SIZE` is its dimensions.
+
+Only log file with name `trace_hart_00000000.trace.json` are used for now.
+
+### Plotting Results
+
+We can plot a grouped barchart using Matplotlib from the previous step's extracted CSV file with:
+
+```shell
+$ scripts/plotting/plot_barchart.py -f output.csv -s scripts/plotting/configs/cycles/barchart.mplstyle -c scripts/plotting/configs/cycles/barchart.json
+$ ls output.pdf
+```
+
+The `.mplstyle` controls plotting stylistic options.
+Since Matplotlib style files cannot control all aspects of a plot, we also include a JSON config file.
