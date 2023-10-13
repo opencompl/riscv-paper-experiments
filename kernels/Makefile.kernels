@@ -5,16 +5,23 @@
 CFLAGS += -std=gnu11
 CFLAGS += -Wall -Wextra
 
+LOG_DIR = $<.logs
+
+.ONESHELL:
+
 %.x: %.o main.o data.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
 sim_%: %
-	rm -fr ./logs/
-	$(VLTSIM) $<
+	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR)
+	cd $(LOG_DIR)
+	$(VLTSIM) ../$<
+	mv logs/* .
+	rm -rf logs
+	cd --
 
 RUN = $(addprefix run_, $(TESTS))
 $(RUN): run_%: sim_%
-	mv logs $(subst sim_,,$<).logs
 
 all: $(TESTS)
 
