@@ -40,7 +40,7 @@ if __name__ == "__main__":
         "--root-dir",
         type=Path,
         metavar="DIR",
-        default=Path(__file__).absolute().parent / DEFAULT_ROOT_DIR,
+        default=DEFAULT_ROOT_DIR,
         help="Top-level directory to search for kernel run logs",
     )
     parser.add_argument(
@@ -71,8 +71,9 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    pattern = f'{args.root_dir}/**/*{DEFAULT_LOG_DIR_SUFFIX}'
-    logdirs = glob.glob(pattern, root_dir=args.root_dir, recursive=True)
+    abs_root_dir = Path(args.root_dir).absolute()
+    pattern = f'{abs_root_dir}/**/*{DEFAULT_LOG_DIR_SUFFIX}'
+    logdirs = glob.glob(pattern, root_dir=abs_root_dir, recursive=True)
 
     logdirs = [f for f in logdirs if os.path.isdir(f)]
 
@@ -82,7 +83,7 @@ if __name__ == "__main__":
             f"Given {len(args.fieldnames)} field names is not equal to the expected {expected_data_fields} data fields"
         )
 
-    prefix_to_remove = len(Path(args.root_dir).parts)
+    prefix_to_remove = len(Path(abs_root_dir).parts)
 
     suffix = Path(args.output_file).suffix
 
