@@ -150,3 +150,28 @@ $ grep fmul\.s linalg.x.logs/trace_hart_00000001.trace.txt  | wc -l
 The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
+
+## Scripts
+
+### Setup
+
+No setup required.
+
+### Collecting Results
+
+We can collect results from the Verilator JSON trace logs in a CSV file with:
+
+```shell
+$ scripts/harvest_results.py -s kernels/ -f kernel size version cycles -e cycles -o output[.csv | .json]
+```
+
+- `-f` is list of strings that are going to be used as a header row in the CSV file.
+- `-e` is list of strings that define field names in the JSON trace to be extracted.
+
+The script assumes that the root search directory follows a directory structure as follows:
+
+`[KERNEL]/[SIZE]/[EXECUTABLE_NAME].x.logs/`
+
+where `KERNEL` is the microkernel name and `SIZE` is its dimensions.
+
+Only log file with name `trace_hart_00000000.trace.json` are used for now.
