@@ -155,13 +155,7 @@ from the `main` function.
 
 ### Setup
 
-Setup and activate a Python virtual environment for the scripts:
-
-```shell
-$ python3 -m venv venv
-$ source venv/bin/activate
-$ pip install -r requirements.txt
-```
+No setup required.
 
 ### Collecting Results
 
