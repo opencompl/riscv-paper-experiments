@@ -1,0 +1,61 @@
+{
+    "plot": {
+        "logy": false,
+        "figsize": [
+            12,
+            5
+        ],
+        "color": [
+            "#543005",
+            "#8c510a",
+            "#bf812d",
+            "#dfc27d",
+            "#f6e8c3",
+            "#c7eae5",
+            "#80cdc1",
+            "#35978f",
+            "#01665e",
+            "#003c30"
+        ]
+    },
+    "bar": {
+        "width": 0.85
+    },
+    "axis": {
+        "grid": "y",
+        "xlabel": "",
+        "ylabel": "Cycles",
+        "yscale": "linear",
+        "ylim": [
+            0,
+            5000
+        ],
+        "xticks": {
+            "rotation": 0
+        },
+        "yticks": {
+            "values": [
+                250,
+                500,
+                750,
+                1500,
+                2000,
+                3000,
+                4000
+            ]
+        }
+    },
+    "legend": {
+        "ncol": 1,
+        "frame_linewidth": 0.4,
+        "bbox_to_anchor": [
+            1.25,
+            0.95
+        ]
+    },
+    "group": {
+        "by": [ "kernel", "size" ],
+        "filter": "cycles",
+        "group_headers": "version"
+    }
+}
