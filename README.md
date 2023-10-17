@@ -155,7 +155,13 @@ from the `main` function.
 
 ### Setup
 
-No setup required.
+Setup and activate a Python virtual environment for the scripts:
+
+```shell
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
 
 ### Collecting Results
 
@@ -175,3 +181,15 @@ The script assumes that the root search directory follows a directory structure 
 where `KERNEL` is the microkernel name and `SIZE` is its dimensions.
 
 Only log file with name `trace_hart_00000000.trace.json` are used for now.
+
+### Plotting Results
+
+We can plot a grouped barchart using Matplotlib from the previous step's extracted CSV file with:
+
+```shell
+$ scripts/plotting/plot_barchart.py -f output.csv -s scripts/plotting/configs/cycles/barchart.mplstyle -c scripts/plotting/configs/cycles/barchart.json
+$ ls output.pdf
+```
+
+The `.mplstyle` controls plotting stylistic options.
+Since Matplotlib style files cannot control all aspects of a plot, we also include a JSON config file.
