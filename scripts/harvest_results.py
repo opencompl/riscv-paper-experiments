@@ -19,6 +19,7 @@ DEFAULT_JSON_LOGFILE_LIST_NUMBER = 3
 
 
 def parse_log_file(filename: str, extract_names: List[str]) -> Iterator[str]:
+    """Parse JSON log files from Verilator tracing."""
     with open(filename, encoding="UTF-8") as fh:
         trace = json.load(fh)
         if len(trace) != DEFAULT_JSON_LOGFILE_LIST_NUMBER:
