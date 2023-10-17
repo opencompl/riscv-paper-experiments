@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from typing import List, NoReturn, Iterator
+from typing import List, Iterator
 from itertools import chain
 
 import os
@@ -30,28 +30,6 @@ def parse_log_file(filename: str, extract_names: List[str]) -> Iterator[str]:
             yield trace[1][name]
 
 
-def is_valid_file(arg_parser: argparse.ArgumentParser, arg: str) -> str | NoReturn:
-    """Checks if the given string is an existing file."""
-
-    if not os.path.exists(arg):
-        arg_parser.error(f"Path \"{arg}\" does not exist.")
-    elif not os.path.isfile(arg):
-        arg_parser.error(f"Path \"{arg}\" is not a file.")
-
-    return arg
-
-
-def is_valid_dir(arg_parser: argparse.ArgumentParser, arg: str) -> str | NoReturn:
-    """Checks if the given string is an existing file."""
-
-    if not os.path.exists(arg):
-        arg_parser.error(f"Path \"{arg}\" does not exist.")
-    elif not os.path.isdir(arg):
-        arg_parser.error(f"Path \"{arg}\" is not a directory.")
-
-    return arg
-
-
 #
 
 if __name__ == "__main__":
@@ -59,9 +37,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "-s",
         "--root-dir",
-        type=lambda x: is_valid_dir(parser, x),
+        type=Path,
         metavar="DIR",
-        default=DEFAULT_ROOT_DIR,
+        default=Path(__file__).absolute().parent / DEFAULT_ROOT_DIR,
         help="Top-level directory to search for kernel run logs",
     )
     parser.add_argument(
@@ -85,7 +63,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-o",
         "--output-file",
-        type=str,
+        type=Path,
         metavar="FILE",
         default="output.csv",
         help="Output data file in CSV format",
