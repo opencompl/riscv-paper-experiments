@@ -8,19 +8,19 @@ void ssum(double* x, double* y, double* z) {
     const uint32_t m = M;
     const uint32_t n = N;
 
-    uint32_t dm = 0;
-    uint32_t b0 = m;
-    uint32_t b1 = n;
-    uint32_t s0 = n * sizeof(double);
-    uint32_t s1 = sizeof(double);
+    snrt_ssr_loop_2d(SNRT_SSR_DM_ALL, m, n, sizeof(double) * n, sizeof(double));
 
-    --b0;
-    --b1;
-    write_ssr_cfg(REG_BOUNDS + 0, dm, b0);
-    write_ssr_cfg(REG_BOUNDS + 1, dm, b1);
-    size_t a = 0;
-    write_ssr_cfg(REG_STRIDES + 0, dm, s0 - a);
-    a += s0 * b0;
-    write_ssr_cfg(REG_STRIDES + 1, dm, s1 - a);
-    a += s1 * b1;
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_2D, x);   // ft0
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_2D, y);   // ft1
+    snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_2D, z);  // ft2
+
+    snrt_ssr_enable();
+
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < n; ++j) {
+            asm volatile("fadd.d ft2, ft0, ft1\n" : : : "ft0", "ft1", "ft2", "memory");
+        }
+    }
+
+    snrt_ssr_disable();
 }
