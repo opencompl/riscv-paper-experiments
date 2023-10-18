@@ -71,8 +71,8 @@ LDFLAGS += -lsnRuntime
 
 XDSLOPTFLAGS =
 XDSLOPTFLAGS = -p
-XDSLOPTFLAGS += convert-linalg-to-stream,convert-stream-to-snitch-stream,lower-affine,convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,snitch-allocate-registers,convert-snitch-stream-to-snitch-runtime,lower-snrt-to-func,canonicalize,riscv-scf-loop-range-folding,canonicalize,riscv-reduce-register-pressure,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
-# convert-linalg-to-stream,convert-stream-to-snitch-stream,lower-affine,convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,snitch-allocate-registers,convert-snitch-stream-to-snitch-runtime,convert-snitch-runtime-to-snitch,lower-snitch,canonicalize,riscv-scf-loop-range-folding,canonicalize,riscv-reduce-register-pressure,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
+# XDSLOPTFLAGS += convert-linalg-to-stream,convert-stream-to-snitch-stream,lower-affine,convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,snitch-allocate-registers,convert-snitch-stream-to-snitch-runtime,lower-snrt-to-func,canonicalize,riscv-scf-loop-range-folding,canonicalize,riscv-reduce-register-pressure,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
+XDSLOPTFLAGS += convert-linalg-to-stream,convert-stream-to-snitch-stream,lower-affine,convert-func-to-riscv-func,convert-memref-to-riscv,convert-arith-to-riscv,convert-scf-to-riscv-scf,dce,reconcile-unrealized-casts,snitch-allocate-registers,convert-snitch-stream-to-snitch-runtime,convert-snitch-runtime-to-snitch,lower-snitch,canonicalize,riscv-scf-loop-range-folding,canonicalize,riscv-reduce-register-pressure,riscv-allocate-registers,canonicalize,lower-riscv-func,lower-riscv-scf-to-labels
 
 XDSLOPTFLAGS += -t riscv-asm
 
