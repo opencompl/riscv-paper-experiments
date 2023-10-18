@@ -7,7 +7,7 @@ a clone of this repo inside it at `/src`:
 
 ```shell
 $ git clone https://github.com/opencompl/riscv-paper-experiments.git
-$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 bash
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 bash
 ```
 
 *Note: `opencompl` members seem not to have enough rights to push packages to the organization's
