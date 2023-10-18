@@ -12,6 +12,11 @@ MLIROPT       = mlir-opt-16
 MLIRTRANSLATE = mlir-translate-16
 XDSLOPT       = xdsl-opt
 
+# FIXME fix upstream runtime for SSRs
+# This is a stopgap solution to provide SSRs configuration functions
+# as extern C abi symbols
+SSR_RUNTIME_OBJS = $(MAKEFILE_RULES_DIRNAME)/snitch-runtime/ssr_api.o
+
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
 # unused for the latter (e.g. -I)

@@ -1,28 +1,29 @@
-.DEFAULT_GOAL := all
+# .DEFAULT_GOAL := all
 
 include ../../../snitch/Makefile.rules
 
-PRES =
-PRES += pres_0_llvm.x
-PRES += pres_1_llvm_clean.x
-PRES += pres_2_vectorized.x
-PRES += pres_3_ssr_loop.x
-PRES += pres_4_ssr_frep.x
+# PRES =
+# PRES += pres_0_llvm.x
+# PRES += pres_1_llvm_clean.x
+# PRES += pres_2_vectorized.x
+# PRES += pres_3_ssr_loop.x
+# PRES += pres_4_ssr_frep.x
 
-TESTS = $(PRES)
-TESTS += baseline.x
-TESTS += noalias.x
-TESTS += ssr1d.x
-TESTS += ssr1d_frep1d.x
-TESTS += ssr2d.x
-TESTS += linalg.x
-TESTS += vector.x
-TESTS += scf.x
+# TESTS = $(PRES)
+# TESTS += baseline.x
+# TESTS += noalias.x
+# TESTS += ssr1d.x
+# TESTS += ssr1d_frep1d.x
+# TESTS += ssr2d.x
+# TESTS += linalg.x
+# TESTS += vector.x
+# TESTS += scf.x
+TESTS = test_frep.x
 
-CFLAGS += -std=gnu11
-CFLAGS += -Wall -Wextra
+# CFLAGS += -std=gnu11
+# CFLAGS += -Wall -Wextra
 
-%.x: %.o main.o data.o
+%.x: %.o main.o data.o $(SSR_RUNTIME_OBJS)
 	$(LD) $(LDFLAGS) $^ -o $@
 
 sim_%: %
@@ -33,18 +34,18 @@ RUN = $(addprefix run_, $(TESTS))
 $(RUN): run_%: sim_%
 	mv logs $(subst sim_,,$<).logs
 
-all: $(TESTS)
+# all: $(TESTS)
 
-allrun: $(RUN)
+# allrun: $(RUN)
 
 
-RUN_PRES = $(addprefix run_, $(PRES))
-$(RUN_PRES): run_%: sim_%
-	mv logs $(subst sim_,,$<).logs
+# RUN_PRES = $(addprefix run_, $(PRES))
+# $(RUN_PRES): run_%: sim_%
+# 	mv logs $(subst sim_,,$<).logs
 
-all-pres: $(PRES)
+# all-pres: $(PRES)
 
-allrun-pres: $(RUN_PRES)
+# allrun-pres: $(RUN_PRES)
 
 clean:
 	rm -fr *.ll12 *.x *.o *.logs/ logs/

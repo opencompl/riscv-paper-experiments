@@ -27,7 +27,7 @@ module {
     llvm.call @snrt_ssr_enable() : () -> ()
 
     // Inline assembly
-    llvm.inline_asm has_side_effects "frep.o $0, 1, 0, 0 \n fadd.d ft2, ft0, ft1", "r" %niter_minus_1 : (i32) -> ()
+    llvm.inline_asm has_side_effects "frep.o $0, 1, 0, 0 \n vfadd.s ft2, ft0, ft1", "r" %niter_minus_1 : (i32) -> ()
 
     llvm.call @snrt_fpu_fence() : () -> ()
     llvm.call @snrt_ssr_disable() : () -> ()
