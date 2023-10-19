@@ -10,6 +10,16 @@ $ git clone https://github.com/opencompl/riscv-paper-experiments.git
 $ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 bash
 ```
 
+Alternatively, the current flow can be performed with:
+
+```shell
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 /src/scripts/run.sh
+```
+
+This builds the kernels, executes them with Verilator, process the traces from these runs and plots the results.
+The results can be found under the `results` subdirectory within the repo.
+Each result file is uniquely tagged with a date and time suffix.
+
 *Note: `opencompl` members seem not to have enough rights to push packages to the organization's
 package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docker/Dockerfile) is
 currently made available at:
