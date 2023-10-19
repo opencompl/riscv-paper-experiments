@@ -13,7 +13,7 @@ $ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavod
 Alternatively, the current flow can be performed with:
 
 ```shell
-$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 /src/scripts/run.sh
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 /src/scripts/run.sh
 ```
 
 This builds the kernels, executes them with Verilator, process the traces from these runs and plots the results.
