@@ -203,7 +203,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--sort",
         action="store_true",
-        help="Display interactive plot only",
+        help="Sort each column lexicographically",
     )
     args = parser.parse_args()
 
