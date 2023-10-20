@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-VALID_ARGS=$(getopt -o h --long skip-build,skip-run,skip-results,help -- "$@")
+VALID_ARGS=$(getopt -o h --long skip-clean,skip-build,skip-run,skip-results,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
+SKIP_CLEAN=0
 SKIP_BUILD=0
 SKIP_RUN=0
 SKIP_RESULTS=0
@@ -12,6 +13,10 @@ SKIP_RESULTS=0
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
+    --skip-clean)
+        SKIP_CLEAN=1
+        shift
+        ;;
     --skip-build)
         SKIP_BUILD=1
         shift
@@ -28,6 +33,7 @@ while [ : ]; do
         ;;
     -h | --help)
         echo ""
+        echo "--skip-clean    Skip the clean step of build directories."
         echo "--skip-build    Skip the build step."
         echo "--skip-run      Skip the run step."
         echo "--skip-results  Skip the results step."
@@ -61,6 +67,16 @@ KERNEL_DIRS=(
   "ssum/14x26xf32/"
 )
 
+# Clean step
+
+if [[ 0 -eq ${SKIP_CLEAN} ]]; then
+  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean 
+
+  for krnl in ${KERNEL_DIRS[@]}; do
+    make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) clean
+  done
+fi
+
 # Setup/build step
 
 if [[ 0 -eq ${SKIP_BUILD} ]]; then
@@ -71,7 +87,6 @@ if [[ 0 -eq ${SKIP_BUILD} ]]; then
   pip install -r ${SCRIPTS_DIR}/requirements.txt
   deactivate
 
-  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean 
   make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} venv
 
   . ${XDSL_DIR}/${VENV_DIR}/bin/activate
@@ -79,7 +94,6 @@ if [[ 0 -eq ${SKIP_BUILD} ]]; then
   [ ! -x $(which xdsl-opt) ] && echo "xdsl-opt is not found in PATH" && exit 1
 
   for krnl in ${KERNEL_DIRS[@]}; do
-    make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) clean
     make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) all
   done
 fi
