@@ -127,6 +127,18 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 
 # Trace rules
 
+sim_%: %.logs/trace_hart_00000000.dasm
+	
+
+.PRECIOUS: %.logs/trace_hart_00000000.dasm
+%.logs/trace_hart_00000000.dasm: %
+	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR)
+	cd $(LOG_DIR)
+	$(VLTSIM) ../$<
+	mv logs/* .
+	rm -rf logs
+	cd --
+
 %.trace.txt %.trace.json: %.dasm
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
 

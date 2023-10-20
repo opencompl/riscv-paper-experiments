@@ -12,14 +12,6 @@ LOG_DIR = $<.logs
 %.x: %.o main.o data.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
-sim_%: %
-	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR)
-	cd $(LOG_DIR)
-	$(VLTSIM) ../$<
-	mv logs/* .
-	rm -rf logs
-	cd --
-
 RUN = $(addprefix run_, $(TESTS))
 $(RUN): run_%: sim_%
 
