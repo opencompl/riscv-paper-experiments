@@ -1,0 +1,18 @@
+name: Run experiments
+
+on:
+  push:
+    branches:
+      - christos/experiments-ci
+  pull_request:
+
+jobs:
+  run-experiments:
+    runs-on: ubuntu-latest
+    container: ghcr.io/nazavode/snitch-toolchain:2.3
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Run experiments
+        run: /scripts/run.sh
