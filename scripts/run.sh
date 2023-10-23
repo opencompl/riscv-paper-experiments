@@ -71,6 +71,7 @@ KERNEL_DIRS=(
 
 if [[ 0 -eq ${SKIP_CLEAN} ]]; then
   make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean 
+  rm -rf ${SCRIPTS_DIR}/${VENV_DIR}
 
   for krnl in ${KERNEL_DIRS[@]}; do
     make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) clean
