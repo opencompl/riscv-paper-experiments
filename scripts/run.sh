@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-VALID_ARGS=$(getopt -o h --long skip-clean,skip-build,skip-run,skip-results,help -- "$@")
+VALID_ARGS=$(getopt -o h --long abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
+ABORT_ON_ERROR=0
 SKIP_CLEAN=0
 SKIP_BUILD=0
 SKIP_RUN=0
@@ -13,6 +14,10 @@ SKIP_RESULTS=0
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
+    --abort-on-error)
+        ABORT_ON_ERROR=1
+        shift
+        ;;
     --skip-clean)
         SKIP_CLEAN=1
         shift
@@ -33,11 +38,12 @@ while [ : ]; do
         ;;
     -h | --help)
         echo ""
-        echo "--skip-clean    Skip the clean step of build directories."
-        echo "--skip-build    Skip the build step."
-        echo "--skip-run      Skip the run step."
-        echo "--skip-results  Skip the results step."
-        echo "-h | --help     This help message."
+        echo "--abort-on-error  Abort upon the first error that occurs."
+        echo "--skip-clean      Skip the clean step of build directories."
+        echo "--skip-build      Skip the build step."
+        echo "--skip-run        Skip the run step."
+        echo "--skip-results    Skip the results step."
+        echo "-h | --help       This help message."
         shift
         exit 0
         ;;
@@ -66,6 +72,10 @@ KERNEL_DIRS=(
   "ssum/8x16xf32/"
   "ssum/14x26xf32/"
 )
+
+if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
+  set -e
+fi
 
 # Clean step
 
