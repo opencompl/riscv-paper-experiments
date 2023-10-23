@@ -15,4 +15,4 @@ jobs:
         with:
           submodules: recursive
       - name: Run experiments
-        run: /scripts/run.sh
+        run: scripts/run.sh
