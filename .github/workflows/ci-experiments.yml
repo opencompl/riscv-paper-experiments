@@ -3,7 +3,7 @@ name: Run experiments
 on:
   push:
     branches:
-      - christos/experiments-ci
+      - main
   pull_request:
 
 jobs:
