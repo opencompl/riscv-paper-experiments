@@ -1,0 +1,23 @@
+.PHONY: all allrun
+
+.DEFAULT_GOAL := all
+
+CFLAGS += -std=gnu11
+CFLAGS += -Wall -Wextra
+
+LOG_DIR = $<.logs
+
+.ONESHELL:
+
+%.x: %.o main.o data.o
+	$(LD) $(LDFLAGS) $^ -o $@
+
+RUN = $(addprefix run_, $(TESTS))
+$(RUN): run_%: sim_%
+
+all: $(TESTS)
+
+allrun: $(RUN)
+
+clean:
+	rm -fr *.ll12 *.x *.o *.logs/ logs/

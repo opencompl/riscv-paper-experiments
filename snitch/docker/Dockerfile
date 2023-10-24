@@ -39,6 +39,7 @@ RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /s
  && make install
 
 FROM ubuntu:18.04 as toolchain
+ENV DEBIAN_FRONTEND=noninteractive
 # Runtime dependencies
 COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
@@ -80,6 +81,13 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
  && apt-get -y update \
  && apt-get -y upgrade \
  && apt-get -y install mlir-16-tools \
+# plotting
+ && apt-get -y install \
+      texlive \
+      texlive-latex-extra \
+      texlive-fonts-recommended \
+      dvipng \
+      cm-super \
  # misc stuff
  && apt-get -y install make \
  # make sure we have the latest git version,

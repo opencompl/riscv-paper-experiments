@@ -7,10 +7,20 @@ a clone of this repo inside it at `/src`:
 
 ```shell
 $ git clone https://github.com/opencompl/riscv-paper-experiments.git
-$ docker run -ti --volume ${PWD}/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.2 bash
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 bash
 ```
 
-*Note: `opencompl` members seems not to have enough rights to push packages to the organization's
+Alternatively, the current flow can be performed with:
+
+```shell
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 /src/scripts/run.sh
+```
+
+This builds the kernels, executes them with Verilator, process the traces from these runs and plots the results.
+The results can be found under the `results` subdirectory within the repo.
+Each result file is uniquely tagged with a date and time suffix.
+
+*Note: `opencompl` members seem not to have enough rights to push packages to the organization's
 package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docker/Dockerfile) is
 currently made available at:
 [`ghcr.io/nazavode/snitch-toolchain:latest`](https://github.com/users/nazavode/packages/container/package/snitch-toolchain)*
@@ -23,7 +33,7 @@ it's likely that your `docker run` command will complain about the image being `
 Add the following option to explicitly ask for a specific platform:*
 
 ```shell
-$docker run --platform linux/amd64 ...
+$ docker run --platform linux/amd64 ...
 ```
 
 To build a RISC-V executable, start from one of the kernels:
@@ -74,7 +84,7 @@ To disassemble and decode the execution traces:
 
 ```shell
 $ make traces
-$ ls linalg.x.logs/*
+$ ls linalg.x.logs/
 linalg.x.logs/trace_hart_00000000.trace.txt  # decoded trace
 linalg.x.logs/trace_hart_00000000.trace.json # json performance data per section 
 # ...
@@ -90,7 +100,7 @@ where we call `snrt_mcycle()` right before and after the measured kernel, we hav
 following sequence of sections with the middle one being the one related to the kernel itself:
 
 ```shell
-$ cat logs/trace_hart_00000000.trace.json
+$ cat linalg.x.logs/trace_hart_00000000.trace.json
 Performance metrics for section 0 @ (12, 719):
 # ...
 
@@ -150,3 +160,46 @@ $ grep fmul\.s linalg.x.logs/trace_hart_00000001.trace.txt  | wc -l
 The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
+
+## Scripts
+
+### Setup
+
+Setup and activate a Python virtual environment for the scripts:
+
+```shell
+$ python3 -m venv venv
+$ source venv/bin/activate
+$ pip install -r requirements.txt
+```
+
+### Collecting Results
+
+We can collect results from the Verilator JSON trace logs in a CSV file with:
+
+```shell
+$ scripts/harvest_results.py -s kernels/ -f kernel size version cycles -e cycles -o output[.csv | .json]
+```
+
+- `-f` is list of strings that are going to be used as a header row in the CSV file.
+- `-e` is list of strings that define field names in the JSON trace to be extracted.
+
+The script assumes that the root search directory follows a directory structure as follows:
+
+`[KERNEL]/[SIZE]/[EXECUTABLE_NAME].x.logs/`
+
+where `KERNEL` is the microkernel name and `SIZE` is its dimensions.
+
+Only log file with name `trace_hart_00000000.trace.json` are used for now.
+
+### Plotting Results
+
+We can plot a grouped barchart using Matplotlib from the previous step's extracted CSV file with:
+
+```shell
+$ scripts/plotting/plot_barchart.py -f output.csv -s scripts/plotting/configs/cycles/barchart.mplstyle -c scripts/plotting/configs/cycles/barchart.json
+$ ls output.pdf
+```
+
+The `.mplstyle` controls plotting stylistic options.
+Since Matplotlib style files cannot control all aspects of a plot, we also include a JSON config file.
