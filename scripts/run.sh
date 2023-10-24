@@ -71,6 +71,7 @@ KERNEL_DIRS=(
   "saxpy/64xf32/"
   "ssum/8x16xf32/"
   "ssum/14x26xf32/"
+  "dsum/8x16xf32/"
 )
 
 if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
