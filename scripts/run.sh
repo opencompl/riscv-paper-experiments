@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VALID_ARGS=$(getopt -o h --long tag,abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
+VALID_ARGS=$(getopt -o h --long tag:,abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
@@ -12,11 +12,19 @@ SKIP_BUILD=0
 SKIP_RUN=0
 SKIP_RESULTS=0
 
+set -x
+
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
     --tag)
-        TAG=$2
+        case "$2" in
+          '')
+            ;;
+          *)
+            TAG=$2
+            ;;
+        esac
         shift 2
         ;;
     --abort-on-error)
