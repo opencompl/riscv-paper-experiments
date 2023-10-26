@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
-VALID_ARGS=$(getopt -o h --long abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
+VALID_ARGS=$(getopt -o h --long tag,abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
+TAG=$(date +"%FT%H%M%S")
 ABORT_ON_ERROR=0
 SKIP_CLEAN=0
 SKIP_BUILD=0
@@ -14,6 +15,10 @@ SKIP_RESULTS=0
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
+    --tag)
+        TAG=$2
+        shift 2
+        ;;
     --abort-on-error)
         ABORT_ON_ERROR=1
         shift
@@ -38,6 +43,7 @@ while [ : ]; do
         ;;
     -h | --help)
         echo ""
+        echo "--tag [NAME]      Provide custom tag for results files."
         echo "--abort-on-error  Abort upon the first error that occurs."
         echo "--skip-clean      Skip the clean step of build directories."
         echo "--skip-build      Skip the build step."
@@ -124,7 +130,6 @@ fi
 if [[ 0 -eq ${SKIP_RESULTS} ]]; then
   . ${SCRIPTS_DIR}/${VENV_DIR}/bin/activate
 
-  TAG=$(date +"%FT%H%M%S")
   CYCLES_CSV="${RESULTS_DIR}/cycles_${TAG}.csv"
 
   ${SCRIPTS_DIR}/harvest_results.py -s ${KERNEL_ROOT} \
