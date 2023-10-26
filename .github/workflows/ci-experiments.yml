@@ -20,3 +20,7 @@ jobs:
         uses: thollander/actions-comment-pull-request@v2
         with:
           filePath: results/cycles_cirun.csv
+      - name: PR comment with PDF file
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          filePath: results/cycles_cirun.pdf
