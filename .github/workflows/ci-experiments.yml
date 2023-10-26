@@ -6,10 +6,6 @@ on:
       - main
   pull_request:
 
-
-env:
-  TAGNAME: ci_run
-
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
@@ -19,8 +15,8 @@ jobs:
         with:
           submodules: recursive
       - name: Run experiments
-        run: scripts/run.sh --abort-on-error --tag $TAGNAME
+        run: scripts/run.sh --abort-on-error --tag cirun
       - name: PR comment with CSV file
         uses: thollander/actions-comment-pull-request@v2
         with:
-          filePath: results/cycles_$TAGNAME.csv
+          filePath: results/cycles_cirun.csv
