@@ -12,8 +12,6 @@ SKIP_BUILD=0
 SKIP_RUN=0
 SKIP_RESULTS=0
 
-set -x
-
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
