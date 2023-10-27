@@ -16,10 +16,6 @@ jobs:
           submodules: recursive
       - name: Run experiments
         run: scripts/run.sh --abort-on-error --tag cirun
-      #- name: PR comment with CSV file
-        #uses: thollander/actions-comment-pull-request@v2
-        #with:
-          #filePath: results/cycles_cirun.csv
       - name: Read CSV
         id: csv
         uses: juliangruber/read-file-action@v1
