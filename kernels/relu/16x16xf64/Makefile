@@ -6,5 +6,6 @@ TESTS =
 TESTS += baseline.x
 TESTS += ssr.x
 TESTS += ssr_frep.x
+TESTS += ssr_frep_unroll.x
 
 include ../../Makefile.kernels
