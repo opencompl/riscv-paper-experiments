@@ -80,9 +80,9 @@ RESULTS_DIR=${THIS_DIR}/../results/
 VENV_DIR=".venv"
 
 KERNEL_DIRS=(
-  "saxpy/64xf32/"
-  "ssum/8x16xf32/"
-  "ssum/14x26xf32/"
+  # "saxpy/64xf32/"
+  # "ssum/8x16xf32/"
+  # "ssum/14x26xf32/"
   "dsum/8x16xf32/"
   "matmul/16x16xf64/"
 )
