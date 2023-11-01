@@ -59,8 +59,8 @@ while [ : ]; do
         shift
         exit 0
         ;;
-    --) shift; 
-        break 
+    --) shift;
+        break
         ;;
   esac
 done
@@ -80,11 +80,12 @@ RESULTS_DIR=${THIS_DIR}/../results/
 VENV_DIR=".venv"
 
 KERNEL_DIRS=(
-  "saxpy/64xf32/"
-  "ssum/8x16xf32/"
-  "ssum/14x26xf32/"
+  # "saxpy/64xf32/"
+  # "ssum/8x16xf32/"
+  # "ssum/14x26xf32/"
   "dsum/8x16xf32/"
   #"matmul/16x16xf64/"
+  "relu/16x16xf64/"
 )
 
 if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
@@ -94,7 +95,7 @@ fi
 # Clean step
 
 if [[ 0 -eq ${SKIP_CLEAN} ]]; then
-  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean 
+  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean
   rm -rf ${SCRIPTS_DIR}/${VENV_DIR}
 
   for krnl in ${KERNEL_DIRS[@]}; do
