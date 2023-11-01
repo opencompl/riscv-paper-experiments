@@ -59,8 +59,8 @@ while [ : ]; do
         shift
         exit 0
         ;;
-    --) shift; 
-        break 
+    --) shift;
+        break
         ;;
   esac
 done
@@ -86,6 +86,7 @@ KERNEL_DIRS=(
   "dsum/8x16xf32/"
   "matmul/16x16xf64/"
   "matmul/8x8xf64/"
+  "relu/16x16xf64/"
 )
 
 if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
@@ -95,7 +96,7 @@ fi
 # Clean step
 
 if [[ 0 -eq ${SKIP_CLEAN} ]]; then
-  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean 
+  make VENV_DIR=${VENV_DIR} -C ${XDSL_DIR} clean
   rm -rf ${SCRIPTS_DIR}/${VENV_DIR}
 
   for krnl in ${KERNEL_DIRS[@]}; do
