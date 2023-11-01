@@ -13,10 +13,3 @@ TESTS += vector.x
 TESTS += scf.x
 
 include ../../Makefile.kernels
-
-# Presentation specific
-
-all-pres: $(PRES)
-
-allrun-pres: TESTS=$(PRES)
-allrun-pres: $(RUN)
