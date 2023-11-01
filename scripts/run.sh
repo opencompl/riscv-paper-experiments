@@ -84,7 +84,7 @@ KERNEL_DIRS=(
   "ssum/8x16xf32/"
   "ssum/14x26xf32/"
   "dsum/8x16xf32/"
-  "matmul/16x16xf64/"
+  #"matmul/16x16xf64/"
 )
 
 if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
