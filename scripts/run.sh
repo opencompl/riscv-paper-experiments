@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
-VALID_ARGS=$(getopt -o h --long tag:,abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
+VALID_ARGS=$(getopt -o h --long config:,tag:,abort-on-error,skip-clean,skip-build,skip-run,skip-results,help -- "$@")
 if [[ $? -ne 0 ]]; then
     exit 1;
 fi
 
+THIS_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
+
 TAG=$(date +"%FT%H%M%S")
+CONFIG_FILE="${THIS_DIR}/run.cfg"
 ABORT_ON_ERROR=0
 SKIP_CLEAN=0
 SKIP_BUILD=0
@@ -15,6 +18,16 @@ SKIP_RESULTS=0
 eval set -- "$VALID_ARGS"
 while [ : ]; do
   case "$1" in
+    --config)
+        case "$2" in
+          '')
+            ;;
+          *)
+            CONFIG_FILE=$2
+            ;;
+        esac
+        shift 2
+        ;;
     --tag)
         case "$2" in
           '')
@@ -68,8 +81,6 @@ done
 # detect if we are within Docker instance
 [ -f /.dockerenv ] && export PATH=/opt/python3.11/bin/:$PATH
 
-THIS_DIR=$(cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)
-
 XDSL_DIR=${THIS_DIR}/../xdsl/
 SCRIPTS_DIR=${THIS_DIR}/../scripts/
 PLOTTING_DIR=${THIS_DIR}/../scripts/plotting/
@@ -79,15 +90,7 @@ RESULTS_DIR=${THIS_DIR}/../results/
 
 VENV_DIR=".venv"
 
-KERNEL_DIRS=(
-  # "saxpy/64xf32/"
-  # "ssum/8x16xf32/"
-  # "ssum/14x26xf32/"
-  "dsum/8x16xf32/"
-  "matmul/8x8xf64/"
-  #"matmul/16x16xf64/"
-  "relu/16x16xf64/"
-)
+mapfile -t KERNEL_DIRS < ${CONFIG_FILE}
 
 if [[ 1 -eq ${ABORT_ON_ERROR} ]]; then
   set -e
