@@ -28,7 +28,7 @@ $(CYCLES_CSV): $(addsuffix .csv, $(basename $(TESTS)))
 		filename=$$(basename $$file .x); \
 		csv_file=$$filename.csv; \
 		value=$$(cat $$csv_file); \
-		echo "$$filename, $$value" >> $@; \
+		echo "$$filename,$$value" >> $@; \
 	done
 
 clean:
