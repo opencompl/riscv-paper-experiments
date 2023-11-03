@@ -142,6 +142,9 @@ sim_%: %.logs/trace_hart_00000000.dasm
 %.trace.txt %.trace.json: %.dasm
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
 
+%.csv: %.x.logs/trace_hart_00000000.trace.json
+	grep -o '"cycles": [0-9]*' $< | cut -d " " -f 2 | sed -n '2p' > $@
+
 define get_trace_targets
 	$(addsuffix .trace.txt, $(basename $(shell find $(1) -name 'trace_hart_*.dasm')))
 endef

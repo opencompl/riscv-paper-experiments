@@ -20,4 +20,4 @@ all: $(TESTS)
 allrun: $(RUN)
 
 clean:
-	rm -fr *.ll12 *.x *.o *.logs/ logs/
+	rm -fr *.ll12 *.x *.o *.logs/ logs/ *.csv
