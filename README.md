@@ -7,13 +7,13 @@ a clone of this repo inside it at `/src`:
 
 ```shell
 $ git clone https://github.com/opencompl/riscv-paper-experiments.git
-$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 bash
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest bash
 ```
 
 Alternatively, the current flow can be performed with:
 
 ```shell
-$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:2.3 /src/scripts/run.sh
+$ docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest /src/scripts/run.sh
 ```
 
 This builds the kernels, executes them with Verilator, process the traces from these runs and plots the results.
