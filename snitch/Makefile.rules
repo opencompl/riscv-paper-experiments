@@ -27,8 +27,8 @@ CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
 LAST_XDSL_COMMIT := $(shell cat $(XDSL_COMMIT_FILE) 2>/dev/null)
 
 # Rule to update the recorded commit hash in a file
-$(XDSL_COMMIT_FILE): maybe_update_xdsl_commit | $(XDSL_DIR)
-	
+$(XDSL_COMMIT_FILE): maybe_update_xdsl_commit
+
 
 # Rule to update the recorded commit hash in a file
 maybe_update_xdsl_commit:
