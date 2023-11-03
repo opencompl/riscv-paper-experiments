@@ -1,7 +1,7 @@
 
 # vim: set ft=make:
 
-.PHONY: traces
+.PHONY: traces, force_xdsl_commit, maybe_update_xdsl_commit
 
 MAKEFILE_RULES_DIRNAME := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
 
@@ -16,6 +16,29 @@ GENTRACE      = /opt/snitch_cluster/util/trace/gen_trace.py
 MLIROPT       = mlir-opt-16
 MLIRTRANSLATE = mlir-translate-16
 XDSLOPT       = xdsl-opt
+
+XDSL_DIR         = /src/xdsl
+XDSL_COMMIT_FILE = /src/xdsl_commit.txt
+
+# Get the current commit hash of xdsl
+CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
+
+# Read the last recorded commit hash from a file, if it exists
+LAST_XDSL_COMMIT := $(shell cat $(XDSL_COMMIT_FILE) 2>/dev/null)
+
+# Rule to update the recorded commit hash in a file
+$(XDSL_COMMIT_FILE): maybe_update_xdsl_commit
+
+
+# Rule to update the recorded commit hash in a file
+maybe_update_xdsl_commit:
+	@if [ "$(CURRENT_XDSL_COMMIT)" != "$(LAST_XDSL_COMMIT)" ]; then \
+		echo $(CURRENT_XDSL_COMMIT) > $(XDSL_COMMIT_FILE); \
+	fi
+
+# Phony target to force re-reading xdsl commit
+force_xdsl_commit:
+	$(RM) $(SUBMODULE_COMMIT_FILE)
 
 CFLAGS =
 # Mixing .c and .ll files makes some flags, useful for the former,
@@ -101,7 +124,7 @@ XDSLOPTFLAGS += -t riscv-asm
 
 # Assembly rules
 
-%.S: %.xdsl.mlir
+%.S: %.xdsl.mlir $(XDSL_COMMIT_FILE)
 	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
 
 %.S: %.c
@@ -148,6 +171,9 @@ sim_%: %.logs/trace_hart_00000000.dasm
 
 %.trace.txt %.trace.json: %.dasm
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
+
+%.csv: %.x.logs/trace_hart_00000000.trace.json
+	grep -o '"cycles": [0-9]*' $< | cut -d " " -f 2 | sed -n '2p' > $@
 
 define get_trace_targets
 	$(addsuffix .trace.txt, $(basename $(shell find $(1) -name 'trace_hart_*.dasm')))
