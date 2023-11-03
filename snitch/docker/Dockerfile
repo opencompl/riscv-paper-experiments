@@ -98,3 +98,6 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
  && apt-get -y install git \
  # cleanup
  && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
+
+# Make our own python3.11 available for current $USER:
+ENV PATH "/opt/python3.11/bin:${PATH}"
