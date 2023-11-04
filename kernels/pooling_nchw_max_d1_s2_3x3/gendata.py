@@ -99,46 +99,47 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     rmin, rmax = args.range
-    batch_size = 1
-    m = args.rows
-    n = args.columns
-    channels = 1
+    n = 1  # n for number of elements in a batch
+    c = 1  # c for channels
+    h = args.rows  # h for height
+    w = args.columns  # w for width
+
     np.random.seed(0)
     x = (
-        np.random.uniform(rmin, rmax, batch_size * m * n * channels)
+        np.random.uniform(rmin, rmax, n * c * h * w)
         .astype(np.float64)
-        .reshape((batch_size, m, n, channels))
+        .reshape((n, c, h, w))
     )
 
     # Define the pooling parameters
     pool_size = (3, 3)
     stride = 2
 
-    # Perform the max pooling operation
-    y = np.zeros(
-        (
-            x.shape[0],
-            (x.shape[1] - pool_size[0]) // stride + 1,
-            (x.shape[2] - pool_size[1]) // stride + 1,
-            x.shape[3],
-        )
-    )
+    new_h = (h - pool_size[0]) // stride + 1
+    new_w = (w - pool_size[0]) // stride + 1
 
-    for h in range(0, x.shape[1] - pool_size[0] + 1, stride):
-        for w in range(0, x.shape[2] - pool_size[1] + 1, stride):
-            pooling_region = x[:, h : h + pool_size[0], w : w + pool_size[1], :]
-            y[:, h // stride, w // stride, :] = np.max(pooling_region, axis=(1, 2))
+    # Perform the max pooling operation
+    y = np.zeros((n, c, new_h, new_w))
+
+    for row in range(0, h - pool_size[0] + 1, stride):
+        for col in range(0, w - pool_size[1] + 1, stride):
+            pooling_region = x[:, :, row : row + pool_size[0], col : col + pool_size[1]]
+            y[:, :, row // stride, col // stride] = np.max(pooling_region, axis=(2, 3))
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
         fmt = array_to_c
-        print(f"#define M {m}")
         print(f"#define N {n}")
+        print(f"#define C {c}")
+        print(f"#define H {h}")
+        print(f"#define W {w}")
+        print(f"#define NEW_H {new_h}")
+        print(f"#define NEW_W {new_w}")
         printopts["formatter"] = {"double ": lambda x: f"{x:+}f"}
     else:
         assert args.format == "mlir"
         fmt = array_to_memref
         printopts["sign"] = "+"
     np.set_printoptions(**printopts)
-    print(fmt(x, shape="M * N", precision=args.precision, symbol="X"))
-    print(fmt(y, shape="N", precision=args.precision, symbol="Y"))
+    print(fmt(x, shape="N * C * H * W", precision=args.precision, symbol="X"))
+    print(fmt(y, shape="N * C * NEW_H * NEW_W", precision=args.precision, symbol="Y"))

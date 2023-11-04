@@ -1,7 +1,11 @@
-#define M 16
-#define N 16
+#define N 1
+#define C 1
+#define H 16
+#define W 16
+#define NEW_H 7
+#define NEW_W 7
 
-const double X[M * N] = {
+const double X[N * C * H * W] = {
 97.62700785,
  430.37873274,
  205.52675214,
@@ -261,7 +265,7 @@ const double X[M * N] = {
 };
 
 
-const double Y[N] = {
+const double Y[N * C * NEW_H * NEW_W] = {
 665.2396911 ,
 957.23668447,
 957.23668447,
