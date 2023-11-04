@@ -1,11 +1,11 @@
 FROM ghcr.io/pulp-platform/snitch_cluster@sha256:9978f9d0e3e6b7ad1b2c1f0eb628a113226e8443bc42ae8b4ddd3f34d9528e96 as builder
 
-RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /src \
+RUN git clone --recursive https://github.com/nazavode/snitch_cluster.git /src \
  && cd /src \
- && git reset --hard 772b86ae84ec0d5a6f1e755cb524ba0aae2cefc3 \
+ && git checkout nazavode/xdsl-ci \
  # verilator model
  && cd /src/target/snitch_cluster \
- && make bin/snitch_cluster.vlt \
+ && make CFG_OVERRIDE=cfg/fdiv.hjson bin/snitch_cluster.vlt \
  # spike-dasm
  && cd /src/target/snitch_cluster/work-vlt/riscv-isa-sim \
  && ./configure --prefix=/opt/snitch-spike \
@@ -98,3 +98,6 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
  && apt-get -y install git \
  # cleanup
  && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
+
+# Make our own python3.11 available for current $USER:
+ENV PATH "/opt/python3.11/bin:${PATH}"
