@@ -6,6 +6,7 @@ FOLDERS += dsum
 FOLDERS += fill
 FOLDERS += matmul
 FOLDERS += pooling_nchw_max_d1_s2_3x3
+FOLDERS += pooling_nchw_sum_d1_s2_3x3
 FOLDERS += relu
 
 include ./Makefile.folders
