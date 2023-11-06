@@ -1,0 +1,25 @@
+.PHONY:
+
+CYCLES_CSV := cycles.csv
+
+.DEFAULT_GOAL := $(CYCLES_CSV)
+
+# Generate the target file by combining the specified files from TESTS
+$(CYCLES_CSV): $(addsuffix /cycles.csv,$(FOLDERS))
+	rm -f $(CYCLES_CSV)
+	@echo "Combining CSV files in folders specified in FOLDERS into $@"
+	@for folder in $(FOLDERS); do \
+		(cd $$folder && make cycles.csv) || { echo "Error: make in $$folder failed"; exit 1; }; \
+		awk -v folder=$$folder '{print folder "," $$0}' $$folder/cycles.csv >> $@; \
+	done
+
+# Define a pattern rule to ensure each folder's cycles.csv is up-to-date
+%/cycles.csv: FORCE
+	$(MAKE) -C $*
+
+# This target is used to force the rebuilding of the folders' cycles.csv files
+FORCE:
+	
+
+clean:
+	rm -f *.csv
