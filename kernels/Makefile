@@ -9,3 +9,6 @@ FOLDERS += pooling_nchw_max_d1_s2_3x3
 FOLDERS += relu
 
 include ./Makefile.folders
+
+pivoted.csv: cycles.csv
+	python3 ../scripts/pivot.py

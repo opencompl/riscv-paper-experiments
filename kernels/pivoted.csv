@@ -1,0 +1,8 @@
+combined,baseline,linalg,noalias,scf,snitch_stream,ssr,ssr1d,ssr1d_frep1d,ssr2d,ssr_frep,ssr_frep_unroll
+conv2d_d1_s1_3x3 1x8x8x1xf64,,3932,,,,,,,,,
+dense 8x8xf64,,7075,,,,,,,,,
+dsum 8x16xf32,1202,1089,1202,1227,,,253,187,273,,
+fill 16x16xf64,370,370,,,,,,,,,
+matmul 8x8xf64,4230,6214,,,,,,,,,
+pooling_nchw_max_d1_s2_3x3 1x16x16x1xf64,,2311,,,,,,,,,
+relu 16x16xf64,1339,1337,,,322,846,,,,327,334
