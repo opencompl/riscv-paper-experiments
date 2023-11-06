@@ -1,3 +1,4 @@
+conv2d_d1_s1_3x3,1x8x8x1xf64,linalg,3932
 dense,8x8xf64,linalg,7075
 dsum,8x16xf32,baseline,1202
 dsum,8x16xf32,noalias,1202
@@ -6,3 +7,14 @@ dsum,8x16xf32,ssr1d_frep1d,187
 dsum,8x16xf32,ssr2d,273
 dsum,8x16xf32,linalg,1089
 dsum,8x16xf32,scf,1227
+fill,16x16xf64,baseline,370
+fill,16x16xf64,linalg,370
+matmul,8x8xf64,baseline,4230
+matmul,8x8xf64,linalg,6214
+pooling_nchw_max_d1_s2_3x3,1x16x16x1xf64,linalg,2311
+relu,16x16xf64,baseline,1339
+relu,16x16xf64,ssr,846
+relu,16x16xf64,ssr_frep,327
+relu,16x16xf64,ssr_frep_unroll,334
+relu,16x16xf64,linalg,1337
+relu,16x16xf64,snitch_stream,322
