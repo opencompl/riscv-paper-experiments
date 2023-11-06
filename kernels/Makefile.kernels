@@ -23,7 +23,7 @@ CYCLES_CSV := cycles.csv
 
 # Generate the target file by combining the specified files from TESTS
 $(CYCLES_CSV): $(addsuffix .csv, $(basename $(TESTS)))
-	rm $(CYCLES_CSV)
+	rm -f $(CYCLES_CSV)
 	@echo "Combining CSV files specified in TESTS into $@"
 	@for file in $(TESTS); do \
 		filename=$$(basename $$file .x); \

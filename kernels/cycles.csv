@@ -1,0 +1,8 @@
+dense,8x8xf64,linalg,7075
+dsum,8x16xf32,baseline,1202
+dsum,8x16xf32,noalias,1202
+dsum,8x16xf32,ssr1d,253
+dsum,8x16xf32,ssr1d_frep1d,187
+dsum,8x16xf32,ssr2d,273
+dsum,8x16xf32,linalg,1089
+dsum,8x16xf32,scf,1227
