@@ -138,6 +138,8 @@ XDSLOPTFLAGS += -t riscv-asm
 MLIROPTFLAGS =
 MLIROPTFLAGS += -opaque-pointers=0
 MLIROPTFLAGS += --convert-linalg-to-loops
+MLIROPTFLAGS += --lower-affine
+MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --convert-scf-to-cf
 MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --cse
