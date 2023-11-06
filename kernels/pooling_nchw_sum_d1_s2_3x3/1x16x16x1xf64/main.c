@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void pooling_nchw_max_d1_s2_3x3(double *x, double *y);
+void pooling_nchw_sum_d1_s2_3x3(double *x, double *y);
 
 int main() {
     // Allocate shared local memory
