@@ -164,7 +164,7 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 
 # Trace rules
 
-sim_%: %.logs/trace_hart_00000000.dasm
+sim_%: %.logs/logs/trace_hart_00000000.dasm
 	
 
 .PRECIOUS: %.logs/trace_hart_00000000.dasm
