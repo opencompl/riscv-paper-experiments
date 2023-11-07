@@ -1,7 +1,5 @@
 #include "data.h"
 
-#include <snrt.h>
-
 #include <stdint.h>
 
 // Taken from math.h

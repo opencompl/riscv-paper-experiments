@@ -1,7 +1,5 @@
 #include "data.h"
 
-#include <snrt.h>
-
 #include <stdint.h>
 
 void conv_2d_nchw_fchw_d1_s1_3x3(const double* x, const double* y, double* z) {

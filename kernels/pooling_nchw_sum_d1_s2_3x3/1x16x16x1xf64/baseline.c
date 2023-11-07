@@ -1,7 +1,5 @@
 #include "data.h"
 
-#include <snrt.h>
-
 #include <stdint.h>
 
 void pooling_nchw_sum_d1_s2_3x3(const double* x, double* y) {
