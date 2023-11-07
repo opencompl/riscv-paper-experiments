@@ -168,18 +168,16 @@ sim_%: %.logs/trace_hart_00000000.dasm
 	
 
 .PRECIOUS: %.logs/trace_hart_00000000.dasm
-%.logs/trace_hart_00000000.dasm: %
-	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR)
-	cd $(LOG_DIR)
-	$(VLTSIM) ../$<
-	mv logs/* .
-	rm -rf logs
+%.logs/logs/trace_hart_00000000.dasm: %
+	set -e; rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
+	cd $(LOG_DIR); \
+	$(VLTSIM) ../$<; \
 	cd --
 
 %.trace.txt %.trace.json: %.dasm
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
 
-%.csv: %.x.logs/trace_hart_00000000.trace.json
+%.csv: %.x.logs/logs/trace_hart_00000000.trace.json
 	grep -o '"cycles": [0-9]*' $< | cut -d " " -f 2 | sed -n '2p' > $@
 
 define get_trace_targets
