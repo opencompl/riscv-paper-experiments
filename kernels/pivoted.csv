@@ -1,9 +1,9 @@
 combined,baseline,linalg,snitch_stream,snrt
-conv2d_d1_s1_3x3 1x8x8x1xf64,,3932,,
+conv2d_d1_s1_3x3 1x8x8x1xf64,1850,3932,,
 dense 8x8xf64,,7075,,
 dsum 8x16xf32,1202,1089,,187
 fill 16x16xf64,370,370,,
 matmul 8x8xf64,4230,6214,,
-pooling_nchw_max_d1_s2_3x3 1x16x16x1xf64,,2311,,
-pooling_nchw_sum_d1_s2_3x3 1x16x16x1xf64,,3191,,
+pooling_nchw_max_d1_s2_3x3 1x16x16x1xf64,1406,2311,,
+pooling_nchw_sum_d1_s2_3x3 1x16x16x1xf64,1982,3191,,
 relu 16x16xf64,1339,1337,322,334
