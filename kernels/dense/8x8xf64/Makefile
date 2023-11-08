@@ -6,5 +6,6 @@ TESTS =
 TESTS += baseline.x
 TESTS += fused.x
 TESTS += linalg.x
+TESTS += ssr.x
 
 include ../../Makefile.kernels
