@@ -79,7 +79,7 @@ static inline void add_f64(const double* b, double* y) {
             asm volatile(
                 "fld    ft3, 0(%[y])\n"
                 "fadd.d ft3, ft3, ft0\n"
-                "fsd    ft3 0(%[y])\n" ::[y] "r"(y)
+                "fsd    ft3, 0(%[y])\n" ::[y] "r"(y)
                 : "ft0", "ft1", "ft2", "memory");
         }
     }
