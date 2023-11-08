@@ -27,10 +27,6 @@ CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
 LAST_XDSL_COMMIT := $(shell cat $(XDSL_COMMIT_FILE) 2>/dev/null)
 
 # Rule to update the recorded commit hash in a file
-$(XDSL_COMMIT_FILE): maybe_update_xdsl_commit
-
-
-# Rule to update the recorded commit hash in a file
 maybe_update_xdsl_commit:
 	@if [ "$(CURRENT_XDSL_COMMIT)" != "$(LAST_XDSL_COMMIT)" ]; then \
 		echo $(CURRENT_XDSL_COMMIT) > $(XDSL_COMMIT_FILE); \
@@ -164,8 +160,26 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 
 # Universal rules
 
-HELLO = $(subst linalg,,relu/16x16xf64/linalg)
-WORLD = $(subst linalg,,relu/16x16xf64/linalg)
+%/baseline.x: %/baseline.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/ssr.x: %/ssr.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/ssr_frep.x: %/ssr_frep.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/snrt.x: %/snrt.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/linalg.x: %/linalg.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/snitch_stream.x: %/snitch_stream.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/fused.x: %/fused.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 %.x: %.o $(addsuffix main.o, $(subst linalg,,$(%))) $(addsuffix data.o, $(WORLD))
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
@@ -175,11 +189,14 @@ WORLD = $(subst linalg,,relu/16x16xf64/linalg)
 sim_%: %.logs/logs/trace_hart_00000000.dasm
 
 
+LOG_DIR = $<.logs
+
 .PRECIOUS: %.logs/logs/trace_hart_00000000.dasm
 %.logs/logs/trace_hart_00000000.dasm: %
-	set -e; rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
+	set -e; \
+	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
 	cd $(LOG_DIR); \
-	$(VLTSIM) ../$<; \
+	$(VLTSIM) ../$(notdir $^); \
 	cd --
 
 %.trace.txt %.trace.json: %.dasm

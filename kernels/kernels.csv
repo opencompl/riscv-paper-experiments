@@ -4,10 +4,10 @@ dense,8x8xf64,baseline,3240
 dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7075
 dsum,8x16xf32,baseline,1202
-dsum,8x16xf32,ssr1d,253
-dsum,8x16xf32,snrt,187
-dsum,8x16xf32,ssr2d,273
 dsum,8x16xf32,linalg,1089
+dsum,8x16xf32,snrt,187
+dsum,8x16xf32,ssr1d,253
+dsum,8x16xf32,ssr2d,273
 fill,16x16xf64,baseline,370
 fill,16x16xf64,linalg,370
 matmul,8x8xf64,baseline,4230
