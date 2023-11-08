@@ -1,4 +1,7 @@
 
+include ../snitch/Makefile.rules
+
+
 FOLDERS =
 FOLDERS += conv2d_d1_s1_3x3
 FOLDERS += dense
@@ -11,5 +14,5 @@ FOLDERS += relu
 
 include ./Makefile.folders
 
-pivoted.csv: $(CYCLES_CSV)
+pivoted.csv: kernels.csv
 	python3 ../scripts/pivot.py

@@ -162,6 +162,11 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %.ll: %.ll.mlir
 	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
 
+# Universal rules
+
+%.x: %.o $(addsuffix /main.o, $(basename $*)) $(addsuffix /data.o, $(basename $*))
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) main.o data.o -o $(notdir $@)
+
 # Trace rules
 
 sim_%: %.logs/logs/trace_hart_00000000.dasm
