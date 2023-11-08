@@ -1,5 +1,7 @@
 conv2d_d1_s1_3x3,1x8x8x1xf64,baseline,1850
 conv2d_d1_s1_3x3,1x8x8x1xf64,linalg,3932
+dense,8x8xf64,baseline,3240
+dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7075
 dsum,8x16xf32,baseline,1202
 dsum,8x16xf32,ssr1d,253

@@ -1,6 +1,6 @@
 combined,baseline,linalg,snitch_stream,snrt
 conv2d_d1_s1_3x3 1x8x8x1xf64,1850,3932,,
-dense 8x8xf64,,7075,,
+dense 8x8xf64,3240,7075,,
 dsum 8x16xf32,1202,1089,,187
 fill 16x16xf64,370,370,,
 matmul 8x8xf64,4230,6214,,
