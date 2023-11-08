@@ -29,15 +29,15 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
                      // Strides
                      sizeof(double) * N, sizeof(double), 0);
 
-    snrt_ssr_loop_2d(SNRT_SSR_DM2,
-                     // Bounds
-                     N, M,
-                     // Strides
-                     sizeof(double), sizeof(double) * N);
+    // snrt_ssr_loop_2d(SNRT_SSR_DM2,
+    //                  // Bounds
+    //                  N, M,
+    //                  // Strides
+    //                  sizeof(double), sizeof(double) * N);
 
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
     snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, B);
-    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_2D, C);
+    // snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_2D, C);
 
     snrt_ssr_enable();
 
@@ -53,7 +53,8 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
             // than a single fmv.d. The point is that this form *should* be compatible
             // with frep.o + frep.i
             // C[m * /*ldC*/ N + n] = c;
-            asm volatile("fmv.d ft2, %[c]" : [c] "+f"(c)::"ft0", "ft1", "ft2");
+            // asm volatile("fmv.d ft2, %[c]" : [c] "+f"(c)::"ft0", "ft1", "ft2");
+            C[m * N + n] = c;
         }
     }
 
@@ -75,12 +76,12 @@ static inline void add_f64(double* y, const double* b) {
 
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
-            ++y;
-            asm volatile(
-                "fld    ft3, 0(%[y])\n"
-                "fadd.d ft3, ft3, ft0\n"
-                "fsd    ft3, 0(%[y])\n" ::[y] "r"(y)
-                : "ft0", "ft1", "ft2", "memory");
+            double v = y[m * N + n];
+            asm volatile("fadd.d %[v], %[v], ft0"
+                         : [v] "+f"(v)
+                         :
+                         : "ft0", "ft1", "ft2", "memory");
+            y[m * N + n] = v;
         }
     }
 
