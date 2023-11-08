@@ -1,6 +1,6 @@
 import pandas as pd
 
-df = pd.read_csv("cycles.csv", header=None, names=("test", "params", "impl", "cycles"))
+df = pd.read_csv("kernels.csv", header=None, names=("test", "params", "impl", "cycles"))
 
 df["combined"] = df["test"].astype(str) + " " + df["params"]
 
