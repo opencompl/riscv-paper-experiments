@@ -15,7 +15,7 @@ jobs:
         with:
           submodules: recursive
       - name: Run experiments
-        run: scripts/run.sh --abort-on-error --tag cirun
+        run: scripts/run.sh --abort-on-error --skip-results --tag cirun
       - name: Read CSV
         id: csv
         uses: juliangruber/read-file-action@v1
@@ -31,5 +31,5 @@ jobs:
           message: |
             ${{steps.csv-table-output.outputs.markdown-table}}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
+          repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
           allow-repeats: true
