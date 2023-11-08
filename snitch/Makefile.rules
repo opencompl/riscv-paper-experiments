@@ -167,7 +167,7 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 sim_%: %.logs/logs/trace_hart_00000000.dasm
 	
 
-.PRECIOUS: %.logs/trace_hart_00000000.dasm
+.PRECIOUS: %.logs/logs/trace_hart_00000000.dasm
 %.logs/logs/trace_hart_00000000.dasm: %
 	set -e; rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
 	cd $(LOG_DIR); \
