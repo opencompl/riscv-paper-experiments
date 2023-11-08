@@ -10,6 +10,9 @@ CFLAGS += -Wall -Wextra
 
 .ONESHELL:
 
+%.x: %.o main.o data.o
+	$(LD) $(LDFLAGS) $^ -o $@
+
 RUN = $(addprefix run_, $(TESTS))
 $(RUN): run_%: sim_%
 
