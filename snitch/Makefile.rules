@@ -181,9 +181,6 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %/fused.x: %/fused.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
-%.x: %.o $(addsuffix main.o, $(subst linalg,,$(%))) $(addsuffix data.o, $(WORLD))
-	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
-
 # Trace rules
 
 sim_%: %.logs/logs/trace_hart_00000000.dasm
