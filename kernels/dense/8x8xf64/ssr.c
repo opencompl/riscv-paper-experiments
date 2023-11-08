@@ -6,17 +6,17 @@
 
 // Attributes must be on function *declarations*, and the function
 // must be inline (even if it's already static) to make always_inline work
-static inline void matmul_f64(const double* A, const double* B, double* C)
+static inline void matmul_f64(double* C, const double* A, const double* B)
     __attribute__((always_inline));
 
-static inline void add_f64(const double* B, double* Y) __attribute__((always_inline));
+static inline void add_f64(double* y, const double* b) __attribute__((always_inline));
 
-static inline void relu_f64(double* Y) __attribute__((always_inline));
+static inline void relu_f64(double* y) __attribute__((always_inline));
 
 // A[ M x K ] -> ldA = K, non transposed
 // B[ K x N ] -> ldB = N, non transposed
 // C[ M x N ] -> ldC = N
-static inline void matmul_f64(const double* A, const double* B, double* C) {
+static inline void matmul_f64(double* C, const double* A, const double* B) {
     snrt_ssr_loop_3d(SNRT_SSR_DM0,
                      // Bounds
                      K, N, M,
@@ -62,7 +62,7 @@ static inline void matmul_f64(const double* A, const double* B, double* C) {
 
 // y[ M x N ]
 // b[ M x N ]
-static inline void add_f64(const double* b, double* y) {
+static inline void add_f64(double* y, const double* b) {
     snrt_ssr_loop_1d(SNRT_SSR_DM0,
                      // Bounds
                      M * N,
@@ -105,9 +105,9 @@ static inline void relu_f64(double* y) {
 void dense(const double* restrict x, const double* restrict w, const double* restrict b,
            double* restrict y) {
     // Y = X W
-    matmul_f64(x, w, y);
+    matmul_f64(y, x, w);
     // Y = Y + B
-    add_f64(b, y);
+    add_f64(y, b);
     // Y = relu(Y)
     relu_f64(y);
 }
