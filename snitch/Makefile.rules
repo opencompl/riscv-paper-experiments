@@ -164,13 +164,16 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 
 # Universal rules
 
-%.x: %.o $(addsuffix /main.o, $(basename $*)) $(addsuffix /data.o, $(basename $*))
-	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) main.o data.o -o $(notdir $@)
+HELLO = $(subst linalg,,relu/16x16xf64/linalg)
+WORLD = $(subst linalg,,relu/16x16xf64/linalg)
+
+%.x: %.o $(addsuffix main.o, $(subst linalg,,$(%))) $(addsuffix data.o, $(WORLD))
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 # Trace rules
 
 sim_%: %.logs/logs/trace_hart_00000000.dasm
-	
+
 
 .PRECIOUS: %.logs/logs/trace_hart_00000000.dasm
 %.logs/logs/trace_hart_00000000.dasm: %

@@ -1,0 +1,2311 @@
+GNU Make 4.1
+Built for x86_64-pc-linux-gnu
+Copyright (C) 1988-2014 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Reading makefiles...
+Reading makefile 'Makefile'...
+Reading makefile '../snitch/Makefile.rules' (search path) (no ~ expansion)...
+Reading makefile 'Makefile.folders' (search path) (no ~ expansion)...
+Updating makefiles....
+ Considering target file 'Makefile.folders'.
+  Looking for an implicit rule for 'Makefile.folders'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.o'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.c'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.cc'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.C'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.cpp'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.p'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.f'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.F'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.m'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.r'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.s'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.S'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.mod'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.sh'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders,v'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'RCS/Makefile.folders,v'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'RCS/Makefile.folders'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 's.Makefile.folders'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'SCCS/s.Makefile.folders'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.o'.
+  Looking for a rule with intermediate file 'Makefile.folders.o'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.c'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.ll12'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.S'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.cc'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.C'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.cpp'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.p'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.f'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.F'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.m'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.r'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.s'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.mod'.
+   Trying pattern rule with stem 'Makefile.folders.o'.
+   Trying implicit prerequisite 'Makefile.folders.o,v'.
+   Trying pattern rule with stem 'Makefile.folders.o'.
+   Trying implicit prerequisite 'RCS/Makefile.folders.o,v'.
+   Trying pattern rule with stem 'Makefile.folders.o'.
+   Trying implicit prerequisite 'RCS/Makefile.folders.o'.
+   Trying pattern rule with stem 'Makefile.folders.o'.
+   Trying implicit prerequisite 's.Makefile.folders.o'.
+   Trying pattern rule with stem 'Makefile.folders.o'.
+   Trying implicit prerequisite 'SCCS/s.Makefile.folders.o'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.c'.
+   Looking for a rule with intermediate file 'Makefile.folders.c'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.y'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.l'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.w'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.w'.
+    Trying pattern rule with stem 'Makefile.folders.c'.
+    Trying implicit prerequisite 'Makefile.folders.c,v'.
+    Trying pattern rule with stem 'Makefile.folders.c'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.c,v'.
+    Trying pattern rule with stem 'Makefile.folders.c'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.c'.
+    Trying pattern rule with stem 'Makefile.folders.c'.
+    Trying implicit prerequisite 's.Makefile.folders.c'.
+    Trying pattern rule with stem 'Makefile.folders.c'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.c'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.y'.
+    Looking for a rule with intermediate file 'Makefile.folders.y'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.y'.
+     Trying implicit prerequisite 'Makefile.folders.y,v'.
+     Trying pattern rule with stem 'Makefile.folders.y'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.y,v'.
+     Trying pattern rule with stem 'Makefile.folders.y'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.y'.
+     Trying pattern rule with stem 'Makefile.folders.y'.
+     Trying implicit prerequisite 's.Makefile.folders.y'.
+     Trying pattern rule with stem 'Makefile.folders.y'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.y'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.l'.
+    Looking for a rule with intermediate file 'Makefile.folders.l'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.l'.
+     Trying implicit prerequisite 'Makefile.folders.l,v'.
+     Trying pattern rule with stem 'Makefile.folders.l'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.l,v'.
+     Trying pattern rule with stem 'Makefile.folders.l'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.l'.
+     Trying pattern rule with stem 'Makefile.folders.l'.
+     Trying implicit prerequisite 's.Makefile.folders.l'.
+     Trying pattern rule with stem 'Makefile.folders.l'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.l'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.w'.
+    Looking for a rule with intermediate file 'Makefile.folders.w'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.w'.
+     Trying implicit prerequisite 'Makefile.folders.w,v'.
+     Trying pattern rule with stem 'Makefile.folders.w'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.w,v'.
+     Trying pattern rule with stem 'Makefile.folders.w'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.w'.
+     Trying pattern rule with stem 'Makefile.folders.w'.
+     Trying implicit prerequisite 's.Makefile.folders.w'.
+     Trying pattern rule with stem 'Makefile.folders.w'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.w'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Rejecting impossible implicit prerequisite 'Makefile.folders.w'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.ll12'.
+   Looking for a rule with intermediate file 'Makefile.folders.ll12'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.ll'.
+    Trying pattern rule with stem 'Makefile.folders.ll12'.
+    Trying implicit prerequisite 'Makefile.folders.ll12,v'.
+    Trying pattern rule with stem 'Makefile.folders.ll12'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.ll12,v'.
+    Trying pattern rule with stem 'Makefile.folders.ll12'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.ll12'.
+    Trying pattern rule with stem 'Makefile.folders.ll12'.
+    Trying implicit prerequisite 's.Makefile.folders.ll12'.
+    Trying pattern rule with stem 'Makefile.folders.ll12'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.ll12'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.ll'.
+    Looking for a rule with intermediate file 'Makefile.folders.ll'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders'.
+     Trying implicit prerequisite 'Makefile.folders.ll.mlir'.
+     Trying pattern rule with stem 'Makefile.folders.ll'.
+     Trying implicit prerequisite 'Makefile.folders.ll,v'.
+     Trying pattern rule with stem 'Makefile.folders.ll'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.ll,v'.
+     Trying pattern rule with stem 'Makefile.folders.ll'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.ll'.
+     Trying pattern rule with stem 'Makefile.folders.ll'.
+     Trying implicit prerequisite 's.Makefile.folders.ll'.
+     Trying pattern rule with stem 'Makefile.folders.ll'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.ll'.
+     Trying pattern rule with stem 'Makefile.folders'.
+     Trying implicit prerequisite 'Makefile.folders.ll.mlir'.
+     Looking for a rule with intermediate file 'Makefile.folders.ll.mlir'.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'Makefile.folders'.
+      Trying implicit prerequisite 'Makefile.folders.mlir'.
+      Trying pattern rule with stem 'Makefile.folders.ll.mlir'.
+      Trying implicit prerequisite 'Makefile.folders.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.folders.ll.mlir'.
+      Trying implicit prerequisite 'RCS/Makefile.folders.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.folders.ll.mlir'.
+      Trying implicit prerequisite 'RCS/Makefile.folders.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.folders.ll.mlir'.
+      Trying implicit prerequisite 's.Makefile.folders.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.folders.ll.mlir'.
+      Trying implicit prerequisite 'SCCS/s.Makefile.folders.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.folders'.
+      Trying implicit prerequisite 'Makefile.folders.mlir'.
+      Looking for a rule with intermediate file 'Makefile.folders.mlir'.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Trying pattern rule with stem 'Makefile.folders.mlir'.
+       Trying implicit prerequisite 'Makefile.folders.mlir,v'.
+       Trying pattern rule with stem 'Makefile.folders.mlir'.
+       Trying implicit prerequisite 'RCS/Makefile.folders.mlir,v'.
+       Trying pattern rule with stem 'Makefile.folders.mlir'.
+       Trying implicit prerequisite 'RCS/Makefile.folders.mlir'.
+       Trying pattern rule with stem 'Makefile.folders.mlir'.
+       Trying implicit prerequisite 's.Makefile.folders.mlir'.
+       Trying pattern rule with stem 'Makefile.folders.mlir'.
+       Trying implicit prerequisite 'SCCS/s.Makefile.folders.mlir'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.S'.
+   Looking for a rule with intermediate file 'Makefile.folders.S'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Rejecting impossible implicit prerequisite 'Makefile.folders.c'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.S.txt'.
+    Trying pattern rule with stem 'Makefile.folders.S'.
+    Trying implicit prerequisite 'Makefile.folders.S,v'.
+    Trying pattern rule with stem 'Makefile.folders.S'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.S,v'.
+    Trying pattern rule with stem 'Makefile.folders.S'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.S'.
+    Trying pattern rule with stem 'Makefile.folders.S'.
+    Trying implicit prerequisite 's.Makefile.folders.S'.
+    Trying pattern rule with stem 'Makefile.folders.S'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.S'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.xdsl.mlir'.
+    Looking for a rule with intermediate file 'Makefile.folders.xdsl.mlir'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.xdsl.mlir'.
+     Trying implicit prerequisite 'Makefile.folders.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.folders.xdsl.mlir'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.folders.xdsl.mlir'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.folders.xdsl.mlir'.
+     Trying implicit prerequisite 's.Makefile.folders.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.folders.xdsl.mlir'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.S.txt'.
+    Looking for a rule with intermediate file 'Makefile.folders.S.txt'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.S.txt'.
+     Trying implicit prerequisite 'Makefile.folders.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.folders.S.txt'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.folders.S.txt'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.S.txt'.
+     Trying pattern rule with stem 'Makefile.folders.S.txt'.
+     Trying implicit prerequisite 's.Makefile.folders.S.txt'.
+     Trying pattern rule with stem 'Makefile.folders.S.txt'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.S.txt'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.cc'.
+   Looking for a rule with intermediate file 'Makefile.folders.cc'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders.cc'.
+    Trying implicit prerequisite 'Makefile.folders.cc,v'.
+    Trying pattern rule with stem 'Makefile.folders.cc'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.cc,v'.
+    Trying pattern rule with stem 'Makefile.folders.cc'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.cc'.
+    Trying pattern rule with stem 'Makefile.folders.cc'.
+    Trying implicit prerequisite 's.Makefile.folders.cc'.
+    Trying pattern rule with stem 'Makefile.folders.cc'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.cc'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.C'.
+   Looking for a rule with intermediate file 'Makefile.folders.C'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders.C'.
+    Trying implicit prerequisite 'Makefile.folders.C,v'.
+    Trying pattern rule with stem 'Makefile.folders.C'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.C,v'.
+    Trying pattern rule with stem 'Makefile.folders.C'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.C'.
+    Trying pattern rule with stem 'Makefile.folders.C'.
+    Trying implicit prerequisite 's.Makefile.folders.C'.
+    Trying pattern rule with stem 'Makefile.folders.C'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.C'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.cpp'.
+   Looking for a rule with intermediate file 'Makefile.folders.cpp'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders.cpp'.
+    Trying implicit prerequisite 'Makefile.folders.cpp,v'.
+    Trying pattern rule with stem 'Makefile.folders.cpp'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.cpp,v'.
+    Trying pattern rule with stem 'Makefile.folders.cpp'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.cpp'.
+    Trying pattern rule with stem 'Makefile.folders.cpp'.
+    Trying implicit prerequisite 's.Makefile.folders.cpp'.
+    Trying pattern rule with stem 'Makefile.folders.cpp'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.cpp'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.p'.
+   Looking for a rule with intermediate file 'Makefile.folders.p'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.web'.
+    Trying pattern rule with stem 'Makefile.folders.p'.
+    Trying implicit prerequisite 'Makefile.folders.p,v'.
+    Trying pattern rule with stem 'Makefile.folders.p'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.p,v'.
+    Trying pattern rule with stem 'Makefile.folders.p'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.p'.
+    Trying pattern rule with stem 'Makefile.folders.p'.
+    Trying implicit prerequisite 's.Makefile.folders.p'.
+    Trying pattern rule with stem 'Makefile.folders.p'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.p'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.web'.
+    Looking for a rule with intermediate file 'Makefile.folders.web'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.web'.
+     Trying implicit prerequisite 'Makefile.folders.web,v'.
+     Trying pattern rule with stem 'Makefile.folders.web'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.web,v'.
+     Trying pattern rule with stem 'Makefile.folders.web'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.web'.
+     Trying pattern rule with stem 'Makefile.folders.web'.
+     Trying implicit prerequisite 's.Makefile.folders.web'.
+     Trying pattern rule with stem 'Makefile.folders.web'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.web'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.f'.
+   Looking for a rule with intermediate file 'Makefile.folders.f'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.F'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.r'.
+    Trying pattern rule with stem 'Makefile.folders.f'.
+    Trying implicit prerequisite 'Makefile.folders.f,v'.
+    Trying pattern rule with stem 'Makefile.folders.f'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.f,v'.
+    Trying pattern rule with stem 'Makefile.folders.f'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.f'.
+    Trying pattern rule with stem 'Makefile.folders.f'.
+    Trying implicit prerequisite 's.Makefile.folders.f'.
+    Trying pattern rule with stem 'Makefile.folders.f'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.f'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.F'.
+    Looking for a rule with intermediate file 'Makefile.folders.F'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.F'.
+     Trying implicit prerequisite 'Makefile.folders.F,v'.
+     Trying pattern rule with stem 'Makefile.folders.F'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.F,v'.
+     Trying pattern rule with stem 'Makefile.folders.F'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.F'.
+     Trying pattern rule with stem 'Makefile.folders.F'.
+     Trying implicit prerequisite 's.Makefile.folders.F'.
+     Trying pattern rule with stem 'Makefile.folders.F'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.F'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.r'.
+    Looking for a rule with intermediate file 'Makefile.folders.r'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders'.
+     Rejecting impossible implicit prerequisite 'Makefile.folders.l'.
+     Trying pattern rule with stem 'Makefile.folders.r'.
+     Trying implicit prerequisite 'Makefile.folders.r,v'.
+     Trying pattern rule with stem 'Makefile.folders.r'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.r,v'.
+     Trying pattern rule with stem 'Makefile.folders.r'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.r'.
+     Trying pattern rule with stem 'Makefile.folders.r'.
+     Trying implicit prerequisite 's.Makefile.folders.r'.
+     Trying pattern rule with stem 'Makefile.folders.r'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.r'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Rejecting impossible implicit prerequisite 'Makefile.folders.F'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.m'.
+   Looking for a rule with intermediate file 'Makefile.folders.m'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.ym'.
+    Trying pattern rule with stem 'Makefile.folders.m'.
+    Trying implicit prerequisite 'Makefile.folders.m,v'.
+    Trying pattern rule with stem 'Makefile.folders.m'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.m,v'.
+    Trying pattern rule with stem 'Makefile.folders.m'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.m'.
+    Trying pattern rule with stem 'Makefile.folders.m'.
+    Trying implicit prerequisite 's.Makefile.folders.m'.
+    Trying pattern rule with stem 'Makefile.folders.m'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.m'.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Trying implicit prerequisite 'Makefile.folders.ym'.
+    Looking for a rule with intermediate file 'Makefile.folders.ym'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.folders.ym'.
+     Trying implicit prerequisite 'Makefile.folders.ym,v'.
+     Trying pattern rule with stem 'Makefile.folders.ym'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.ym,v'.
+     Trying pattern rule with stem 'Makefile.folders.ym'.
+     Trying implicit prerequisite 'RCS/Makefile.folders.ym'.
+     Trying pattern rule with stem 'Makefile.folders.ym'.
+     Trying implicit prerequisite 's.Makefile.folders.ym'.
+     Trying pattern rule with stem 'Makefile.folders.ym'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.folders.ym'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Rejecting impossible implicit prerequisite 'Makefile.folders.r'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.s'.
+   Looking for a rule with intermediate file 'Makefile.folders.s'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders'.
+    Rejecting impossible implicit prerequisite 'Makefile.folders.S'.
+    Trying pattern rule with stem 'Makefile.folders.s'.
+    Trying implicit prerequisite 'Makefile.folders.s,v'.
+    Trying pattern rule with stem 'Makefile.folders.s'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.s,v'.
+    Trying pattern rule with stem 'Makefile.folders.s'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.s'.
+    Trying pattern rule with stem 'Makefile.folders.s'.
+    Trying implicit prerequisite 's.Makefile.folders.s'.
+    Trying pattern rule with stem 'Makefile.folders.s'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.s'.
+   Trying pattern rule with stem 'Makefile.folders'.
+   Trying implicit prerequisite 'Makefile.folders.mod'.
+   Looking for a rule with intermediate file 'Makefile.folders.mod'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.folders.mod'.
+    Trying implicit prerequisite 'Makefile.folders.mod,v'.
+    Trying pattern rule with stem 'Makefile.folders.mod'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.mod,v'.
+    Trying pattern rule with stem 'Makefile.folders.mod'.
+    Trying implicit prerequisite 'RCS/Makefile.folders.mod'.
+    Trying pattern rule with stem 'Makefile.folders.mod'.
+    Trying implicit prerequisite 's.Makefile.folders.mod'.
+    Trying pattern rule with stem 'Makefile.folders.mod'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.folders.mod'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.c'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.cc'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.C'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.cpp'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.p'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.f'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.F'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.m'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.r'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.s'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.S'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Rejecting impossible implicit prerequisite 'Makefile.folders.mod'.
+  Trying pattern rule with stem 'Makefile.folders'.
+  Trying implicit prerequisite 'Makefile.folders.sh'.
+  Looking for a rule with intermediate file 'Makefile.folders.sh'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile.folders.sh'.
+   Trying implicit prerequisite 'Makefile.folders.sh,v'.
+   Trying pattern rule with stem 'Makefile.folders.sh'.
+   Trying implicit prerequisite 'RCS/Makefile.folders.sh,v'.
+   Trying pattern rule with stem 'Makefile.folders.sh'.
+   Trying implicit prerequisite 'RCS/Makefile.folders.sh'.
+   Trying pattern rule with stem 'Makefile.folders.sh'.
+   Trying implicit prerequisite 's.Makefile.folders.sh'.
+   Trying pattern rule with stem 'Makefile.folders.sh'.
+   Trying implicit prerequisite 'SCCS/s.Makefile.folders.sh'.
+  No implicit rule found for 'Makefile.folders'.
+  Finished prerequisites of target file 'Makefile.folders'.
+ No need to remake target 'Makefile.folders'.
+ Considering target file '../snitch/Makefile.rules'.
+  Looking for an implicit rule for '../snitch/Makefile.rules'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.o'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.c'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.cc'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.C'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.cpp'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.p'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.f'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.F'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.m'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.r'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.s'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.S'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.mod'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.sh'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules,v'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/RCS/Makefile.rules,v'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/RCS/Makefile.rules'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/s.Makefile.rules'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.o'.
+  Looking for a rule with intermediate file '../snitch/Makefile.rules.o'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.c'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.ll12'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.S'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.cc'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.C'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.cpp'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.p'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.f'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.F'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.m'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.r'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.s'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.mod'.
+   Trying pattern rule with stem 'Makefile.rules.o'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.o,v'.
+   Trying pattern rule with stem 'Makefile.rules.o'.
+   Trying implicit prerequisite '../snitch/RCS/Makefile.rules.o,v'.
+   Trying pattern rule with stem 'Makefile.rules.o'.
+   Trying implicit prerequisite '../snitch/RCS/Makefile.rules.o'.
+   Trying pattern rule with stem 'Makefile.rules.o'.
+   Trying implicit prerequisite '../snitch/s.Makefile.rules.o'.
+   Trying pattern rule with stem 'Makefile.rules.o'.
+   Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.o'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.c'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.c'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.y'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.l'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.w'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.w'.
+    Trying pattern rule with stem 'Makefile.rules.c'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.c,v'.
+    Trying pattern rule with stem 'Makefile.rules.c'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.c,v'.
+    Trying pattern rule with stem 'Makefile.rules.c'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.c'.
+    Trying pattern rule with stem 'Makefile.rules.c'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.c'.
+    Trying pattern rule with stem 'Makefile.rules.c'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.c'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.y'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.y'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.y'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.y,v'.
+     Trying pattern rule with stem 'Makefile.rules.y'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.y,v'.
+     Trying pattern rule with stem 'Makefile.rules.y'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.y'.
+     Trying pattern rule with stem 'Makefile.rules.y'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.y'.
+     Trying pattern rule with stem 'Makefile.rules.y'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.y'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.l'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.l'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.l'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.l,v'.
+     Trying pattern rule with stem 'Makefile.rules.l'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.l,v'.
+     Trying pattern rule with stem 'Makefile.rules.l'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.l'.
+     Trying pattern rule with stem 'Makefile.rules.l'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.l'.
+     Trying pattern rule with stem 'Makefile.rules.l'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.l'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.w'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.w'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.w'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.w,v'.
+     Trying pattern rule with stem 'Makefile.rules.w'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.w,v'.
+     Trying pattern rule with stem 'Makefile.rules.w'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.w'.
+     Trying pattern rule with stem 'Makefile.rules.w'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.w'.
+     Trying pattern rule with stem 'Makefile.rules.w'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.w'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.w'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.ll12'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.ll12'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.ll'.
+    Trying pattern rule with stem 'Makefile.rules.ll12'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.ll12,v'.
+    Trying pattern rule with stem 'Makefile.rules.ll12'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll12,v'.
+    Trying pattern rule with stem 'Makefile.rules.ll12'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll12'.
+    Trying pattern rule with stem 'Makefile.rules.ll12'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.ll12'.
+    Trying pattern rule with stem 'Makefile.rules.ll12'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.ll12'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.ll'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.ll'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.ll.mlir'.
+     Trying pattern rule with stem 'Makefile.rules.ll'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.ll,v'.
+     Trying pattern rule with stem 'Makefile.rules.ll'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll,v'.
+     Trying pattern rule with stem 'Makefile.rules.ll'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll'.
+     Trying pattern rule with stem 'Makefile.rules.ll'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.ll'.
+     Trying pattern rule with stem 'Makefile.rules.ll'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.ll'.
+     Trying pattern rule with stem 'Makefile.rules'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.ll.mlir'.
+     Looking for a rule with intermediate file '../snitch/Makefile.rules.ll.mlir'.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'Makefile.rules'.
+      Trying implicit prerequisite '../snitch/Makefile.rules.mlir'.
+      Trying pattern rule with stem 'Makefile.rules.ll.mlir'.
+      Trying implicit prerequisite '../snitch/Makefile.rules.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.rules.ll.mlir'.
+      Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.rules.ll.mlir'.
+      Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.rules.ll.mlir'.
+      Trying implicit prerequisite '../snitch/s.Makefile.rules.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.rules.ll.mlir'.
+      Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.rules'.
+      Trying implicit prerequisite '../snitch/Makefile.rules.mlir'.
+      Looking for a rule with intermediate file '../snitch/Makefile.rules.mlir'.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Trying pattern rule with stem 'Makefile.rules.mlir'.
+       Trying implicit prerequisite '../snitch/Makefile.rules.mlir,v'.
+       Trying pattern rule with stem 'Makefile.rules.mlir'.
+       Trying implicit prerequisite '../snitch/RCS/Makefile.rules.mlir,v'.
+       Trying pattern rule with stem 'Makefile.rules.mlir'.
+       Trying implicit prerequisite '../snitch/RCS/Makefile.rules.mlir'.
+       Trying pattern rule with stem 'Makefile.rules.mlir'.
+       Trying implicit prerequisite '../snitch/s.Makefile.rules.mlir'.
+       Trying pattern rule with stem 'Makefile.rules.mlir'.
+       Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.mlir'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.S'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.S'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.c'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.S.txt'.
+    Trying pattern rule with stem 'Makefile.rules.S'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.S,v'.
+    Trying pattern rule with stem 'Makefile.rules.S'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.S,v'.
+    Trying pattern rule with stem 'Makefile.rules.S'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.S'.
+    Trying pattern rule with stem 'Makefile.rules.S'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.S'.
+    Trying pattern rule with stem 'Makefile.rules.S'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.S'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.xdsl.mlir'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.xdsl.mlir'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.xdsl.mlir'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.rules.xdsl.mlir'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.rules.xdsl.mlir'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.rules.xdsl.mlir'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.rules.xdsl.mlir'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.S.txt'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.S.txt'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.S.txt'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.rules.S.txt'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.rules.S.txt'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.S.txt'.
+     Trying pattern rule with stem 'Makefile.rules.S.txt'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.S.txt'.
+     Trying pattern rule with stem 'Makefile.rules.S.txt'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.S.txt'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.cc'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.cc'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules.cc'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.cc,v'.
+    Trying pattern rule with stem 'Makefile.rules.cc'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.cc,v'.
+    Trying pattern rule with stem 'Makefile.rules.cc'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.cc'.
+    Trying pattern rule with stem 'Makefile.rules.cc'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.cc'.
+    Trying pattern rule with stem 'Makefile.rules.cc'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.cc'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.C'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.C'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules.C'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.C,v'.
+    Trying pattern rule with stem 'Makefile.rules.C'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.C,v'.
+    Trying pattern rule with stem 'Makefile.rules.C'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.C'.
+    Trying pattern rule with stem 'Makefile.rules.C'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.C'.
+    Trying pattern rule with stem 'Makefile.rules.C'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.C'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.cpp'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.cpp'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules.cpp'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.cpp,v'.
+    Trying pattern rule with stem 'Makefile.rules.cpp'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.cpp,v'.
+    Trying pattern rule with stem 'Makefile.rules.cpp'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.cpp'.
+    Trying pattern rule with stem 'Makefile.rules.cpp'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.cpp'.
+    Trying pattern rule with stem 'Makefile.rules.cpp'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.cpp'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.p'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.p'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.web'.
+    Trying pattern rule with stem 'Makefile.rules.p'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.p,v'.
+    Trying pattern rule with stem 'Makefile.rules.p'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.p,v'.
+    Trying pattern rule with stem 'Makefile.rules.p'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.p'.
+    Trying pattern rule with stem 'Makefile.rules.p'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.p'.
+    Trying pattern rule with stem 'Makefile.rules.p'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.p'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.web'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.web'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.web'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.web,v'.
+     Trying pattern rule with stem 'Makefile.rules.web'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.web,v'.
+     Trying pattern rule with stem 'Makefile.rules.web'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.web'.
+     Trying pattern rule with stem 'Makefile.rules.web'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.web'.
+     Trying pattern rule with stem 'Makefile.rules.web'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.web'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.f'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.f'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.F'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.r'.
+    Trying pattern rule with stem 'Makefile.rules.f'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.f,v'.
+    Trying pattern rule with stem 'Makefile.rules.f'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.f,v'.
+    Trying pattern rule with stem 'Makefile.rules.f'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.f'.
+    Trying pattern rule with stem 'Makefile.rules.f'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.f'.
+    Trying pattern rule with stem 'Makefile.rules.f'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.f'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.F'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.F'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.F'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.F,v'.
+     Trying pattern rule with stem 'Makefile.rules.F'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.F,v'.
+     Trying pattern rule with stem 'Makefile.rules.F'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.F'.
+     Trying pattern rule with stem 'Makefile.rules.F'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.F'.
+     Trying pattern rule with stem 'Makefile.rules.F'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.F'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.r'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.r'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules'.
+     Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.l'.
+     Trying pattern rule with stem 'Makefile.rules.r'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.r,v'.
+     Trying pattern rule with stem 'Makefile.rules.r'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.r,v'.
+     Trying pattern rule with stem 'Makefile.rules.r'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.r'.
+     Trying pattern rule with stem 'Makefile.rules.r'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.r'.
+     Trying pattern rule with stem 'Makefile.rules.r'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.r'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.F'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.m'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.m'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.ym'.
+    Trying pattern rule with stem 'Makefile.rules.m'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.m,v'.
+    Trying pattern rule with stem 'Makefile.rules.m'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.m,v'.
+    Trying pattern rule with stem 'Makefile.rules.m'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.m'.
+    Trying pattern rule with stem 'Makefile.rules.m'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.m'.
+    Trying pattern rule with stem 'Makefile.rules.m'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.m'.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.ym'.
+    Looking for a rule with intermediate file '../snitch/Makefile.rules.ym'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.rules.ym'.
+     Trying implicit prerequisite '../snitch/Makefile.rules.ym,v'.
+     Trying pattern rule with stem 'Makefile.rules.ym'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ym,v'.
+     Trying pattern rule with stem 'Makefile.rules.ym'.
+     Trying implicit prerequisite '../snitch/RCS/Makefile.rules.ym'.
+     Trying pattern rule with stem 'Makefile.rules.ym'.
+     Trying implicit prerequisite '../snitch/s.Makefile.rules.ym'.
+     Trying pattern rule with stem 'Makefile.rules.ym'.
+     Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.ym'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.r'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.s'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.s'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules'.
+    Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.S'.
+    Trying pattern rule with stem 'Makefile.rules.s'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.s,v'.
+    Trying pattern rule with stem 'Makefile.rules.s'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.s,v'.
+    Trying pattern rule with stem 'Makefile.rules.s'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.s'.
+    Trying pattern rule with stem 'Makefile.rules.s'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.s'.
+    Trying pattern rule with stem 'Makefile.rules.s'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.s'.
+   Trying pattern rule with stem 'Makefile.rules'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.mod'.
+   Looking for a rule with intermediate file '../snitch/Makefile.rules.mod'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.rules.mod'.
+    Trying implicit prerequisite '../snitch/Makefile.rules.mod,v'.
+    Trying pattern rule with stem 'Makefile.rules.mod'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.mod,v'.
+    Trying pattern rule with stem 'Makefile.rules.mod'.
+    Trying implicit prerequisite '../snitch/RCS/Makefile.rules.mod'.
+    Trying pattern rule with stem 'Makefile.rules.mod'.
+    Trying implicit prerequisite '../snitch/s.Makefile.rules.mod'.
+    Trying pattern rule with stem 'Makefile.rules.mod'.
+    Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.mod'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.c'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.cc'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.C'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.cpp'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.p'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.f'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.F'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.m'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.r'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.s'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.S'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Rejecting impossible implicit prerequisite '../snitch/Makefile.rules.mod'.
+  Trying pattern rule with stem 'Makefile.rules'.
+  Trying implicit prerequisite '../snitch/Makefile.rules.sh'.
+  Looking for a rule with intermediate file '../snitch/Makefile.rules.sh'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile.rules.sh'.
+   Trying implicit prerequisite '../snitch/Makefile.rules.sh,v'.
+   Trying pattern rule with stem 'Makefile.rules.sh'.
+   Trying implicit prerequisite '../snitch/RCS/Makefile.rules.sh,v'.
+   Trying pattern rule with stem 'Makefile.rules.sh'.
+   Trying implicit prerequisite '../snitch/RCS/Makefile.rules.sh'.
+   Trying pattern rule with stem 'Makefile.rules.sh'.
+   Trying implicit prerequisite '../snitch/s.Makefile.rules.sh'.
+   Trying pattern rule with stem 'Makefile.rules.sh'.
+   Trying implicit prerequisite '../snitch/SCCS/s.Makefile.rules.sh'.
+  No implicit rule found for '../snitch/Makefile.rules'.
+  Finished prerequisites of target file '../snitch/Makefile.rules'.
+ No need to remake target '../snitch/Makefile.rules'.
+ Considering target file 'Makefile'.
+  Looking for an implicit rule for 'Makefile'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.o'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.c'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.cc'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.C'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.cpp'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.p'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.f'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.F'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.m'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.r'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.s'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.S'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.mod'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.sh'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile,v'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'RCS/Makefile,v'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'RCS/Makefile'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 's.Makefile'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'SCCS/s.Makefile'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.o'.
+  Looking for a rule with intermediate file 'Makefile.o'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.c'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.ll12'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.S'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.cc'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.C'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.cpp'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.p'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.f'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.F'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.m'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.r'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.s'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.mod'.
+   Trying pattern rule with stem 'Makefile.o'.
+   Trying implicit prerequisite 'Makefile.o,v'.
+   Trying pattern rule with stem 'Makefile.o'.
+   Trying implicit prerequisite 'RCS/Makefile.o,v'.
+   Trying pattern rule with stem 'Makefile.o'.
+   Trying implicit prerequisite 'RCS/Makefile.o'.
+   Trying pattern rule with stem 'Makefile.o'.
+   Trying implicit prerequisite 's.Makefile.o'.
+   Trying pattern rule with stem 'Makefile.o'.
+   Trying implicit prerequisite 'SCCS/s.Makefile.o'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.c'.
+   Looking for a rule with intermediate file 'Makefile.c'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.y'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.l'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.w'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.w'.
+    Trying pattern rule with stem 'Makefile.c'.
+    Trying implicit prerequisite 'Makefile.c,v'.
+    Trying pattern rule with stem 'Makefile.c'.
+    Trying implicit prerequisite 'RCS/Makefile.c,v'.
+    Trying pattern rule with stem 'Makefile.c'.
+    Trying implicit prerequisite 'RCS/Makefile.c'.
+    Trying pattern rule with stem 'Makefile.c'.
+    Trying implicit prerequisite 's.Makefile.c'.
+    Trying pattern rule with stem 'Makefile.c'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.c'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.y'.
+    Looking for a rule with intermediate file 'Makefile.y'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.y'.
+     Trying implicit prerequisite 'Makefile.y,v'.
+     Trying pattern rule with stem 'Makefile.y'.
+     Trying implicit prerequisite 'RCS/Makefile.y,v'.
+     Trying pattern rule with stem 'Makefile.y'.
+     Trying implicit prerequisite 'RCS/Makefile.y'.
+     Trying pattern rule with stem 'Makefile.y'.
+     Trying implicit prerequisite 's.Makefile.y'.
+     Trying pattern rule with stem 'Makefile.y'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.y'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.l'.
+    Looking for a rule with intermediate file 'Makefile.l'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.l'.
+     Trying implicit prerequisite 'Makefile.l,v'.
+     Trying pattern rule with stem 'Makefile.l'.
+     Trying implicit prerequisite 'RCS/Makefile.l,v'.
+     Trying pattern rule with stem 'Makefile.l'.
+     Trying implicit prerequisite 'RCS/Makefile.l'.
+     Trying pattern rule with stem 'Makefile.l'.
+     Trying implicit prerequisite 's.Makefile.l'.
+     Trying pattern rule with stem 'Makefile.l'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.l'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.w'.
+    Looking for a rule with intermediate file 'Makefile.w'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.w'.
+     Trying implicit prerequisite 'Makefile.w,v'.
+     Trying pattern rule with stem 'Makefile.w'.
+     Trying implicit prerequisite 'RCS/Makefile.w,v'.
+     Trying pattern rule with stem 'Makefile.w'.
+     Trying implicit prerequisite 'RCS/Makefile.w'.
+     Trying pattern rule with stem 'Makefile.w'.
+     Trying implicit prerequisite 's.Makefile.w'.
+     Trying pattern rule with stem 'Makefile.w'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.w'.
+    Trying pattern rule with stem 'Makefile'.
+    Rejecting impossible implicit prerequisite 'Makefile.w'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.ll12'.
+   Looking for a rule with intermediate file 'Makefile.ll12'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.ll'.
+    Trying pattern rule with stem 'Makefile.ll12'.
+    Trying implicit prerequisite 'Makefile.ll12,v'.
+    Trying pattern rule with stem 'Makefile.ll12'.
+    Trying implicit prerequisite 'RCS/Makefile.ll12,v'.
+    Trying pattern rule with stem 'Makefile.ll12'.
+    Trying implicit prerequisite 'RCS/Makefile.ll12'.
+    Trying pattern rule with stem 'Makefile.ll12'.
+    Trying implicit prerequisite 's.Makefile.ll12'.
+    Trying pattern rule with stem 'Makefile.ll12'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.ll12'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.ll'.
+    Looking for a rule with intermediate file 'Makefile.ll'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile'.
+     Trying implicit prerequisite 'Makefile.ll.mlir'.
+     Trying pattern rule with stem 'Makefile.ll'.
+     Trying implicit prerequisite 'Makefile.ll,v'.
+     Trying pattern rule with stem 'Makefile.ll'.
+     Trying implicit prerequisite 'RCS/Makefile.ll,v'.
+     Trying pattern rule with stem 'Makefile.ll'.
+     Trying implicit prerequisite 'RCS/Makefile.ll'.
+     Trying pattern rule with stem 'Makefile.ll'.
+     Trying implicit prerequisite 's.Makefile.ll'.
+     Trying pattern rule with stem 'Makefile.ll'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.ll'.
+     Trying pattern rule with stem 'Makefile'.
+     Trying implicit prerequisite 'Makefile.ll.mlir'.
+     Looking for a rule with intermediate file 'Makefile.ll.mlir'.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'Makefile'.
+      Trying implicit prerequisite 'Makefile.mlir'.
+      Trying pattern rule with stem 'Makefile.ll.mlir'.
+      Trying implicit prerequisite 'Makefile.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.ll.mlir'.
+      Trying implicit prerequisite 'RCS/Makefile.ll.mlir,v'.
+      Trying pattern rule with stem 'Makefile.ll.mlir'.
+      Trying implicit prerequisite 'RCS/Makefile.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.ll.mlir'.
+      Trying implicit prerequisite 's.Makefile.ll.mlir'.
+      Trying pattern rule with stem 'Makefile.ll.mlir'.
+      Trying implicit prerequisite 'SCCS/s.Makefile.ll.mlir'.
+      Trying pattern rule with stem 'Makefile'.
+      Trying implicit prerequisite 'Makefile.mlir'.
+      Looking for a rule with intermediate file 'Makefile.mlir'.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Avoiding implicit rule recursion.
+       Trying pattern rule with stem 'Makefile.mlir'.
+       Trying implicit prerequisite 'Makefile.mlir,v'.
+       Trying pattern rule with stem 'Makefile.mlir'.
+       Trying implicit prerequisite 'RCS/Makefile.mlir,v'.
+       Trying pattern rule with stem 'Makefile.mlir'.
+       Trying implicit prerequisite 'RCS/Makefile.mlir'.
+       Trying pattern rule with stem 'Makefile.mlir'.
+       Trying implicit prerequisite 's.Makefile.mlir'.
+       Trying pattern rule with stem 'Makefile.mlir'.
+       Trying implicit prerequisite 'SCCS/s.Makefile.mlir'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.S'.
+   Looking for a rule with intermediate file 'Makefile.S'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile'.
+    Rejecting impossible implicit prerequisite 'Makefile.c'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.S.txt'.
+    Trying pattern rule with stem 'Makefile.S'.
+    Trying implicit prerequisite 'Makefile.S,v'.
+    Trying pattern rule with stem 'Makefile.S'.
+    Trying implicit prerequisite 'RCS/Makefile.S,v'.
+    Trying pattern rule with stem 'Makefile.S'.
+    Trying implicit prerequisite 'RCS/Makefile.S'.
+    Trying pattern rule with stem 'Makefile.S'.
+    Trying implicit prerequisite 's.Makefile.S'.
+    Trying pattern rule with stem 'Makefile.S'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.S'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.xdsl.mlir'.
+    Looking for a rule with intermediate file 'Makefile.xdsl.mlir'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.xdsl.mlir'.
+     Trying implicit prerequisite 'Makefile.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.xdsl.mlir'.
+     Trying implicit prerequisite 'RCS/Makefile.xdsl.mlir,v'.
+     Trying pattern rule with stem 'Makefile.xdsl.mlir'.
+     Trying implicit prerequisite 'RCS/Makefile.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.xdsl.mlir'.
+     Trying implicit prerequisite 's.Makefile.xdsl.mlir'.
+     Trying pattern rule with stem 'Makefile.xdsl.mlir'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.xdsl.mlir'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.S.txt'.
+    Looking for a rule with intermediate file 'Makefile.S.txt'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.S.txt'.
+     Trying implicit prerequisite 'Makefile.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.S.txt'.
+     Trying implicit prerequisite 'RCS/Makefile.S.txt,v'.
+     Trying pattern rule with stem 'Makefile.S.txt'.
+     Trying implicit prerequisite 'RCS/Makefile.S.txt'.
+     Trying pattern rule with stem 'Makefile.S.txt'.
+     Trying implicit prerequisite 's.Makefile.S.txt'.
+     Trying pattern rule with stem 'Makefile.S.txt'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.S.txt'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.cc'.
+   Looking for a rule with intermediate file 'Makefile.cc'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.cc'.
+    Trying implicit prerequisite 'Makefile.cc,v'.
+    Trying pattern rule with stem 'Makefile.cc'.
+    Trying implicit prerequisite 'RCS/Makefile.cc,v'.
+    Trying pattern rule with stem 'Makefile.cc'.
+    Trying implicit prerequisite 'RCS/Makefile.cc'.
+    Trying pattern rule with stem 'Makefile.cc'.
+    Trying implicit prerequisite 's.Makefile.cc'.
+    Trying pattern rule with stem 'Makefile.cc'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.cc'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.C'.
+   Looking for a rule with intermediate file 'Makefile.C'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.C'.
+    Trying implicit prerequisite 'Makefile.C,v'.
+    Trying pattern rule with stem 'Makefile.C'.
+    Trying implicit prerequisite 'RCS/Makefile.C,v'.
+    Trying pattern rule with stem 'Makefile.C'.
+    Trying implicit prerequisite 'RCS/Makefile.C'.
+    Trying pattern rule with stem 'Makefile.C'.
+    Trying implicit prerequisite 's.Makefile.C'.
+    Trying pattern rule with stem 'Makefile.C'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.C'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.cpp'.
+   Looking for a rule with intermediate file 'Makefile.cpp'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.cpp'.
+    Trying implicit prerequisite 'Makefile.cpp,v'.
+    Trying pattern rule with stem 'Makefile.cpp'.
+    Trying implicit prerequisite 'RCS/Makefile.cpp,v'.
+    Trying pattern rule with stem 'Makefile.cpp'.
+    Trying implicit prerequisite 'RCS/Makefile.cpp'.
+    Trying pattern rule with stem 'Makefile.cpp'.
+    Trying implicit prerequisite 's.Makefile.cpp'.
+    Trying pattern rule with stem 'Makefile.cpp'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.cpp'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.p'.
+   Looking for a rule with intermediate file 'Makefile.p'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.web'.
+    Trying pattern rule with stem 'Makefile.p'.
+    Trying implicit prerequisite 'Makefile.p,v'.
+    Trying pattern rule with stem 'Makefile.p'.
+    Trying implicit prerequisite 'RCS/Makefile.p,v'.
+    Trying pattern rule with stem 'Makefile.p'.
+    Trying implicit prerequisite 'RCS/Makefile.p'.
+    Trying pattern rule with stem 'Makefile.p'.
+    Trying implicit prerequisite 's.Makefile.p'.
+    Trying pattern rule with stem 'Makefile.p'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.p'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.web'.
+    Looking for a rule with intermediate file 'Makefile.web'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.web'.
+     Trying implicit prerequisite 'Makefile.web,v'.
+     Trying pattern rule with stem 'Makefile.web'.
+     Trying implicit prerequisite 'RCS/Makefile.web,v'.
+     Trying pattern rule with stem 'Makefile.web'.
+     Trying implicit prerequisite 'RCS/Makefile.web'.
+     Trying pattern rule with stem 'Makefile.web'.
+     Trying implicit prerequisite 's.Makefile.web'.
+     Trying pattern rule with stem 'Makefile.web'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.web'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.f'.
+   Looking for a rule with intermediate file 'Makefile.f'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.F'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.r'.
+    Trying pattern rule with stem 'Makefile.f'.
+    Trying implicit prerequisite 'Makefile.f,v'.
+    Trying pattern rule with stem 'Makefile.f'.
+    Trying implicit prerequisite 'RCS/Makefile.f,v'.
+    Trying pattern rule with stem 'Makefile.f'.
+    Trying implicit prerequisite 'RCS/Makefile.f'.
+    Trying pattern rule with stem 'Makefile.f'.
+    Trying implicit prerequisite 's.Makefile.f'.
+    Trying pattern rule with stem 'Makefile.f'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.f'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.F'.
+    Looking for a rule with intermediate file 'Makefile.F'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.F'.
+     Trying implicit prerequisite 'Makefile.F,v'.
+     Trying pattern rule with stem 'Makefile.F'.
+     Trying implicit prerequisite 'RCS/Makefile.F,v'.
+     Trying pattern rule with stem 'Makefile.F'.
+     Trying implicit prerequisite 'RCS/Makefile.F'.
+     Trying pattern rule with stem 'Makefile.F'.
+     Trying implicit prerequisite 's.Makefile.F'.
+     Trying pattern rule with stem 'Makefile.F'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.F'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.r'.
+    Looking for a rule with intermediate file 'Makefile.r'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile'.
+     Rejecting impossible implicit prerequisite 'Makefile.l'.
+     Trying pattern rule with stem 'Makefile.r'.
+     Trying implicit prerequisite 'Makefile.r,v'.
+     Trying pattern rule with stem 'Makefile.r'.
+     Trying implicit prerequisite 'RCS/Makefile.r,v'.
+     Trying pattern rule with stem 'Makefile.r'.
+     Trying implicit prerequisite 'RCS/Makefile.r'.
+     Trying pattern rule with stem 'Makefile.r'.
+     Trying implicit prerequisite 's.Makefile.r'.
+     Trying pattern rule with stem 'Makefile.r'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.r'.
+   Trying pattern rule with stem 'Makefile'.
+   Rejecting impossible implicit prerequisite 'Makefile.F'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.m'.
+   Looking for a rule with intermediate file 'Makefile.m'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.ym'.
+    Trying pattern rule with stem 'Makefile.m'.
+    Trying implicit prerequisite 'Makefile.m,v'.
+    Trying pattern rule with stem 'Makefile.m'.
+    Trying implicit prerequisite 'RCS/Makefile.m,v'.
+    Trying pattern rule with stem 'Makefile.m'.
+    Trying implicit prerequisite 'RCS/Makefile.m'.
+    Trying pattern rule with stem 'Makefile.m'.
+    Trying implicit prerequisite 's.Makefile.m'.
+    Trying pattern rule with stem 'Makefile.m'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.m'.
+    Trying pattern rule with stem 'Makefile'.
+    Trying implicit prerequisite 'Makefile.ym'.
+    Looking for a rule with intermediate file 'Makefile.ym'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'Makefile.ym'.
+     Trying implicit prerequisite 'Makefile.ym,v'.
+     Trying pattern rule with stem 'Makefile.ym'.
+     Trying implicit prerequisite 'RCS/Makefile.ym,v'.
+     Trying pattern rule with stem 'Makefile.ym'.
+     Trying implicit prerequisite 'RCS/Makefile.ym'.
+     Trying pattern rule with stem 'Makefile.ym'.
+     Trying implicit prerequisite 's.Makefile.ym'.
+     Trying pattern rule with stem 'Makefile.ym'.
+     Trying implicit prerequisite 'SCCS/s.Makefile.ym'.
+   Trying pattern rule with stem 'Makefile'.
+   Rejecting impossible implicit prerequisite 'Makefile.r'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.s'.
+   Looking for a rule with intermediate file 'Makefile.s'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile'.
+    Rejecting impossible implicit prerequisite 'Makefile.S'.
+    Trying pattern rule with stem 'Makefile.s'.
+    Trying implicit prerequisite 'Makefile.s,v'.
+    Trying pattern rule with stem 'Makefile.s'.
+    Trying implicit prerequisite 'RCS/Makefile.s,v'.
+    Trying pattern rule with stem 'Makefile.s'.
+    Trying implicit prerequisite 'RCS/Makefile.s'.
+    Trying pattern rule with stem 'Makefile.s'.
+    Trying implicit prerequisite 's.Makefile.s'.
+    Trying pattern rule with stem 'Makefile.s'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.s'.
+   Trying pattern rule with stem 'Makefile'.
+   Trying implicit prerequisite 'Makefile.mod'.
+   Looking for a rule with intermediate file 'Makefile.mod'.
+    Avoiding implicit rule recursion.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'Makefile.mod'.
+    Trying implicit prerequisite 'Makefile.mod,v'.
+    Trying pattern rule with stem 'Makefile.mod'.
+    Trying implicit prerequisite 'RCS/Makefile.mod,v'.
+    Trying pattern rule with stem 'Makefile.mod'.
+    Trying implicit prerequisite 'RCS/Makefile.mod'.
+    Trying pattern rule with stem 'Makefile.mod'.
+    Trying implicit prerequisite 's.Makefile.mod'.
+    Trying pattern rule with stem 'Makefile.mod'.
+    Trying implicit prerequisite 'SCCS/s.Makefile.mod'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.c'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.cc'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.C'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.cpp'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.p'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.f'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.F'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.m'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.r'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.s'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.S'.
+  Trying pattern rule with stem 'Makefile'.
+  Rejecting impossible implicit prerequisite 'Makefile.mod'.
+  Trying pattern rule with stem 'Makefile'.
+  Trying implicit prerequisite 'Makefile.sh'.
+  Looking for a rule with intermediate file 'Makefile.sh'.
+   Avoiding implicit rule recursion.
+   Trying pattern rule with stem 'Makefile.sh'.
+   Trying implicit prerequisite 'Makefile.sh,v'.
+   Trying pattern rule with stem 'Makefile.sh'.
+   Trying implicit prerequisite 'RCS/Makefile.sh,v'.
+   Trying pattern rule with stem 'Makefile.sh'.
+   Trying implicit prerequisite 'RCS/Makefile.sh'.
+   Trying pattern rule with stem 'Makefile.sh'.
+   Trying implicit prerequisite 's.Makefile.sh'.
+   Trying pattern rule with stem 'Makefile.sh'.
+   Trying implicit prerequisite 'SCCS/s.Makefile.sh'.
+  No implicit rule found for 'Makefile'.
+  Finished prerequisites of target file 'Makefile'.
+ No need to remake target 'Makefile'.
+Updating goal targets....
+Considering target file 'relu/16x16xf64/linalg.x'.
+ File 'relu/16x16xf64/linalg.x' does not exist.
+ Looking for an implicit rule for 'relu/16x16xf64/linalg.x'.
+ Trying pattern rule with stem 'linalg'.
+ Trying implicit prerequisite 'relu/16x16xf64/linalg.o'.
+ Trying rule prerequisite 'relu/16x16xf64/data.o'.
+ Found an implicit rule for 'relu/16x16xf64/linalg.x'.
+  Considering target file 'relu/16x16xf64/linalg.o'.
+   Looking for an implicit rule for 'relu/16x16xf64/linalg.o'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.c'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.ll12'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.S'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.cc'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.C'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.cpp'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.p'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.f'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.F'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.m'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.r'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.s'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.mod'.
+   Trying pattern rule with stem 'linalg.o'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.o,v'.
+   Trying pattern rule with stem 'linalg.o'.
+   Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.o,v'.
+   Trying pattern rule with stem 'linalg.o'.
+   Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.o'.
+   Trying pattern rule with stem 'linalg.o'.
+   Trying implicit prerequisite 'relu/16x16xf64/s.linalg.o'.
+   Trying pattern rule with stem 'linalg.o'.
+   Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.o'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.c'.
+   Looking for a rule with intermediate file 'relu/16x16xf64/linalg.c'.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.y'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.l'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.w'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.w'.
+    Trying pattern rule with stem 'linalg.c'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.c,v'.
+    Trying pattern rule with stem 'linalg.c'.
+    Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.c,v'.
+    Trying pattern rule with stem 'linalg.c'.
+    Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.c'.
+    Trying pattern rule with stem 'linalg.c'.
+    Trying implicit prerequisite 'relu/16x16xf64/s.linalg.c'.
+    Trying pattern rule with stem 'linalg.c'.
+    Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.c'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.y'.
+    Looking for a rule with intermediate file 'relu/16x16xf64/linalg.y'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'linalg.y'.
+     Trying implicit prerequisite 'relu/16x16xf64/linalg.y,v'.
+     Trying pattern rule with stem 'linalg.y'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.y,v'.
+     Trying pattern rule with stem 'linalg.y'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.y'.
+     Trying pattern rule with stem 'linalg.y'.
+     Trying implicit prerequisite 'relu/16x16xf64/s.linalg.y'.
+     Trying pattern rule with stem 'linalg.y'.
+     Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.y'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.l'.
+    Looking for a rule with intermediate file 'relu/16x16xf64/linalg.l'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'linalg.l'.
+     Trying implicit prerequisite 'relu/16x16xf64/linalg.l,v'.
+     Trying pattern rule with stem 'linalg.l'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.l,v'.
+     Trying pattern rule with stem 'linalg.l'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.l'.
+     Trying pattern rule with stem 'linalg.l'.
+     Trying implicit prerequisite 'relu/16x16xf64/s.linalg.l'.
+     Trying pattern rule with stem 'linalg.l'.
+     Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.l'.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.w'.
+    Looking for a rule with intermediate file 'relu/16x16xf64/linalg.w'.
+     Avoiding implicit rule recursion.
+     Avoiding implicit rule recursion.
+     Trying pattern rule with stem 'linalg.w'.
+     Trying implicit prerequisite 'relu/16x16xf64/linalg.w,v'.
+     Trying pattern rule with stem 'linalg.w'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.w,v'.
+     Trying pattern rule with stem 'linalg.w'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.w'.
+     Trying pattern rule with stem 'linalg.w'.
+     Trying implicit prerequisite 'relu/16x16xf64/s.linalg.w'.
+     Trying pattern rule with stem 'linalg.w'.
+     Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.w'.
+    Trying pattern rule with stem 'linalg'.
+    Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.w'.
+   Trying pattern rule with stem 'linalg'.
+   Trying implicit prerequisite 'relu/16x16xf64/linalg.ll12'.
+   Looking for a rule with intermediate file 'relu/16x16xf64/linalg.ll12'.
+    Avoiding implicit rule recursion.
+    Trying pattern rule with stem 'linalg'.
+    Trying implicit prerequisite 'relu/16x16xf64/linalg.ll'.
+   Found an implicit rule for 'relu/16x16xf64/linalg.o'.
+     Considering target file 'relu/16x16xf64/linalg.ll'.
+      Looking for an implicit rule for 'relu/16x16xf64/linalg.ll'.
+      Trying pattern rule with stem 'linalg'.
+      Trying implicit prerequisite 'relu/16x16xf64/linalg.ll.mlir'.
+      Found an implicit rule for 'relu/16x16xf64/linalg.ll'.
+       Considering target file 'relu/16x16xf64/linalg.ll.mlir'.
+        Looking for an implicit rule for 'relu/16x16xf64/linalg.ll.mlir'.
+        Trying pattern rule with stem 'linalg'.
+        Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir'.
+        Found an implicit rule for 'relu/16x16xf64/linalg.ll.mlir'.
+         Considering target file 'relu/16x16xf64/linalg.mlir'.
+          Looking for an implicit rule for 'relu/16x16xf64/linalg.mlir'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.o'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.c'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cc'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.C'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cpp'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.p'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.f'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.m'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.s'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mod'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.sh'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir,v'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir,v'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.o'.
+          Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.o'.
+           Avoiding implicit rule recursion.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.c'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll12'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cc'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.C'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cpp'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.p'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.f'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.m'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.s'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mod'.
+           Trying pattern rule with stem 'linalg.mlir.o'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.o,v'.
+           Trying pattern rule with stem 'linalg.mlir.o'.
+           Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.o,v'.
+           Trying pattern rule with stem 'linalg.mlir.o'.
+           Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.o'.
+           Trying pattern rule with stem 'linalg.mlir.o'.
+           Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.o'.
+           Trying pattern rule with stem 'linalg.mlir.o'.
+           Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.o'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.c'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.c'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.y'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.l'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.w'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.w'.
+            Trying pattern rule with stem 'linalg.mlir.c'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.c,v'.
+            Trying pattern rule with stem 'linalg.mlir.c'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.c,v'.
+            Trying pattern rule with stem 'linalg.mlir.c'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.c'.
+            Trying pattern rule with stem 'linalg.mlir.c'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.c'.
+            Trying pattern rule with stem 'linalg.mlir.c'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.c'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.y'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.y'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.y'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.y,v'.
+             Trying pattern rule with stem 'linalg.mlir.y'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.y,v'.
+             Trying pattern rule with stem 'linalg.mlir.y'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.y'.
+             Trying pattern rule with stem 'linalg.mlir.y'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.y'.
+             Trying pattern rule with stem 'linalg.mlir.y'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.y'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.l'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.l'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.l'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.l,v'.
+             Trying pattern rule with stem 'linalg.mlir.l'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.l,v'.
+             Trying pattern rule with stem 'linalg.mlir.l'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.l'.
+             Trying pattern rule with stem 'linalg.mlir.l'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.l'.
+             Trying pattern rule with stem 'linalg.mlir.l'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.l'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.w'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.w'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.w'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.w,v'.
+             Trying pattern rule with stem 'linalg.mlir.w'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.w,v'.
+             Trying pattern rule with stem 'linalg.mlir.w'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.w'.
+             Trying pattern rule with stem 'linalg.mlir.w'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.w'.
+             Trying pattern rule with stem 'linalg.mlir.w'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.w'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.w'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll12'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.ll12'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll'.
+            Trying pattern rule with stem 'linalg.mlir.ll12'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll12,v'.
+            Trying pattern rule with stem 'linalg.mlir.ll12'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll12,v'.
+            Trying pattern rule with stem 'linalg.mlir.ll12'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll12'.
+            Trying pattern rule with stem 'linalg.mlir.ll12'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.ll12'.
+            Trying pattern rule with stem 'linalg.mlir.ll12'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.ll12'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.ll'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll.mlir'.
+             Trying pattern rule with stem 'linalg.mlir.ll'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll,v'.
+             Trying pattern rule with stem 'linalg.mlir.ll'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll,v'.
+             Trying pattern rule with stem 'linalg.mlir.ll'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll'.
+             Trying pattern rule with stem 'linalg.mlir.ll'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.ll'.
+             Trying pattern rule with stem 'linalg.mlir.ll'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.ll'.
+             Trying pattern rule with stem 'linalg.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll.mlir'.
+             Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.ll.mlir'.
+              Avoiding implicit rule recursion.
+              Avoiding implicit rule recursion.
+              Avoiding implicit rule recursion.
+              Avoiding implicit rule recursion.
+              Trying pattern rule with stem 'linalg.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mlir'.
+              Trying pattern rule with stem 'linalg.mlir.ll.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ll.mlir,v'.
+              Trying pattern rule with stem 'linalg.mlir.ll.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll.mlir,v'.
+              Trying pattern rule with stem 'linalg.mlir.ll.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ll.mlir'.
+              Trying pattern rule with stem 'linalg.mlir.ll.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.ll.mlir'.
+              Trying pattern rule with stem 'linalg.mlir.ll.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.ll.mlir'.
+              Trying pattern rule with stem 'linalg.mlir'.
+              Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mlir'.
+              Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.mlir'.
+               Avoiding implicit rule recursion.
+               Avoiding implicit rule recursion.
+               Avoiding implicit rule recursion.
+               Avoiding implicit rule recursion.
+               Avoiding implicit rule recursion.
+               Trying pattern rule with stem 'linalg.mlir.mlir'.
+               Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mlir,v'.
+               Trying pattern rule with stem 'linalg.mlir.mlir'.
+               Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.mlir,v'.
+               Trying pattern rule with stem 'linalg.mlir.mlir'.
+               Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.mlir'.
+               Trying pattern rule with stem 'linalg.mlir.mlir'.
+               Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.mlir'.
+               Trying pattern rule with stem 'linalg.mlir.mlir'.
+               Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.mlir'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.S'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.xdsl.mlir'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.c'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S.txt'.
+            Trying pattern rule with stem 'linalg.mlir.S'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S,v'.
+            Trying pattern rule with stem 'linalg.mlir.S'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.S,v'.
+            Trying pattern rule with stem 'linalg.mlir.S'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.S'.
+            Trying pattern rule with stem 'linalg.mlir.S'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.S'.
+            Trying pattern rule with stem 'linalg.mlir.S'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.S'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.xdsl.mlir'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.xdsl.mlir'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.xdsl.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.xdsl.mlir,v'.
+             Trying pattern rule with stem 'linalg.mlir.xdsl.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.xdsl.mlir,v'.
+             Trying pattern rule with stem 'linalg.mlir.xdsl.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.xdsl.mlir'.
+             Trying pattern rule with stem 'linalg.mlir.xdsl.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.xdsl.mlir'.
+             Trying pattern rule with stem 'linalg.mlir.xdsl.mlir'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.xdsl.mlir'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S.txt'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.S.txt'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.S.txt'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.S.txt,v'.
+             Trying pattern rule with stem 'linalg.mlir.S.txt'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.S.txt,v'.
+             Trying pattern rule with stem 'linalg.mlir.S.txt'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.S.txt'.
+             Trying pattern rule with stem 'linalg.mlir.S.txt'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.S.txt'.
+             Trying pattern rule with stem 'linalg.mlir.S.txt'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.S.txt'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cc'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.cc'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir.cc'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cc,v'.
+            Trying pattern rule with stem 'linalg.mlir.cc'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.cc,v'.
+            Trying pattern rule with stem 'linalg.mlir.cc'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.cc'.
+            Trying pattern rule with stem 'linalg.mlir.cc'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.cc'.
+            Trying pattern rule with stem 'linalg.mlir.cc'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.cc'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.C'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.C'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir.C'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.C,v'.
+            Trying pattern rule with stem 'linalg.mlir.C'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.C,v'.
+            Trying pattern rule with stem 'linalg.mlir.C'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.C'.
+            Trying pattern rule with stem 'linalg.mlir.C'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.C'.
+            Trying pattern rule with stem 'linalg.mlir.C'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.C'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cpp'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.cpp'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir.cpp'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.cpp,v'.
+            Trying pattern rule with stem 'linalg.mlir.cpp'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.cpp,v'.
+            Trying pattern rule with stem 'linalg.mlir.cpp'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.cpp'.
+            Trying pattern rule with stem 'linalg.mlir.cpp'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.cpp'.
+            Trying pattern rule with stem 'linalg.mlir.cpp'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.cpp'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.p'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.p'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.web'.
+            Trying pattern rule with stem 'linalg.mlir.p'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.p,v'.
+            Trying pattern rule with stem 'linalg.mlir.p'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.p,v'.
+            Trying pattern rule with stem 'linalg.mlir.p'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.p'.
+            Trying pattern rule with stem 'linalg.mlir.p'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.p'.
+            Trying pattern rule with stem 'linalg.mlir.p'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.p'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.web'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.web'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.web'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.web,v'.
+             Trying pattern rule with stem 'linalg.mlir.web'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.web,v'.
+             Trying pattern rule with stem 'linalg.mlir.web'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.web'.
+             Trying pattern rule with stem 'linalg.mlir.web'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.web'.
+             Trying pattern rule with stem 'linalg.mlir.web'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.web'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.f'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.f'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+            Trying pattern rule with stem 'linalg.mlir.f'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.f,v'.
+            Trying pattern rule with stem 'linalg.mlir.f'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.f,v'.
+            Trying pattern rule with stem 'linalg.mlir.f'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.f'.
+            Trying pattern rule with stem 'linalg.mlir.f'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.f'.
+            Trying pattern rule with stem 'linalg.mlir.f'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.f'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.F'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.F'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.F,v'.
+             Trying pattern rule with stem 'linalg.mlir.F'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.F,v'.
+             Trying pattern rule with stem 'linalg.mlir.F'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.F'.
+             Trying pattern rule with stem 'linalg.mlir.F'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.F'.
+             Trying pattern rule with stem 'linalg.mlir.F'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.F'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.r'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir'.
+             Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.l'.
+             Trying pattern rule with stem 'linalg.mlir.r'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.r,v'.
+             Trying pattern rule with stem 'linalg.mlir.r'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.r,v'.
+             Trying pattern rule with stem 'linalg.mlir.r'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.r'.
+             Trying pattern rule with stem 'linalg.mlir.r'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.r'.
+             Trying pattern rule with stem 'linalg.mlir.r'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.r'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.m'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.m'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ym'.
+            Trying pattern rule with stem 'linalg.mlir.m'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.m,v'.
+            Trying pattern rule with stem 'linalg.mlir.m'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.m,v'.
+            Trying pattern rule with stem 'linalg.mlir.m'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.m'.
+            Trying pattern rule with stem 'linalg.mlir.m'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.m'.
+            Trying pattern rule with stem 'linalg.mlir.m'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.m'.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ym'.
+            Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.ym'.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Avoiding implicit rule recursion.
+             Trying pattern rule with stem 'linalg.mlir.ym'.
+             Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.ym,v'.
+             Trying pattern rule with stem 'linalg.mlir.ym'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ym,v'.
+             Trying pattern rule with stem 'linalg.mlir.ym'.
+             Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.ym'.
+             Trying pattern rule with stem 'linalg.mlir.ym'.
+             Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.ym'.
+             Trying pattern rule with stem 'linalg.mlir.ym'.
+             Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.ym'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.s'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.s'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir'.
+            Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.S'.
+            Trying pattern rule with stem 'linalg.mlir.s'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.s,v'.
+            Trying pattern rule with stem 'linalg.mlir.s'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.s,v'.
+            Trying pattern rule with stem 'linalg.mlir.s'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.s'.
+            Trying pattern rule with stem 'linalg.mlir.s'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.s'.
+            Trying pattern rule with stem 'linalg.mlir.s'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.s'.
+           Trying pattern rule with stem 'linalg.mlir'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mod'.
+           Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.mod'.
+            Avoiding implicit rule recursion.
+            Avoiding implicit rule recursion.
+            Trying pattern rule with stem 'linalg.mlir.mod'.
+            Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.mod,v'.
+            Trying pattern rule with stem 'linalg.mlir.mod'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.mod,v'.
+            Trying pattern rule with stem 'linalg.mlir.mod'.
+            Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.mod'.
+            Trying pattern rule with stem 'linalg.mlir.mod'.
+            Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.mod'.
+            Trying pattern rule with stem 'linalg.mlir.mod'.
+            Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.mod'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.c'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.cc'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.C'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.cpp'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.p'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.f'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.F'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.m'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.r'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.s'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.S'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Rejecting impossible implicit prerequisite 'relu/16x16xf64/linalg.mlir.mod'.
+          Trying pattern rule with stem 'linalg.mlir'.
+          Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.sh'.
+          Looking for a rule with intermediate file 'relu/16x16xf64/linalg.mlir.sh'.
+           Avoiding implicit rule recursion.
+           Trying pattern rule with stem 'linalg.mlir.sh'.
+           Trying implicit prerequisite 'relu/16x16xf64/linalg.mlir.sh,v'.
+           Trying pattern rule with stem 'linalg.mlir.sh'.
+           Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.sh,v'.
+           Trying pattern rule with stem 'linalg.mlir.sh'.
+           Trying implicit prerequisite 'relu/16x16xf64/RCS/linalg.mlir.sh'.
+           Trying pattern rule with stem 'linalg.mlir.sh'.
+           Trying implicit prerequisite 'relu/16x16xf64/s.linalg.mlir.sh'.
+           Trying pattern rule with stem 'linalg.mlir.sh'.
+           Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.linalg.mlir.sh'.
+          No implicit rule found for 'relu/16x16xf64/linalg.mlir'.
+          Finished prerequisites of target file 'relu/16x16xf64/linalg.mlir'.
+         No need to remake target 'relu/16x16xf64/linalg.mlir'.
+        Finished prerequisites of target file 'relu/16x16xf64/linalg.ll.mlir'.
+        Prerequisite 'relu/16x16xf64/linalg.mlir' is older than target 'relu/16x16xf64/linalg.ll.mlir'.
+       No need to remake target 'relu/16x16xf64/linalg.ll.mlir'.
+      Finished prerequisites of target file 'relu/16x16xf64/linalg.ll'.
+      Prerequisite 'relu/16x16xf64/linalg.ll.mlir' is older than target 'relu/16x16xf64/linalg.ll'.
+     No need to remake target 'relu/16x16xf64/linalg.ll'.
+   Finished prerequisites of target file 'relu/16x16xf64/linalg.o'.
+   Prerequisite 'relu/16x16xf64/linalg.ll12' of target 'relu/16x16xf64/linalg.o' does not exist.
+  No need to remake target 'relu/16x16xf64/linalg.o'.
+  Considering target file 'relu/16x16xf64/data.o'.
+   Looking for an implicit rule for 'relu/16x16xf64/data.o'.
+   Trying pattern rule with stem 'data'.
+   Trying implicit prerequisite 'relu/16x16xf64/data.c'.
+   Found an implicit rule for 'relu/16x16xf64/data.o'.
+    Considering target file 'relu/16x16xf64/data.c'.
+     Looking for an implicit rule for 'relu/16x16xf64/data.c'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.y'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.l'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.w'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.w'.
+     Trying pattern rule with stem 'data.c'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.c,v'.
+     Trying pattern rule with stem 'data.c'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/data.c,v'.
+     Trying pattern rule with stem 'data.c'.
+     Trying implicit prerequisite 'relu/16x16xf64/RCS/data.c'.
+     Trying pattern rule with stem 'data.c'.
+     Trying implicit prerequisite 'relu/16x16xf64/s.data.c'.
+     Trying pattern rule with stem 'data.c'.
+     Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.data.c'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.y'.
+     Looking for a rule with intermediate file 'relu/16x16xf64/data.y'.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'data.y'.
+      Trying implicit prerequisite 'relu/16x16xf64/data.y,v'.
+      Trying pattern rule with stem 'data.y'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.y,v'.
+      Trying pattern rule with stem 'data.y'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.y'.
+      Trying pattern rule with stem 'data.y'.
+      Trying implicit prerequisite 'relu/16x16xf64/s.data.y'.
+      Trying pattern rule with stem 'data.y'.
+      Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.data.y'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.l'.
+     Looking for a rule with intermediate file 'relu/16x16xf64/data.l'.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'data.l'.
+      Trying implicit prerequisite 'relu/16x16xf64/data.l,v'.
+      Trying pattern rule with stem 'data.l'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.l,v'.
+      Trying pattern rule with stem 'data.l'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.l'.
+      Trying pattern rule with stem 'data.l'.
+      Trying implicit prerequisite 'relu/16x16xf64/s.data.l'.
+      Trying pattern rule with stem 'data.l'.
+      Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.data.l'.
+     Trying pattern rule with stem 'data'.
+     Trying implicit prerequisite 'relu/16x16xf64/data.w'.
+     Looking for a rule with intermediate file 'relu/16x16xf64/data.w'.
+      Avoiding implicit rule recursion.
+      Trying pattern rule with stem 'data.w'.
+      Trying implicit prerequisite 'relu/16x16xf64/data.w,v'.
+      Trying pattern rule with stem 'data.w'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.w,v'.
+      Trying pattern rule with stem 'data.w'.
+      Trying implicit prerequisite 'relu/16x16xf64/RCS/data.w'.
+      Trying pattern rule with stem 'data.w'.
+      Trying implicit prerequisite 'relu/16x16xf64/s.data.w'.
+      Trying pattern rule with stem 'data.w'.
+      Trying implicit prerequisite 'relu/16x16xf64/SCCS/s.data.w'.
+     Trying pattern rule with stem 'data'.
+     Rejecting impossible implicit prerequisite 'relu/16x16xf64/data.w'.
+     No implicit rule found for 'relu/16x16xf64/data.c'.
+     Finished prerequisites of target file 'relu/16x16xf64/data.c'.
+    No need to remake target 'relu/16x16xf64/data.c'.
+   Finished prerequisites of target file 'relu/16x16xf64/data.o'.
+   Prerequisite 'relu/16x16xf64/data.c' is older than target 'relu/16x16xf64/data.o'.
+  No need to remake target 'relu/16x16xf64/data.o'.
+ Finished prerequisites of target file 'relu/16x16xf64/linalg.x'.
+Must remake target 'relu/16x16xf64/linalg.x'.
+cd relu/16x16xf64/; /opt/snitch-llvm/bin/riscv32-unknown-elf-clang  -fuse-ld=/opt/snitch-llvm/bin/ld.lld -L/opt/snitch-llvm/lib/clang/12.0.1/lib/ -T/opt/snitch_cluster/sw/snRuntime/base.ld -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build -nostartfiles -nostdlib -lclang_rt.builtins-riscv32 -lc -lsnRuntime linalg.o data.o -o linalg.x
+Putting child 0x5555557edd00 (relu/16x16xf64/linalg.x) PID 9235 on the chain.
+Live child 0x5555557edd00 (relu/16x16xf64/linalg.x) PID 9235 
+Reaping losing child 0x5555557edd00 PID 9235 
+../snitch/Makefile.rules:171: recipe for target 'relu/16x16xf64/linalg.x' failed
+Removing child 0x5555557edd00 PID 9235 from chain.
