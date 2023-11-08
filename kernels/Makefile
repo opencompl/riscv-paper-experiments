@@ -11,5 +11,5 @@ FOLDERS += relu
 
 include ./Makefile.folders
 
-pivoted.csv: cycles.csv
+pivoted.csv: $(CYCLES_CSV)
 	python3 ../scripts/pivot.py
