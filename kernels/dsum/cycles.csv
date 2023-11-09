@@ -1,5 +1,0 @@
-8x16xf32,baseline,1202
-8x16xf32,ssr1d,253
-8x16xf32,snrt,187
-8x16xf32,ssr2d,273
-8x16xf32,linalg,1089

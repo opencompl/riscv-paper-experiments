@@ -27,10 +27,6 @@ CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
 LAST_XDSL_COMMIT := $(shell cat $(XDSL_COMMIT_FILE) 2>/dev/null)
 
 # Rule to update the recorded commit hash in a file
-$(XDSL_COMMIT_FILE): maybe_update_xdsl_commit
-
-
-# Rule to update the recorded commit hash in a file
 maybe_update_xdsl_commit:
 	@if [ "$(CURRENT_XDSL_COMMIT)" != "$(LAST_XDSL_COMMIT)" ]; then \
 		echo $(CURRENT_XDSL_COMMIT) > $(XDSL_COMMIT_FILE); \
@@ -170,24 +166,51 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %.ll: %.ll.mlir
 	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
 
+# Universal rules
+
+%/baseline.x: %/baseline.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/ssr.x: %/ssr.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/ssr_frep.x: %/ssr_frep.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/snrt.x: %/snrt.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/linalg.x: %/linalg.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/linalg_2.x: %/linalg_2.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/snitch_stream.x: %/snitch_stream.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/fused.x: %/fused.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
 # Trace rules
 
-sim_%: %.logs/trace_hart_00000000.dasm
+sim_%: %.logs/logs/trace_hart_00000000.dasm
 	
 
-.PRECIOUS: %.logs/trace_hart_00000000.dasm
-%.logs/trace_hart_00000000.dasm: %
-	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR)
-	cd $(LOG_DIR)
-	$(VLTSIM) ../$<
-	mv logs/* .
-	rm -rf logs
+LOG_DIR = $<.logs
+
+.PRECIOUS: %.logs/logs/trace_hart_00000000.dasm
+%.logs/logs/trace_hart_00000000.dasm: %
+	set -e; \
+	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
+	cd $(LOG_DIR); \
+	$(VLTSIM) ../$(notdir $^); \
 	cd --
 
 %.trace.txt %.trace.json: %.dasm
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
 
-%.csv: %.x.logs/trace_hart_00000000.trace.json
+%.csv: %.x.logs/logs/trace_hart_00000000.trace.json
 	grep -o '"cycles": [0-9]*' $< | cut -d " " -f 2 | sed -n '2p' > $@
 
 define get_trace_targets
