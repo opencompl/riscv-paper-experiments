@@ -1,3 +1,6 @@
+// auto-generated with the following options:
+// --range 0 20 -n 16
+
 #define N 16
 
 const double X[N] = {

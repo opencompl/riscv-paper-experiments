@@ -4,6 +4,7 @@ import numpy as np
 import argparse
 import sys
 import math
+import shlex
 
 C_TYPES = {
     "32": "float",
@@ -102,6 +103,10 @@ if __name__ == "__main__":
     y = softmax(x)
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
+
+    cmdline = " ".join(map(shlex.quote, sys.argv[1:]))
+    print(f"// auto-generated with the following options:\n// {cmdline}\n")
+
     if args.format == "c":
         fmt = array_to_c
         print(f"#define N {n}")
