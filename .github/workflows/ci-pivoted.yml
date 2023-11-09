@@ -14,9 +14,9 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: recursive
-      - name: Run experiments
+      - name: Check pivoted is up to date
         run: cd kernels
-          make pivoted.csv
+          make -q pivoted.csv
       - name: Read CSV
         id: csv
         uses: juliangruber/read-file-action@v1

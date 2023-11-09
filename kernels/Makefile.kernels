@@ -8,8 +8,6 @@ CYCLES_CSV= ${CSV_PREFIX}.csv
 CFLAGS += -std=gnu11
 CFLAGS += -Wall -Wextra
 
-LOG_DIR = $<.logs
-
 .ONESHELL:
 
 %.x: %.o main.o data.o
