@@ -183,7 +183,7 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %/linalg.x: %/linalg.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
-%/linalg_2.x: %/linalg_2.o %/main.o %/data.o
+%/linalg_xdsl.x: %/linalg_xdsl.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 %/snitch_stream.x: %/snitch_stream.o %/main.o %/data.o

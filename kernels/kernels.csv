@@ -5,7 +5,7 @@ dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7075
 dsum,8x16xf32,baseline,1202
 dsum,8x16xf32,linalg,1089
-dsum,8x16xf32,linalg_2,195
+dsum,8x16xf32,linalg_xdsl,195
 dsum,8x16xf32,snrt,187
 dsum,8x16xf32,ssr1d,253
 dsum,8x16xf32,ssr2d,273
