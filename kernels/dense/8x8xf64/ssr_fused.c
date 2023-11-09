@@ -42,15 +42,15 @@ void dense(const double* restrict x, const double* restrict w, const double* res
             register double c asm("ft3") = 0.;
 
             asm volatile(
-                "frep.o  %[nfrep], 1, 0, 0\n"
-                "fmadd.d %[c], ft0, ft1, %[c]\n"
+                "frep.o  %[nfrep], 1, 0, 0       \n\t"
+                "fmadd.d %[c], ft0, ft1, %[c]    \n\t"
                 : [c] "+f"(c)
                 : [nfrep] "r"(K - 1)
                 : "ft0", "ft1", "ft2", "memory");
 
             asm volatile(
-                "fadd.d %[c], ft2,  %[c]\n"
-                "fmax.d %[c], %[c], %[fzero]\n"
+                "fadd.d %[c], ft2,  %[c]         \n\t"
+                "fmax.d %[c], %[c], %[fzero]     \n\t"
                 : [c] "+f"(c)
                 : [fzero] "f"(fzero)
                 : "ft0", "ft1", "ft2", "memory");
