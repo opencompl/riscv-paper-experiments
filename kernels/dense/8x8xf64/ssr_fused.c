@@ -22,7 +22,7 @@ void dense(const double* restrict x, const double* restrict w, const double* res
                      K, N, M,
                      // Strides
                      sizeof(double) * N, sizeof(double), 0);
-    
+
     snrt_ssr_loop_2d(SNRT_SSR_DM2,
                      // Bounds
                      N, M,
@@ -40,17 +40,19 @@ void dense(const double* restrict x, const double* restrict w, const double* res
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
             register double c asm("ft3") = 0.;
-            for (uint32_t k = 0; k < K; ++k) {
-                asm volatile("fmadd.d %[c], ft0, ft1, %[c]"
-                             : [c] "+f"(c)
-                             :
-                             : "ft0", "ft1", "ft2", "memory");
-            }
-            asm volatile("fadd.d %[c], ft2,  %[c]\n"
-                         "fmax.d %[c], %[c], %[fzero]\n"
-                             : [c] "+f"(c)
-                             : [fzero] "f"(fzero)
-                             : "ft0", "ft1", "ft2", "memory");
+            asm volatile(
+                "frep.o  %[nfrep], 1, 0, 0\n"
+                "fmadd.d %[c], ft0, ft1, %[c]\n"
+                : [c] "+f"(c)
+                : [nfrep] "r"(K - 1)
+                : "ft0", "ft1", "ft2", "memory");
+
+            asm volatile(
+                "fadd.d %[c], ft2,  %[c]\n"
+                "fmax.d %[c], %[c], %[fzero]\n"
+                : [c] "+f"(c)
+                : [fzero] "f"(fzero)
+                : "ft0", "ft1", "ft2", "memory");
             y[m * N + n] = c;
         }
     }
