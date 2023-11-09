@@ -42,6 +42,7 @@ DENSE_8_TESTS =
 DENSE_8_TESTS += $(DENSE_8)/baseline.csv
 DENSE_8_TESTS += $(DENSE_8)/fused.csv
 DENSE_8_TESTS += $(DENSE_8)/linalg.csv
+DENSE_8_TESTS += $(DENSE_8)/snrt.csv
 
 $(DENSE_8)/tests.csv: $(DENSE_8_TESTS)
 	./generate_tests_csv.sh $@ $^
