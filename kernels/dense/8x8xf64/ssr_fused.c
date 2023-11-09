@@ -40,12 +40,16 @@ void dense(const double* restrict x, const double* restrict w, const double* res
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
             register double c asm("ft3") = 0.;
-            asm volatile(
-                "frep.o  %[nfrep], 1, 0, 0\n"
-                "fmadd.d %[c], ft0, ft1, %[c]\n"
-                : [c] "+f"(c)
-                : [nfrep] "r"(K - 1)
-                : "ft0", "ft1", "ft2", "memory");
+
+// No need for frep here, we can fully unroll the loop
+// since our trip count is equal to the unroll factor
+#pragma clang loop unroll(full)
+            for (uint32_t k = 0; k < K; ++k) {
+                asm volatile("fmadd.d %[c], ft0, ft1, %[c]"
+                             : [c] "+f"(c)
+                             :
+                             : "ft0", "ft1", "ft2", "memory");
+            }
 
             asm volatile(
                 "fadd.d %[c], ft2,  %[c]\n"
@@ -53,6 +57,7 @@ void dense(const double* restrict x, const double* restrict w, const double* res
                 : [c] "+f"(c)
                 : [fzero] "f"(fzero)
                 : "ft0", "ft1", "ft2", "memory");
+            
             y[m * N + n] = c;
         }
     }
