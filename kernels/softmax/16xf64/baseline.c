@@ -8,7 +8,7 @@
 // Copied from math.h
 double exp(double __x) { return __builtin_exp(__x); }
 #else
-double myexp(double x) {
+double exp(double x) {
     int terms = 75;
     double result = 1.0;
     double term = 1.0;
@@ -34,7 +34,7 @@ void softmax(const double* x, double* y) {
         maxval = fmax(maxval, x[i]);
     }
     for (uint32_t i = 0; i < N; ++i) {
-        y[i] = myexp(x[i] - maxval);
+        y[i] = exp(x[i] - maxval);
         sum += y[i];
     }
     for (uint32_t i = 0; i < N; ++i) {
