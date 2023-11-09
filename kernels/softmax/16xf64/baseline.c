@@ -9,7 +9,7 @@
 double exp(double __x) { return __builtin_exp(__x); }
 #else
 double myexp(double x) {
-    int terms = 10;
+    int terms = 75;
     double result = 1.0;
     double term = 1.0;
     int i;

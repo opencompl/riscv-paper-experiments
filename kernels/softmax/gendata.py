@@ -3,6 +3,7 @@
 import numpy as np
 import argparse
 import sys
+import math
 
 C_TYPES = {
     "32": "float",
@@ -33,18 +34,9 @@ const {type} {symbol}[{shape}] = {{
 """
 
 
-def myexp(x, terms=10):
-    result = np.ones_like(x, dtype=np.float64)
-    term = np.ones_like(x, dtype=np.float64)
-    for i in range(1, terms):
-        term *= x / i
-        result += term
-    return result
-
-
 def softmax(x):
-    # e_x = np.exp(x - np.max(x))  # Subtracting np.max(x) for numerical stability
-    e_x = myexp(x - np.max(x))  # Subtracting np.max(x) for numerical stability
+    # Subtracting np.max(x) for numerical stability
+    e_x = np.vectorize(math.exp)(x - np.max(x))
     return e_x / e_x.sum(axis=0)
 
 
