@@ -13,9 +13,9 @@ static inline void add_f64(double* y, const double* b) __attribute__((always_inl
 
 static inline void relu_f64(double* y) __attribute__((always_inline));
 
-// A[ M x K ] -> ldA = K, non transposed
-// B[ K x N ] -> ldB = N, non transposed
-// C[ M x N ] -> ldC = N
+// A[ M x K ], non transposed
+// B[ K x N ], non transposed
+// C[ M x N ]
 static inline void matmul_f64(double* C, const double* A, const double* B) {
     snrt_ssr_loop_3d(SNRT_SSR_DM0,
                      // Bounds
@@ -37,24 +37,37 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
 
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
     snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, B);
-    // snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_2D, C);
+    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_2D, C);
 
     snrt_ssr_enable();
 
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
-            double c = 0.;
+            register double c asm("ft3") = 0.;
             for (uint32_t k = 0; k < K; ++k) {
                 asm volatile("fmadd.d %[c], ft0, ft1, %[c]"
-                             : [c] "+f"(c)::"ft0", "ft1", "ft2");
+                             : [c] "+f"(c)
+                             :
+                             : "ft0", "ft1", "ft2", "memory");
             }
-            // Note: we are streaming also the stores to C.
-            // Not sure a single fsd (without streaming C) would be much slower
-            // than a single fmv.d. The point is that this form *should* be compatible
-            // with frep.o + frep.i
-            // C[m * /*ldC*/ N + n] = c;
-            // asm volatile("fmv.d ft2, %[c]" : [c] "+f"(c)::"ft0", "ft1", "ft2");
+
+            // FIXME: something's wrong with the output stream to C, verilator
+            // hangs on the first write to ft2. This is being investigated, for
+            // the time being:
             C[m * N + n] = c;
+
+            // Doesn't work:
+            // asm volatile("fmv.d ft2, %[c]"
+            //              :
+            //              : [c] "f"(c)
+            //              : "ft0", "ft1", "ft2", "memory");
+
+            // Doesn't work:
+            // register double fzero asm("ft4") = 0.;
+            // asm volatile("fadd.d ft2, %[c], %[fzero]"
+            //              :
+            //              : [c] "f"(c), [fzero] "f"(fzero)
+            //              : "ft0", "ft1", "ft2", "memory");
         }
     }
 
