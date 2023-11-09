@@ -79,6 +79,9 @@ LDFLAGS += -lsnRuntime
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+%.ll.txt: %.c
+	$(CC) $(CFLAGS) -S -emit-llvm -c $< -o $@
+
 %.ll12: %.ll
 	$(MAKEFILE_RULES_DIRNAME)/tollvm12.py < $< > $@
 
@@ -91,6 +94,8 @@ LDFLAGS += -lsnRuntime
 # XDSL
 
 XDSLOPT_PASSES =
+XDSLOPT_PASSES += convert-linalg-to-stream
+XDSLOPT_PASSES += convert-stream-to-snitch-stream
 XDSLOPT_PASSES += lower-affine
 XDSLOPT_PASSES += convert-func-to-riscv-func
 XDSLOPT_PASSES += convert-memref-to-riscv
@@ -110,6 +115,7 @@ XDSLOPT_PASSES += canonicalize
 XDSLOPT_PASSES += lower-riscv-func
 XDSLOPT_PASSES += lower-riscv-scf-to-labels
 
+
 space := $(null) #
 comma := ,
 XDSLOPT_PASSES_LIST := $(subst $(space),$(comma),$(strip $(XDSLOPT_PASSES)))
@@ -122,6 +128,8 @@ XDSLOPTFLAGS += -t riscv-asm
 
 %.S: %.xdsl.mlir $(XDSL_COMMIT_FILE)
 	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
+
+# cd /src/xdsl; pwd; . ../venv/bin/activate; python -m docs.Toy.toy --emit=snitch-asm $(abspath $<) --ir > $(abspath $@)
 
 %.S: %.c
 	$(CC) $(CFLAGS) -S $< -o $@
@@ -173,6 +181,9 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 %/linalg.x: %/linalg.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/linalg_xdsl.x: %/linalg_xdsl.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 %/snitch_stream.x: %/snitch_stream.o %/main.o %/data.o

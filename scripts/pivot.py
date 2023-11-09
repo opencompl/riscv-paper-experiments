@@ -6,7 +6,7 @@ df["combined"] = df["test"].astype(str) + " " + df["params"]
 
 pivoted = df.pivot(index="combined", columns="impl")["cycles"]
 
-PIVOTED_COLS = set(("linalg", "baseline", "snitch_stream", "snrt"))
+PIVOTED_COLS = set(("linalg", "baseline", "snitch_stream", "snrt", "linalg_xdsl"))
 
 for col in pivoted:
     if col not in PIVOTED_COLS:

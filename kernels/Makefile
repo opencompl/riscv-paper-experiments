@@ -43,6 +43,7 @@ DENSE_8_TESTS =
 DENSE_8_TESTS += $(DENSE_8)/baseline.csv
 DENSE_8_TESTS += $(DENSE_8)/fused.csv
 DENSE_8_TESTS += $(DENSE_8)/linalg.csv
+DENSE_8_TESTS += $(DENSE_8)/snrt.csv
 
 $(DENSE_8)/tests.csv: $(DENSE_8_TESTS)
 	./generate_tests_csv.sh $@ $^
@@ -56,6 +57,7 @@ DSUM_8_16 = dsum/8x16xf32
 DSUM_8_16_TESTS =
 DSUM_8_16_TESTS += $(DSUM_8_16)/baseline.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/linalg.csv
+DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_xdsl.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv

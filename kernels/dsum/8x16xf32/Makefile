@@ -8,5 +8,7 @@ TESTS += ssr1d.x
 TESTS += snrt.x
 TESTS += ssr2d.x
 TESTS += linalg.x
+TESTS += linalg_xdsl.x
+TESTS += scf.x
 
 include ../../Makefile.kernels
