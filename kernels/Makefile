@@ -17,6 +17,7 @@ FOLDERS += matmul
 FOLDERS += pooling_nchw_max_d1_s2_3x3
 FOLDERS += pooling_nchw_sum_d1_s2_3x3
 FOLDERS += relu
+FOLDERS += softmax
 
 kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
 	./generate_params_csv.sh $@ $(addprefix ./, $^)
@@ -105,7 +106,6 @@ pooling_nchw_sum_d1_s2_3x3/params.csv: $(SUM_POOL_16)/tests.csv
 	./generate_params_csv.sh $@ $^
 
 
-
 RELU_16 = relu/16x16xf64
 
 RELU_16_TESTS =
@@ -132,4 +132,16 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 	./generate_tests_csv.sh $@ $^
 
 fill/params.csv: $(FILL_16)/tests.csv
+	./generate_params_csv.sh $@ $^
+
+
+SOFTMAX_16 = softmax/16xf64
+
+SOFTMAX_16_TESTS =
+SOFTMAX_16_TESTS += $(SOFTMAX_16)/baseline.csv
+
+$(SOFTMAX_16)/tests.csv: $(SOFTMAX_16_TESTS)
+	./generate_tests_csv.sh $@ $^
+
+softmax/params.csv: $(SOFTMAX_16)/tests.csv
 	./generate_params_csv.sh $@ $^

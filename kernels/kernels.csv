@@ -22,3 +22,4 @@ relu,16x16xf64,ssr_frep,327
 relu,16x16xf64,snrt,334
 relu,16x16xf64,linalg,1337
 relu,16x16xf64,snitch_stream,322
+softmax,16xf64,baseline,1806
