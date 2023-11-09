@@ -29,15 +29,15 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
                      // Strides
                      sizeof(double) * N, sizeof(double), 0);
 
-    // snrt_ssr_loop_2d(SNRT_SSR_DM2,
-    //                  // Bounds
-    //                  N, M,
-    //                  // Strides
-    //                  sizeof(double), sizeof(double) * N);
+    snrt_ssr_loop_2d(SNRT_SSR_DM2,
+                     // Bounds
+                     N, M,
+                     // Strides
+                     sizeof(double), sizeof(double) * N);
 
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
     snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, B);
-    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_2D, C);
+    snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_2D, C);
 
     snrt_ssr_enable();
 
@@ -51,23 +51,10 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
                              : "ft0", "ft1", "ft2", "memory");
             }
 
-            // FIXME: something's wrong with the output stream to C, verilator
-            // hangs on the first write to ft2. This is being investigated, for
-            // the time being:
-            C[m * N + n] = c;
-
-            // Doesn't work:
-            // asm volatile("fmv.d ft2, %[c]"
-            //              :
-            //              : [c] "f"(c)
-            //              : "ft0", "ft1", "ft2", "memory");
-
-            // Doesn't work:
-            // register double fzero asm("ft4") = 0.;
-            // asm volatile("fadd.d ft2, %[c], %[fzero]"
-            //              :
-            //              : [c] "f"(c), [fzero] "f"(fzero)
-            //              : "ft0", "ft1", "ft2", "memory");
+            asm volatile("fmv.d ft2, %[c]"
+                         :
+                         : [c] "f"(c)
+                         : "ft0", "ft1", "ft2", "memory");
         }
     }
 
