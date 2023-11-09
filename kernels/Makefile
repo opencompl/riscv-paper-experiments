@@ -55,6 +55,7 @@ DSUM_8_16 = dsum/8x16xf32
 DSUM_8_16_TESTS =
 DSUM_8_16_TESTS += $(DSUM_8_16)/baseline.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/linalg.csv
+DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_2.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv
