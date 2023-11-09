@@ -44,6 +44,8 @@ static inline void matmul_f64(double* C, const double* A, const double* B) {
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
             register double c asm("ft3") = 0.;
+
+#pragma clang loop unroll(full)
             for (uint32_t k = 0; k < K; ++k) {
                 asm volatile("fmadd.d %[c], ft0, ft1, %[c]"
                              : [c] "+f"(c)
