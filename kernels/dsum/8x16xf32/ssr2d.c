@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void ssum(double* x, double* y, double* z) {
+void dsum(double* x, double* y, double* z) {
     const uint32_t m = M;
     const uint32_t n = N;
 
