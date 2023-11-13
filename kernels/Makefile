@@ -76,6 +76,7 @@ MATMUL_8 = matmul/8x8xf64
 MATMUL_8_TESTS =
 MATMUL_8_TESTS += $(MATMUL_8)/baseline.csv
 MATMUL_8_TESTS += $(MATMUL_8)/linalg.csv
+MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
 
 $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
 	./generate_tests_csv.sh $@ $^
