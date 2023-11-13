@@ -1,5 +1,5 @@
 riscv.assembly_section ".text" {
-  riscv.directive ".globl" "relu"
+  riscv.directive ".globl" "dense"
   riscv.directive ".p2align" "2"
 
   // * Inputs:  x[ M x K ]
@@ -20,6 +20,7 @@ riscv.assembly_section ".text" {
     %c0 = riscv.get_register : () -> !riscv.reg<zero>
     %c1 = riscv.li 1 : () -> !riscv.reg<>
     %c8 = riscv.li 8 : () -> !riscv.reg<>
+    %c512 = riscv.li 512 : () -> !riscv.reg<>
 
     %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<ft4>
 
@@ -30,27 +31,35 @@ riscv.assembly_section ".text" {
     %stride_pattern_2 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<8>, #builtin.int<8>], "strides" = [#builtin.int<8>, #builtin.int<64>], "dm" = #builtin.int<2>} : () -> !snitch_stream.stride_pattern_type
 
     %X_stream = "snitch_stream.strided_read"(%X_moved, %stride_pattern_0) {"dm" = #builtin.int<0>, "rank" = #builtin.int<3>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft0>>
-    %W_stream = "snitch_stream.strided_read"(%W_moved, %stride_pattern_1) {"dm" = #builtin.int<1>, "rank" = #builtin.int<3>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft0>>
-    %B_stream = "snitch_stream.strided_read"(%B_moved, %stride_pattern_2) {"dm" = #builtin.int<2>, "rank" = #builtin.int<2>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.writable<!riscv.freg<ft1>>
+    %W_stream = "snitch_stream.strided_read"(%W_moved, %stride_pattern_1) {"dm" = #builtin.int<1>, "rank" = #builtin.int<3>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft1>>
+    %B_stream = "snitch_stream.strided_read"(%B_moved, %stride_pattern_2) {"dm" = #builtin.int<2>, "rank" = #builtin.int<2>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft2>>
 
+    "snitch.ssr_enable"() : () -> ()
 
-    // for (uint32_t m = 0; m < M; ++m) {
-        // for (uint32_t n = 0; n < N; ++n) {
+    riscv_scf.for %y_i : !riscv.reg<> = %c0 to %c512 step %c8 {
+      %c = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
 
-    riscv_scf.for %m = %c0 to %c8 step %c1 {
-      riscv_scf.for %n = %c0 to %c8 step %c1 {
-        %c = riscv.fmv.d %zero_float : !riscv.freg<ft3> -> !riscv.freg<ft4>
+      %x = riscv.get_float_register : () -> !riscv.freg<ft0>
+      %w = riscv.get_float_register : () -> !riscv.freg<ft1>
 
-        "snitch_stream.generic"(%c8, %X_stream, %W_stream, %B_stream) <{"operandSegmentSizes" = array<i32: 1, 3, 0>}> ({
-        ^0(%x : !riscv.freg<ft0>, %w : !riscv.freg<ft1>, %b : !riscv.freg<ft2>):
-          %y = riscv.fmadd.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<ft3>) -> !riscv.freg<ft1>
-          snitch_stream.yield %res : !riscv.freg<ft1>
-        }) : (!riscv.reg<>, !stream.readable<!riscv.freg<ft0>>, !stream.writable<!riscv.freg<ft1>>) -> ()
+      %c7 = riscv.li 7 : () -> !riscv.reg<>
+      riscv_snitch.frep_outer %c7, 0, 0 ({
+        %res = riscv.fmadd.d %x, %w, %c : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
+        riscv_snitch.frep_yield %res : (!riscv.freg<ft3>) -> ()
+      }) : (!riscv.reg<>) -> ()
 
-        riscv_scf.yield
-      }
+      %b = riscv.get_float_register : () -> !riscv.freg<ft2>
+      %y_0 = riscv.fadd.d %b, %c : (!riscv.freg<ft2>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
+      %y_1 = riscv.fmax.d %y_0, %zero_float : (!riscv.freg<ft3>, !riscv.freg<ft4>) -> !riscv.freg<ft3>
+
+      %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+      riscv.fsd %Y_dest, %y_1, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
+
       riscv_scf.yield
     }
+
+    "snitch.ssr_disable"() : () -> ()
+
     riscv_func.return
   }
 }
