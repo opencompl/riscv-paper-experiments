@@ -4,9 +4,9 @@
 
 #include <stdint.h>
 
-// * Inputs:  x[ M x K ]
-// * Weights: y[ K x N ]
-// * Biases:  g[ M x N ]
+// x[ M x K ]
+// y[ K x N ]
+// g[ M x N ]
 void matmul(const double* restrict x, const double* restrict y, double* restrict g) {
     snrt_ssr_loop_3d(SNRT_SSR_DM0,
                      // Bounds
