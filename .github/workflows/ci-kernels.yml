@@ -20,6 +20,7 @@ jobs:
           . venv/bin/activate
           cd xdsl
           pip3 install -r requirements.txt
+          pip3 uninstall wgpu
           lit -v tests/filecheck
       - name: Build and run kernel 'saxpy'
         run: make allrun
