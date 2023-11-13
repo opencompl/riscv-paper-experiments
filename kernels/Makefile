@@ -61,6 +61,7 @@ DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_xdsl.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv
+DSUM_8_16_TESTS += $(DSUM_8_16)/snitch_stream.csv
 
 $(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
 	./generate_tests_csv.sh $@ $^

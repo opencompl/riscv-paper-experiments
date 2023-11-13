@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void dsum(float* x, float* y, float* z) {
+void dsum(double* x, double* y, double* z) {
     const uint32_t niter = M * N;
 
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, niter, sizeof(double));
