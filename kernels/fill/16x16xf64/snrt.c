@@ -17,7 +17,7 @@ void fill(const double x, double* y) {
 
     asm volatile(
         "frep.o  %[nfrep], 1, 0, 0 \n"
-        "fmv.s ft0, %[fval]\n"
+        "fmv.d ft0, %[fval]\n"
         :
         : [nfrep] "r"(niter - 1), [fval] "f"(fval)
         : "ft0", "ft3", "memory");
