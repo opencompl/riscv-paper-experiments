@@ -5,5 +5,6 @@ include ../../../snitch/Makefile.rules
 TESTS =
 TESTS += baseline.x
 TESTS += linalg.x
+TESTS += snrt.x
 
 include ../../Makefile.kernels
