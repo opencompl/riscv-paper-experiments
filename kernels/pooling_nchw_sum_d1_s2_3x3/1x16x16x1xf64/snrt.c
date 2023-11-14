@@ -12,8 +12,6 @@ void pooling_nchw_sum_d1_s2_3x3(const double* x, double* y) {
                      sizeof(double), W * sizeof(double), 2 * sizeof(double),
                      2 * W * sizeof(double));
 
-    // 2 * sizeof(double), 2 * W * sizeof(double));
-
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_4D, x);
 
     snrt_ssr_enable();
