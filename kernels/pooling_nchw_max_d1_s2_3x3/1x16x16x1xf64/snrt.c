@@ -28,7 +28,7 @@ void pooling_nchw_max_d1_s2_3x3(const double* x, double* y) {
                 "fmax.d %[max_value], ft0, %[max_value]    \n\t"
                 : [max_value] "+f"(max_value)
                 : [nfrep] "r"(3 * 3 - 1)
-                : "ft0", "ft3", "memory");
+                : "ft0", "ft1", "ft2", "memory");
 
             // Store the maximum value in the corresponding position in y
             int y_index = (y_row * NEW_W) + y_col;
