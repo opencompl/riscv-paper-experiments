@@ -1,4 +1,4 @@
-func.func public @ssum(%X: memref<8x16xf64>,
+func.func public @dsum(%X: memref<8x16xf64>,
                        %Y: memref<8x16xf64>,
                        %Z: memref<8x16xf64>) -> () {
   "linalg.generic"(%X, %Y, %Z) <{

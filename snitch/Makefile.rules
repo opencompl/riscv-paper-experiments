@@ -174,6 +174,12 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %/ssr.x: %/ssr.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
+%/ssr1d.x: %/ssr1d.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/ssr2d.x: %/ssr2d.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
 %/ssr_frep.x: %/ssr_frep.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 

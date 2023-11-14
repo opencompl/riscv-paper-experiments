@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void ssum(double *x, double *y, double *z);
+void dsum(double *x, double *y, double *z);
 
 int main() {
     // Allocate shared local memory
@@ -29,7 +29,7 @@ int main() {
     if (thiscore != 0) return 0;
 
     (void)snrt_mcycle();
-    ssum(local_x, local_y, local_z);
+    dsum(local_x, local_y, local_z);
     (void)snrt_mcycle();
 
     // Correctness check
