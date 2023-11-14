@@ -10,10 +10,12 @@
 void pooling_nchw_max_d1_s2_3x3(const double* x, double* y) {
     snrt_ssr_loop_4d(SNRT_SSR_DM0,
                      // Bounds
-                     NEW_H, NEW_W, 3, 3,
+                     3, 3, NEW_W, NEW_H,
                      // Strides
-                     2 * W * sizeof(double), 2 * sizeof(double), W * sizeof(double),
-                     sizeof(double));
+                     sizeof(double), W * sizeof(double), 2 * sizeof(double),
+                     2 * W * sizeof(double));
+
+    // 2 * sizeof(double), 2 * W * sizeof(double));
 
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_4D, x);
 
@@ -31,8 +33,7 @@ void pooling_nchw_max_d1_s2_3x3(const double* x, double* y) {
                 : "ft0", "ft1", "ft2", "memory");
 
             // Store the maximum value in the corresponding position in y
-            int y_index = (y_row * NEW_W) + y_col;
-            y[y_index] = max_value;
+            y[y_row * NEW_W + y_col] = max_value;
         }
     }
 
