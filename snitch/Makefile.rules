@@ -141,10 +141,10 @@ XDSLOPTFLAGS += -t riscv-asm
 
 MLIROPTFLAGS =
 MLIROPTFLAGS += -opaque-pointers=0
-MLIROPTFLAGS += --linalg-bufferize
-MLIROPTFLAGS += --empty-tensor-to-alloc-tensor
-MLIROPTFLAGS += --tensor-bufferize
-MLIROPTFLAGS += --func-bufferize
+MLIROPTFLAGS += --linalg-generalize-named-ops
+MLIROPTFLAGS += --eliminate-empty-tensors
+MLIROPTFLAGS += -empty-tensor-to-alloc-tensor
+MLIROPTFLAGS += --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
 MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --convert-linalg-to-loops
 MLIROPTFLAGS += --lower-affine

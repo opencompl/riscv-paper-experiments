@@ -19,7 +19,7 @@ fill,16x16xf64,linalg,370
 fill,16x16xf64,snitch_stream,296
 fill,16x16xf64,snrt,299
 matmul,8x8xf64,baseline,4230
-matmul,8x8xf64,linalg,6214
+matmul,8x8xf64,linalg,6220
 matmul,8x8xf64,snitch_stream,2339
 matmul,8x8xf64,snrt,2321
 pooling_nchw_max_d1_s2_3x3,1x16x16x1xf64,baseline,1406
@@ -34,6 +34,6 @@ relu,16x16xf64,baseline,1339
 relu,16x16xf64,ssr,846
 relu,16x16xf64,ssr_frep,327
 relu,16x16xf64,snrt,334
-relu,16x16xf64,linalg,1337
+relu,16x16xf64,linalg,1335
 relu,16x16xf64,snitch_stream,322
 softmax,16xf64,baseline,32611
