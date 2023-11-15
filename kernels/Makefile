@@ -29,6 +29,7 @@ CONV_8 = conv2d_d1_s1_3x3/1x8x8x1xf64
 CONV_8_TESTS =
 CONV_8_TESTS += $(CONV_8)/baseline.csv
 CONV_8_TESTS += $(CONV_8)/linalg.csv
+CONV_8_TESTS += $(CONV_8)/snitch_stream.csv
 CONV_8_TESTS += $(CONV_8)/snrt.csv
 
 $(CONV_8)/tests.csv: $(CONV_8_TESTS)
