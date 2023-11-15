@@ -90,6 +90,7 @@ MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x16x16x1xf64
 MAX_POOL_16_TESTS =
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
+MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
 	./generate_tests_csv.sh $@ $^
