@@ -1,5 +1,6 @@
 conv2d_d1_s1_3x3,1x8x8x1xf64,baseline,1850
 conv2d_d1_s1_3x3,1x8x8x1xf64,linalg,3932
+conv2d_d1_s1_3x3,1x8x8x1xf64,snrt,1498
 dense,8x8xf64,baseline,3240
 dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7075
@@ -14,6 +15,7 @@ dsum,8x16xf32,ssr2d,273
 dsum,8x16xf32,snitch_stream,206
 fill,16x16xf64,baseline,370
 fill,16x16xf64,linalg,370
+fill,16x16xf64,snitch_stream,296
 fill,16x16xf64,snrt,299
 matmul,8x8xf64,baseline,4230
 matmul,8x8xf64,linalg,6214
