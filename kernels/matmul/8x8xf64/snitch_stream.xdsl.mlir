@@ -32,18 +32,18 @@ riscv.assembly_section ".text" {
     "snitch.ssr_enable"() : () -> ()
 
     %c7 = riscv.li 7 : () -> !riscv.reg<>
-    riscv_scf.for %y_i : !riscv.reg<> = %c0 to %c512 step %c8 {
-      %y = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
+    riscv_scf.for %g_i : !riscv.reg<> = %c0 to %c512 step %c8 {
+      %g = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
 
       %x = riscv.get_float_register : () -> !riscv.freg<ft0>
-      %w = riscv.get_float_register : () -> !riscv.freg<ft1>
+      %y = riscv.get_float_register : () -> !riscv.freg<ft1>
       riscv_snitch.frep_outer %c7, 0, 0 ({
-        %res = riscv.fmadd.d %x, %w, %y : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
+        %res = riscv.fmadd.d %x, %y, %g : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
         riscv_snitch.frep_yield %res : (!riscv.freg<ft3>) -> ()
       }) : (!riscv.reg<>) -> ()
 
-      %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-      riscv.fsd %Y_dest, %y, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
+      %G_dest = riscv.add %G_moved, %g_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+      riscv.fsd %G_dest, %g, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
 
       riscv_scf.yield
     }
