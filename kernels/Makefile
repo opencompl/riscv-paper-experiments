@@ -104,6 +104,7 @@ SUM_POOL_16 = pooling_nchw_sum_d1_s2_3x3/1x16x16x1xf64
 SUM_POOL_16_TESTS =
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/baseline.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/linalg.csv
+SUM_POOL_16_TESTS += $(SUM_POOL_16)/snrt.csv
 
 $(SUM_POOL_16)/tests.csv: $(SUM_POOL_16_TESTS)
 	./generate_tests_csv.sh $@ $^
