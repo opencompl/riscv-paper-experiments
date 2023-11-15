@@ -135,6 +135,7 @@ FILL_16 = fill/16x16xf64
 FILL_16_TESTS =
 FILL_16_TESTS += $(FILL_16)/baseline.csv
 FILL_16_TESTS += $(FILL_16)/linalg.csv
+FILL_16_TESTS += $(FILL_16)/snitch_stream.csv
 FILL_16_TESTS += $(FILL_16)/snrt.csv
 
 
