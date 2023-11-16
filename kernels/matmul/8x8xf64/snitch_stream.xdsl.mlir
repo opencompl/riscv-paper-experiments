@@ -37,10 +37,10 @@ riscv.assembly_section ".text" {
 
       %x = riscv.get_float_register : () -> !riscv.freg<ft0>
       %y = riscv.get_float_register : () -> !riscv.freg<ft1>
-      riscv_snitch.frep_outer %c7, 0, 0 ({
+      riscv_snitch.frep_outer %c7 {
         %res = riscv.fmadd.d %x, %y, %g : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
-        riscv_snitch.frep_yield %res : (!riscv.freg<ft3>) -> ()
-      }) : (!riscv.reg<>) -> ()
+        riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+      }
 
       %G_dest = riscv.add %G_moved, %g_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
       riscv.fsd %G_dest, %g, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
