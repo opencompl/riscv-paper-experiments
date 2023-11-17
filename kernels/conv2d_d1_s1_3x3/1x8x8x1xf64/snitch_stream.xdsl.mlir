@@ -33,10 +33,10 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
 
       %x = riscv.get_float_register : () -> !riscv.freg<ft0>
       %y = riscv.get_float_register : () -> !riscv.freg<ft1>
-      riscv_snitch.frep_outer %c8, 0, 0 ({
+      riscv_snitch.frep_outer %c8 {
         %res = riscv.fmadd.d %x, %y, %c : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
-        riscv_snitch.frep_yield %res : (!riscv.freg<ft3>) -> ()
-      }) : (!riscv.reg<>) -> ()
+        riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+      }
 
       %Z_dest = riscv.add %Z_moved, %z_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
       riscv.fsd %Z_dest, %c, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()

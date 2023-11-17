@@ -33,10 +33,10 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
       %y = riscv.fmv.d %min_val : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
 
       %x = riscv.get_float_register : () -> !riscv.freg<ft0>
-      riscv_snitch.frep_outer %c8, 0, 0 ({
+      riscv_snitch.frep_outer %c8 {
         %res = riscv.fmax.d %x, %y : (!riscv.freg<ft0>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
-        riscv_snitch.frep_yield %res : (!riscv.freg<ft3>) -> ()
-      }) : (!riscv.reg<>) -> ()
+        riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+      }
 
       %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
       riscv.fsd %Y_dest, %y, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
