@@ -4,7 +4,7 @@ conv2d_d1_s1_3x3,1x8x8x1xf64,snitch_stream,1500
 conv2d_d1_s1_3x3,1x8x8x1xf64,snrt,1498
 dense,8x8xf64,baseline,3240
 dense,8x8xf64,fused,2970
-dense,8x8xf64,linalg,7075
+dense,8x8xf64,linalg,7069
 dense,8x8xf64,snrt,2711
 dense,8x8xf64,snitch_stream,2721
 dsum,8x16xf32,baseline,1202
