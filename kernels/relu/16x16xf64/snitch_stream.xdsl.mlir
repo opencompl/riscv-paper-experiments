@@ -8,15 +8,18 @@ riscv.assembly_section ".text" {
     %zero_int = riscv.get_register : () -> !riscv.reg<zero>
     %zero_float = riscv.fcvt.d.w %zero_int : (!riscv.reg<zero>) -> !riscv.freg<ft3>
 
-    %stride_pattern = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<16>, #builtin.int<16>], "strides" = [#builtin.int<128>, #builtin.int<8>], "dm" = #builtin.int<31>} : () -> !snitch_stream.stride_pattern_type
-    %X_stream = "snitch_stream.strided_read"(%X_moved, %stride_pattern) {"dm" = #builtin.int<0>, "rank" = #builtin.int<2>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft0>>
-    %Y_stream = "snitch_stream.strided_write"(%Y_moved, %stride_pattern) {"dm" = #builtin.int<1>, "rank" = #builtin.int<2>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.writable<!riscv.freg<ft1>>
-    %count = riscv.li 256 : () -> !riscv.reg<>
-    "snitch_stream.generic"(%count, %X_stream, %Y_stream) <{"operandSegmentSizes" = array<i32: 1, 1, 1>}> ({
-    ^0(%x : !riscv.freg<ft0>):
-        %res = riscv.fmax.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<ft3>) -> !riscv.freg<ft1>
-        snitch_stream.yield %res : !riscv.freg<ft1>
-    }) : (!riscv.reg<>, !stream.readable<!riscv.freg<ft0>>, !stream.writable<!riscv.freg<ft1>>) -> ()
+    %stride_pattern = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<16>, #builtin.int<16>], "strides" = [#builtin.int<128>, #builtin.int<8>], "dm" = #builtin.int<31>} : () -> !snitch_stream.stride_pattern_type<2>
+
+    "snitch_stream.streaming_region"(%X_moved, %Y_moved, %stride_pattern) <{"operandSegmentSizes" = array<i32: 1, 1, 1>}> ({
+    ^0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.writable<!riscv.freg<ft1>>):
+      %c255 = riscv.li 255 : () -> !riscv.reg<>
+      riscv_snitch.frep_outer %c255 {
+        %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y = riscv.fmax.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<ft3>) -> !riscv.freg<ft1>
+        riscv_snitch.write %y to %Y_stream : !riscv.freg<ft1>
+      }
+    }) : (!riscv.reg<>, !riscv.reg<>, !snitch_stream.stride_pattern_type<2>) -> ()
+
     riscv_func.return
   }
 }

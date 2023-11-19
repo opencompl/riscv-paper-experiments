@@ -19,32 +19,28 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
 
     %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<ft4>
 
-    %stride_pattern_0 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<3>, #builtin.int<3>, #builtin.int<6>, #builtin.int<6>], "strides" = [#builtin.int<8>, #builtin.int<64>, #builtin.int<8>, #builtin.int<64>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type
-    %stride_pattern_1 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<3>, #builtin.int<3>, #builtin.int<6>, #builtin.int<6>], "strides" = [#builtin.int<8>, #builtin.int<24>, #builtin.int<0>, #builtin.int<0>], "dm" = #builtin.int<1>} : () -> !snitch_stream.stride_pattern_type
+    %stride_pattern_0 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<3>, #builtin.int<3>, #builtin.int<6>, #builtin.int<6>], "strides" = [#builtin.int<8>, #builtin.int<64>, #builtin.int<8>, #builtin.int<64>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type<4>
+    %stride_pattern_1 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<3>, #builtin.int<3>, #builtin.int<6>, #builtin.int<6>], "strides" = [#builtin.int<8>, #builtin.int<24>, #builtin.int<0>, #builtin.int<0>], "dm" = #builtin.int<1>} : () -> !snitch_stream.stride_pattern_type<4>
 
-    %X_stream = "snitch_stream.strided_read"(%X_moved, %stride_pattern_0) {"dm" = #builtin.int<0>, "rank" = #builtin.int<4>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft0>>
-    %Y_stream = "snitch_stream.strided_read"(%Y_moved, %stride_pattern_1) {"dm" = #builtin.int<1>, "rank" = #builtin.int<4>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.readable<!riscv.freg<ft0>>
+    "snitch_stream.streaming_region"(%X_moved, %Y_moved, %stride_pattern_0, %stride_pattern_1) <{"operandSegmentSizes" = array<i32: 2, 0, 2>}> ({
+    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
+      %c288 = riscv.li 288 : () -> !riscv.reg<>
+      riscv_scf.for %z_i : !riscv.reg<> = %c0 to %c288 step %c8 {
+        %c = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
 
-    "snitch.ssr_enable"() : () -> ()
+        %z = riscv_snitch.frep_outer %c8 iter_args(%acc = %c) -> (!riscv.freg<ft3>) {
+          %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+          %y = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+          %res = riscv.fmadd.d %x, %y, %acc : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
+          riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+        }
 
-    %c288 = riscv.li 288 : () -> !riscv.reg<>
-    riscv_scf.for %z_i : !riscv.reg<> = %c0 to %c288 step %c8 {
-      %c = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
+        %Z_dest = riscv.add %Z_moved, %z_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+        riscv.fsd %Z_dest, %z, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
 
-      %x = riscv.get_float_register : () -> !riscv.freg<ft0>
-      %y = riscv.get_float_register : () -> !riscv.freg<ft1>
-      riscv_snitch.frep_outer %c8 {
-        %res = riscv.fmadd.d %x, %y, %c : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
-        riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+        riscv_scf.yield
       }
-
-      %Z_dest = riscv.add %Z_moved, %z_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-      riscv.fsd %Z_dest, %c, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
-
-      riscv_scf.yield
-    }
-
-    "snitch.ssr_disable"() : () -> ()
+    }) : (!riscv.reg<>, !riscv.reg<>, !snitch_stream.stride_pattern_type<4>, !snitch_stream.stride_pattern_type<4>) -> ()
 
     riscv_func.return
   }

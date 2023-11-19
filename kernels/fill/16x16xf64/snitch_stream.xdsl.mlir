@@ -12,16 +12,16 @@ riscv.assembly_section ".text" {
 
     %x = riscv.fmv.d %X_moved : (!riscv.freg<>) -> !riscv.freg<ft3>
 
-    %stride_pattern = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<256>], "strides" = [#builtin.int<8>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type
+    %stride_pattern = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<256>], "strides" = [#builtin.int<8>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type<1>
 
-    %Y_stream = "snitch_stream.strided_write"(%Y_moved, %stride_pattern) {"dm" = #builtin.int<0>, "rank" = #builtin.int<1>} : (!riscv.reg<>, !snitch_stream.stride_pattern_type) -> !stream.writable<!riscv.freg<ft0>>
-
-    %count = riscv.li 256 : () -> !riscv.reg<>
-    "snitch_stream.generic"(%count, %Y_stream) <{"operandSegmentSizes" = array<i32: 1, 0, 1>}> ({
-    ^0():
-        %res = riscv.fmv.d %x : (!riscv.freg<ft3>) -> !riscv.freg<ft0>
-        snitch_stream.yield %res : !riscv.freg<ft0>
-    }) : (!riscv.reg<>, !stream.writable<!riscv.freg<ft0>>) -> ()
+    "snitch_stream.streaming_region"(%Y_moved, %stride_pattern) <{"operandSegmentSizes" = array<i32: 0, 1, 1>}> ({
+    ^bb0(%Y_stream : !stream.writable<!riscv.freg<ft0>>):
+      %c255 = riscv.li 255 : () -> !riscv.reg<>
+      riscv_snitch.frep_outer %c255 {
+        %y = riscv.fmv.d %x : (!riscv.freg<ft3>) -> !riscv.freg<ft0>
+        riscv_snitch.write %y to %Y_stream : !riscv.freg<ft0>
+      }
+    }) : (!riscv.reg<>, !snitch_stream.stride_pattern_type<1>) -> ()
 
     riscv_func.return
   }
