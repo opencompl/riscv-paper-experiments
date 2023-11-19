@@ -8,7 +8,7 @@ dense,8x8xf64,linalg,7075
 dense,8x8xf64,snrt,2711
 dense,8x8xf64,snitch_stream,2721
 dsum,8x16xf32,baseline,1202
-dsum,8x16xf32,linalg,1089
+dsum,8x16xf32,linalg,1077
 dsum,8x16xf32,linalg_xdsl,195
 dsum,8x16xf32,snrt,187
 dsum,8x16xf32,ssr1d,253
