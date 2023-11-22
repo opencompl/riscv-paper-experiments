@@ -126,6 +126,7 @@ XDSLOPTFLAGS += -t riscv-asm
 
 # Assembly rules
 
+.PRECIOUS: %/linalg_xdsl.xdsl.mlir
 %/linalg_xdsl.xdsl.mlir: %/linalg.mlir
 	$(MLIROPT) $(MLIROPTFLAGS_XDSL) --mlir-print-local-scope -o $@ $<
 
