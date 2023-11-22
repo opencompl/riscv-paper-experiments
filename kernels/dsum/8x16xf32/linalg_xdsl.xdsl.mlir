@@ -1,21 +1,10 @@
-func.func public @dsum(%X: memref<8x16xf64>,
-                       %Y: memref<8x16xf64>,
-                       %Z: memref<8x16xf64>) -> () {
-  "linalg.generic"(%X, %Y, %Z) <{
-    "indexing_maps" = [
-      affine_map<(d0, d1) -> (d0, d1)>,
-      affine_map<(d0, d1) -> (d0, d1)>,
-      affine_map<(d0, d1) -> (d0, d1)>
-    ], "iterator_types" = [
-      #linalg.iterator_type<parallel>,
-      #linalg.iterator_type<parallel>,
-      #linalg.iterator_type<parallel>
-    ],
-    "operandSegmentSizes" = array<i32: 2, 1>
-  }> ({
-    ^bb0(%x : f64, %y : f64, %z : f64):
-      %r0 = arith.addf %x, %y : f64
-      "linalg.yield"(%r0) : (f64) -> ()
-    }) : (memref<8x16xf64>, memref<8x16xf64>, memref<8x16xf64>) -> ()
-  func.return
+module {
+  func.func public @dsum(%arg0: memref<8x16xf64>, %arg1: memref<8x16xf64>, %arg2: memref<8x16xf64>) -> memref<8x16xf64> {
+    linalg.generic {indexing_maps = [affine_map<(d0, d1) -> (d0, d1)>, affine_map<(d0, d1) -> (d0, d1)>, affine_map<(d0, d1) -> (d0, d1)>], iterator_types = ["parallel", "parallel"]} ins(%arg0, %arg1 : memref<8x16xf64>, memref<8x16xf64>) outs(%arg2 : memref<8x16xf64>) {
+    ^bb0(%in: f64, %in_0: f64, %out: f64):
+      %0 = arith.addf %in, %in_0 : f64
+      linalg.yield %0 : f64
+    }
+    return %arg2 : memref<8x16xf64>
+  }
 }

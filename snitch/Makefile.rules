@@ -126,6 +126,10 @@ XDSLOPTFLAGS += -t riscv-asm
 
 # Assembly rules
 
+.PRECIOUS: %/linalg_xdsl.xdsl.mlir
+%/linalg_xdsl.xdsl.mlir: %/linalg.mlir
+	$(MLIROPT) $(MLIROPTFLAGS_XDSL) --mlir-print-local-scope -o $@ $<
+
 %.S: %.xdsl.mlir $(XDSL_COMMIT_FILE)
 	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
 
@@ -139,13 +143,15 @@ XDSLOPTFLAGS += -t riscv-asm
 
 # MLIR
 
-MLIROPTFLAGS =
-MLIROPTFLAGS += -opaque-pointers=0
-MLIROPTFLAGS += --linalg-generalize-named-ops
-MLIROPTFLAGS += --eliminate-empty-tensors
-MLIROPTFLAGS += -empty-tensor-to-alloc-tensor
-MLIROPTFLAGS += --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
-MLIROPTFLAGS += --canonicalize
+MLIROPTFLAGS_XDSL =
+MLIROPTFLAGS_XDSL += -opaque-pointers=0
+MLIROPTFLAGS_XDSL += --linalg-generalize-named-ops
+MLIROPTFLAGS_XDSL += --eliminate-empty-tensors
+MLIROPTFLAGS_XDSL += -empty-tensor-to-alloc-tensor
+MLIROPTFLAGS_XDSL += --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
+MLIROPTFLAGS_XDSL += --canonicalize
+
+MLIROPTFLAGS = $(MLIROPTFLAGS_XDSL)
 MLIROPTFLAGS += --convert-linalg-to-loops
 MLIROPTFLAGS += --lower-affine
 MLIROPTFLAGS += --canonicalize
