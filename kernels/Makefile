@@ -3,7 +3,7 @@ include ../snitch/Makefile.rules
 
 # Top-level result, pivots the flat results in kernels.csv
 
-pivoted.csv: kernels.csv
+pivoted.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
 
 # kernels.csv is the aggregation of all kernels
