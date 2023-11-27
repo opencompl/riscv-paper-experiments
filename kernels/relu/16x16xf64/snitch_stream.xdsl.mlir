@@ -6,7 +6,7 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg<>
 
     %zero_int = riscv.get_register : () -> !riscv.reg<zero>
-    %zero_float = riscv.fcvt.d.w %zero_int : (!riscv.reg<zero>) -> !riscv.freg<ft3>
+    %zero_float = riscv.fcvt.d.w %zero_int : (!riscv.reg<zero>) -> !riscv.freg<>
 
     %stride_pattern = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<16>, #builtin.int<16>], "strides" = [#builtin.int<128>, #builtin.int<8>], "dm" = #builtin.int<31>} : () -> !snitch_stream.stride_pattern_type<2>
 
@@ -15,7 +15,7 @@ riscv.assembly_section ".text" {
       %c255 = riscv.li 255 : () -> !riscv.reg<>
       riscv_snitch.frep_outer %c255 {
         %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
-        %y = riscv.fmax.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<ft3>) -> !riscv.freg<ft1>
+        %y = riscv.fmax.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<>) -> !riscv.freg<ft1>
         riscv_snitch.write %y to %Y_stream : !riscv.freg<ft1>
       }
     }) : (!riscv.reg<>, !riscv.reg<>, !snitch_stream.stride_pattern_type<2>) -> ()

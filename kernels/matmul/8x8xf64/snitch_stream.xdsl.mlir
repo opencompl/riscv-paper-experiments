@@ -19,7 +19,7 @@ riscv.assembly_section ".text" {
     %c8 = riscv.li 8 : () -> !riscv.reg<>
     %c512 = riscv.li 512 : () -> !riscv.reg<>
 
-    %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<ft4>
+    %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
 
     %stride_pattern_0 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<8>, #builtin.int<8>, #builtin.int<8>], "strides" = [#builtin.int<8>, #builtin.int<0>, #builtin.int<64>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type<3>
 
@@ -29,17 +29,17 @@ riscv.assembly_section ".text" {
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
       %c7 = riscv.li 7 : () -> !riscv.reg<>
       riscv_scf.for %g_i : !riscv.reg<> = %c0 to %c512 step %c8 {
-        %init = riscv.fmv.d %zero_float : (!riscv.freg<ft4>) -> !riscv.freg<ft3>
+        %init = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
 
-        %g = riscv_snitch.frep_outer %c7 iter_args(%acc = %init) -> (!riscv.freg<ft3>) {
+        %g = riscv_snitch.frep_outer %c7 iter_args(%acc = %init) -> (!riscv.freg<>) {
           %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
           %y = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
-          %res = riscv.fmadd.d %x, %y, %acc : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<ft3>) -> !riscv.freg<ft3>
-          riscv_snitch.frep_yield %res : !riscv.freg<ft3>
+          %res = riscv.fmadd.d %x, %y, %acc : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+          riscv_snitch.frep_yield %res : !riscv.freg<>
         }
 
         %G_dest = riscv.add %G_moved, %g_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-        riscv.fsd %G_dest, %g, 0 : (!riscv.reg<>, !riscv.freg<ft3>) -> ()
+        riscv.fsd %G_dest, %g, 0 : (!riscv.reg<>, !riscv.freg<>) -> ()
 
         riscv_scf.yield
       }
