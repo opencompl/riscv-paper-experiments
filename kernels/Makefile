@@ -69,7 +69,19 @@ DSUM_8_16_TESTS += $(DSUM_8_16)/snitch_stream.csv
 $(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
 	./generate_tests_csv.sh $@ $^
 
-dsum/params.csv: $(DSUM_8_16)/tests.csv
+DSUM_64_64 = dsum/64x64xf64
+
+DSUM_64_64_TESTS =
+DSUM_64_64_TESTS += $(DSUM_64_64)/baseline.csv
+DSUM_64_64_TESTS += $(DSUM_64_64)/linalg.csv
+DSUM_64_64_TESTS += $(DSUM_64_64)/linalg_xdsl.csv
+DSUM_64_64_TESTS += $(DSUM_64_64)/snrt.csv
+DSUM_64_64_TESTS += $(DSUM_64_64)/snitch_stream.csv
+
+$(DSUM_64_64)/tests.csv: $(DSUM_64_64_TESTS)
+	./generate_tests_csv.sh $@ $^
+
+dsum/params.csv: $(DSUM_8_16)/tests.csv $(DSUM_64_64)/tests.csv
 	./generate_params_csv.sh $@ $^
 
 
