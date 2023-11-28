@@ -11,5 +11,6 @@ TESTS += snitch_stream.x
 TESTS += linalg.x
 TESTS += linalg_xdsl.x
 TESTS += scf.x
+TESTS += scf_xdsl.x
 
 include ../../Makefile.kernels

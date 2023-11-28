@@ -2,3 +2,4 @@
 1x16x16x1xf64,linalg,3212
 1x16x16x1xf64,snitch_stream,2012
 1x16x16x1xf64,snrt,2006
+1x16x16x1xf64,scf_xdsl,24729

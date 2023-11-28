@@ -130,6 +130,10 @@ XDSLOPTFLAGS += -t riscv-asm
 %/linalg_xdsl.xdsl.mlir: %/linalg.mlir
 	$(MLIROPT) $(MLIROPTFLAGS_XDSL) --mlir-print-local-scope -o $@ $<
 
+.PRECIOUS: %/scf_xdsl.xdsl.mlir
+%/scf_xdsl.xdsl.mlir: %/linalg.mlir
+	$(MLIROPT) $(MLIROPTFLAGS_SCF_XDSL) --mlir-print-local-scope -o $@ $<
+
 %.S: %.xdsl.mlir $(XDSL_COMMIT_FILE)
 	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
 
@@ -151,10 +155,12 @@ MLIROPTFLAGS_XDSL += -empty-tensor-to-alloc-tensor
 MLIROPTFLAGS_XDSL += --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
 MLIROPTFLAGS_XDSL += --canonicalize
 
-MLIROPTFLAGS = $(MLIROPTFLAGS_XDSL)
-MLIROPTFLAGS += --convert-linalg-to-loops
-MLIROPTFLAGS += --lower-affine
-MLIROPTFLAGS += --canonicalize
+MLIROPTFLAGS_SCF_XDSL = $(MLIROPTFLAGS_XDSL)
+MLIROPTFLAGS_SCF_XDSL += --convert-linalg-to-loops
+MLIROPTFLAGS_SCF_XDSL += --lower-affine
+MLIROPTFLAGS_SCF_XDSL += --canonicalize
+
+MLIROPTFLAGS = $(MLIROPTFLAGS_SCF_XDSL)
 MLIROPTFLAGS += --convert-scf-to-cf
 MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --cse
@@ -202,6 +208,9 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 %/fused.x: %/fused.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/scf_xdsl.x: %/scf_xdsl.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
 # Trace rules
