@@ -3,9 +3,9 @@ import math
 
 df = pd.read_csv("kernels.csv", header=None, names=("test", "params", "impl", "cycles"))
 
-df["combined"] = df["test"].astype(str) + " " + df["params"]
+df["kernels"] = df["test"].astype(str) + " " + df["params"]
 
-pivoted = df.pivot(index="combined", columns="impl")["cycles"]
+pivoted = df.pivot(index="kernels", columns="impl")["cycles"]
 
 PIVOTED_COLS = set(("linalg", "baseline", "snitch_stream", "snrt", "linalg_xdsl", "scf_xdsl"))
 

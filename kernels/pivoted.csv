@@ -1,4 +1,4 @@
-combined,baseline,linalg,linalg_xdsl,scf_xdsl,snitch_stream,snrt,min_llvm_mlir,speedup
+kernels,baseline,linalg,linalg_xdsl,scf_xdsl,snitch_stream,snrt,min_llvm_mlir,speedup
 conv2d_d1_s1_3x3 1x8x8x1xf64,1850,3946,,,1500,1498,1850,1.23x
 dense 8x8xf64,3240,7069,,,2721,2711,3240,1.19x
 dsum 8x16xf32,1202,1077,194,3564,206,187,1077,5.23x
