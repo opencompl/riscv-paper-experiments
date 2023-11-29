@@ -7,6 +7,8 @@ ddot,128xf64,linalg,1575
 ddot,128xf64,snitch_stream,593
 ddot,128xf64,snrt,547
 ddot,128xf64,scf_xdsl,1605
+ddot,128xf64,scf,1180
+ddot,128xf64,riscv_scf,1216
 dense,8x8xf64,baseline,3240
 dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7069
