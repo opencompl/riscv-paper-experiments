@@ -213,6 +213,13 @@ MLIROPTFLAGS += --reconcile-unrealized-casts
 %/scf_xdsl.x: %/scf_xdsl.o %/main.o %/data.o
 	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
 
+%/scf.x: %/scf.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+%/riscv_scf.x: %/riscv_scf.o %/main.o %/data.o
+	cd $(dir $<); $(LD) $(LDFLAGS) $(notdir $^) -o $(notdir $@)
+
+
 # Trace rules
 
 LOG_DIR = $<.logs
