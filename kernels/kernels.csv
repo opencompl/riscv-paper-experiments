@@ -2,6 +2,11 @@ conv2d_d1_s1_3x3,1x1x8x8xf64,baseline,1850
 conv2d_d1_s1_3x3,1x1x8x8xf64,linalg,3946
 conv2d_d1_s1_3x3,1x1x8x8xf64,snitch_stream,1500
 conv2d_d1_s1_3x3,1x1x8x8xf64,snrt,1498
+ddot,128xf64,baseline,948
+ddot,128xf64,linalg,1575
+ddot,128xf64,snitch_stream,593
+ddot,128xf64,snrt,547
+ddot,128xf64,scf_xdsl,1605
 dense,8x8xf64,baseline,3240
 dense,8x8xf64,fused,2970
 dense,8x8xf64,linalg,7069

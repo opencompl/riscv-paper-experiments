@@ -10,6 +10,7 @@ pivoted.csv: kernels.csv ../scripts/pivot.py
 
 FOLDERS =
 FOLDERS += conv2d_d1_s1_3x3
+FOLDERS += ddot
 FOLDERS += dense
 FOLDERS += dsum
 FOLDERS += fill
@@ -40,6 +41,21 @@ $(CONV_8)/tests.csv: $(CONV_8_TESTS)
 conv2d_d1_s1_3x3/params.csv: $(CONV_8)/tests.csv
 	./generate_params_csv.sh $@ $^
 
+
+DDOT_128 = ddot/128xf64
+
+DDOT_128_TESTS =
+DDOT_128_TESTS += $(DDOT_128)/baseline.csv
+DDOT_128_TESTS += $(DDOT_128)/linalg.csv
+DDOT_128_TESTS += $(DDOT_128)/snitch_stream.csv
+DDOT_128_TESTS += $(DDOT_128)/snrt.csv
+DDOT_128_TESTS += $(DDOT_128)/scf_xdsl.csv
+
+$(DDOT_128)/tests.csv: $(DDOT_128_TESTS)
+	./generate_tests_csv.sh $@ $^
+
+ddot/params.csv: $(DDOT_128)/tests.csv
+	./generate_params_csv.sh $@ $^
 
 DENSE_8 = dense/8x8xf64
 
