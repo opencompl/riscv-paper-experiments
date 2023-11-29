@@ -24,7 +24,7 @@ kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
 
 # individual tests below
 
-CONV_8 = conv2d_d1_s1_3x3/1x8x8x1xf64
+CONV_8 = conv2d_d1_s1_3x3/1x1x8x8xf64
 
 CONV_8_TESTS =
 CONV_8_TESTS += $(CONV_8)/baseline.csv
