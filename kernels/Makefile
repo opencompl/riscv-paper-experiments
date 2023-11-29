@@ -134,6 +134,7 @@ RELU_16_TESTS += $(RELU_16)/ssr.csv
 RELU_16_TESTS += $(RELU_16)/ssr_frep.csv
 RELU_16_TESTS += $(RELU_16)/snrt.csv
 RELU_16_TESTS += $(RELU_16)/linalg.csv
+RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
 RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
 RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
