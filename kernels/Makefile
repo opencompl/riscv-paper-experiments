@@ -94,7 +94,7 @@ matmul/params.csv: $(MATMUL_8)/tests.csv
 	./generate_params_csv.sh $@ $^
 
 
-MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x16x16x1xf64
+MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
 
 MAX_POOL_16_TESTS =
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
@@ -110,7 +110,7 @@ pooling_nchw_max_d1_s2_3x3/params.csv: $(MAX_POOL_16)/tests.csv
 	./generate_params_csv.sh $@ $^
 
 
-SUM_POOL_16 = pooling_nchw_sum_d1_s2_3x3/1x16x16x1xf64
+SUM_POOL_16 = pooling_nchw_sum_d1_s2_3x3/1x1x16x16xf64
 
 SUM_POOL_16_TESTS =
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/baseline.csv
