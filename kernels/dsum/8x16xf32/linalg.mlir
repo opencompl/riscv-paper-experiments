@@ -10,6 +10,8 @@
 func.func public @dsum(%X: tensor<8x16xf64>,
                        %Y: tensor<8x16xf64>,
                        %Z: tensor<8x16xf64>) -> tensor<8x16xf64> {
+  // Our version of MLIR can't do this
+  // %res = linalg.add ins(%X, %Y : tensor<128xf64>, tensor<128xf64>) outs(%Z : tensor<f64>) -> tensor<f64>
   %res = linalg.generic #kernel_attributes
   ins(%X, %Y: tensor<8x16xf64>, tensor<8x16xf64>)
   outs(%Z: tensor<8x16xf64>) {
