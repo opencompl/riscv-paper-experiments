@@ -20,7 +20,7 @@ dsum,8x16xf32,linalg_xdsl,194
 dsum,8x16xf32,snrt,187
 dsum,8x16xf32,ssr1d,253
 dsum,8x16xf32,ssr2d,273
-dsum,8x16xf32,snitch_stream,206
+dsum,8x16xf32,snitch_stream,194
 dsum,8x16xf32,scf_xdsl,3564
 fill,16x16xf64,baseline,370
 fill,16x16xf64,linalg,347
