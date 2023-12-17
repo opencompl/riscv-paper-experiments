@@ -18,8 +18,7 @@ for col in pivoted:
 pivoted["min_llvm_mlir"] = pivoted[["baseline", "linalg"]].min(axis=1)
 
 # TODO: linalg_xdsl when that's ready
-# TODO: uncomment when adding back xdsl flow
-# pivoted["speedup"] = pivoted["min_llvm_mlir"].div(pivoted["snitch_stream"]).map(lambda val: f"{val:.2f}x" if not math.isnan(val) else "?x")
+pivoted["speedup"] = pivoted["min_llvm_mlir"].div(pivoted["snitch_stream"]).map(lambda val: f"{val:.2f}x" if not math.isnan(val) else "?x")
 
 # print(bla.dtype)
 

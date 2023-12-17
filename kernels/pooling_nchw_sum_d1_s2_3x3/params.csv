@@ -1,4 +1,5 @@
 1x1x16x16xf64,baseline,1982
 1x1x16x16xf64,linalg,3212
+1x1x16x16xf64,snitch_stream,2012
 1x1x16x16xf64,snrt,2006
 1x1x16x16xf64,scf_xdsl,24729

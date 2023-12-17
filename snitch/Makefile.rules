@@ -93,11 +93,9 @@ LDFLAGS += -lsnRuntime
 
 # XDSL
 
-# commented passes are not in xdsl main yet
-
 XDSLOPT_PASSES =
-# XDSLOPT_PASSES += convert-linalg-to-stream
-# XDSLOPT_PASSES += convert-stream-to-snitch-stream
+XDSLOPT_PASSES += convert-linalg-to-stream
+XDSLOPT_PASSES += convert-stream-to-snitch-stream
 XDSLOPT_PASSES += lower-affine
 XDSLOPT_PASSES += convert-func-to-riscv-func
 XDSLOPT_PASSES += convert-memref-to-riscv
