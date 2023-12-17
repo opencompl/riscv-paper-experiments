@@ -1,8 +1,6 @@
 baseline,1202
 linalg,1077
-linalg_xdsl,194
 snrt,187
 ssr1d,253
 ssr2d,273
-snitch_stream,194
 scf_xdsl,3564
