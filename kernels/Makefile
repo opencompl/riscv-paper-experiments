@@ -1,10 +1,16 @@
 
 include ../snitch/Makefile.rules
 
+.PHONY: clean
+
 # Top-level result, pivots the flat results in kernels.csv
 
 pivoted.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
+
+# Remove all csv files in this folder, recursively
+clean:
+	find . -type f -name "*.csv" -print0 | xargs -0 rm
 
 # kernels.csv is the aggregation of all kernels
 
