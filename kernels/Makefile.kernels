@@ -1,4 +1,4 @@
-.PHONY: all allrun clean
+.PHONY: all clean
 
 CSV_PREFIX = $(shell basename $(shell pwd))
 CYCLES_CSV= ${CSV_PREFIX}.csv
@@ -13,12 +13,7 @@ CFLAGS += -Wall -Wextra
 %.x: %.o main.o data.o
 	$(LD) $(LDFLAGS) $^ -o $@
 
-RUN = $(addprefix run_, $(TESTS))
-$(RUN): run_%: sim_%
-
 all: $(TESTS) $(CYCLES_CSV)
-
-allrun: $(RUN)
 
 # Generate the target file by combining the specified files from TESTS
 $(CYCLES_CSV): $(addsuffix .csv, $(basename $(TESTS)))
