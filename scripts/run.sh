@@ -132,7 +132,7 @@ fi
 
 if [[ 0 -eq ${SKIP_RUN} ]]; then
   for krnl in ${KERNEL_DIRS[@]}; do
-    make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) allrun
+    make -C ${KERNEL_ROOT}/${krnl} -j $(nproc) all
     make -C ${KERNEL_ROOT}/${krnl} traces
   done
 fi

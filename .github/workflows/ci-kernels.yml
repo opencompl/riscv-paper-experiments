@@ -23,11 +23,11 @@ jobs:
           yes | pip3 uninstall wgpu
           lit -v tests/filecheck
       - name: Build and run kernel 'saxpy'
-        run: make allrun
+        run: make all
         working-directory: kernels/saxpy/64xf32
 # Note: disabling 'ssum' since it is taking 5x the time taken
 # by saxpy. Let's speed up things a bit, saxpy is fairly enough
 # of a smoke test.
 #      - name: Build and run kernel 'ssum'
-#        run: make allrun
+#        run: make all
 #        working-directory: kernels/ssum/14x26xf32
