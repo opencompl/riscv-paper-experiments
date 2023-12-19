@@ -102,22 +102,15 @@ if __name__ == "__main__":
     stride = 1
 
     np.random.seed(0)
-    x = (
-        np.random.uniform(rmin, rmax, n * c * h * w)
-        .astype(np.float64)
-        .reshape((n, c, h, w))
-    )
-    y = (
-        np.random.uniform(rmin, rmax, f * c * kernel_size[0] * kernel_size[1])
-        .astype(np.float64)
-        .reshape((f, c, kernel_size[0], kernel_size[1]))
-    )
+    x = np.random.uniform(rmin, rmax, (n, c, h, w))
+    y = np.random.uniform(rmin, rmax, (f, c, kernel_size[0], kernel_size[1]))
 
     new_h = (h - kernel_size[0]) // stride + 1
     new_w = (w - kernel_size[1]) // stride + 1
 
     # Perform the max pooling operation
-    z = np.zeros((n, f, new_h, new_w))
+    z_in = np.random.uniform(rmin, rmax, (n, f, new_h, new_w))
+    z_out = np.zeros((n, f, new_h, new_w))
 
     for i in range(f):
         for row in range(0, h - kernel_size[0] + 1, stride):
@@ -125,9 +118,9 @@ if __name__ == "__main__":
                 receptive_field = x[
                     :, :, row : row + kernel_size[0], col : col + kernel_size[1]
                 ]
-                z[:, i, row // stride, col // stride] = np.sum(
-                    receptive_field * y[i, :, :, :]
-                )
+                z_old = z_in[:, i, row // stride, col // stride]
+                z = z_old + np.sum(receptive_field * y[i, :, :, :])
+                z_out[:, i, row // stride, col // stride] = z
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
@@ -147,4 +140,16 @@ if __name__ == "__main__":
     np.set_printoptions(**printopts)
     print(fmt(x, shape="N * C * H * W", precision=args.precision, symbol="X"))
     print(fmt(y, shape="F * C * 3 * 3", precision=args.precision, symbol="Y"))
-    print(fmt(z, shape="N * F * NEW_H * NEW_W", precision=args.precision, symbol="Z"))
+    print(
+        fmt(
+            z_in, shape="N * F * NEW_H * NEW_W", precision=args.precision, symbol="Z_IN"
+        )
+    )
+    print(
+        fmt(
+            z_out,
+            shape="N * F * NEW_H * NEW_W",
+            precision=args.precision,
+            symbol="Z_OUT",
+        )
+    )
