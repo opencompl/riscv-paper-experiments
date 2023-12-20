@@ -1,8 +1,6 @@
 8x16xf32,baseline,1202
 8x16xf32,linalg,1077
-8x16xf32,linalg_xdsl,194
 8x16xf32,snrt,187
 8x16xf32,ssr1d,253
 8x16xf32,ssr2d,273
-8x16xf32,snitch_stream,194
 8x16xf32,scf_xdsl,3564
