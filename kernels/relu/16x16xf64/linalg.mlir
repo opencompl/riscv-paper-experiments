@@ -6,7 +6,7 @@
   iterator_types = ["parallel", "parallel"]
 }
 
-func.func public @relu(%X: tensor<16x16xf64>, %Y: tensor<16x16xf64>) -> tensor<16x16xf64> {
+func.func public @relu(%X: tensor<16x16xf64> {"llvm.noalias"}, %Y: tensor<16x16xf64> {"llvm.noalias"}) -> tensor<16x16xf64> {
   %c0 = arith.constant 0.0 : f64
   %res = linalg.generic #kernel_attributes
   ins(%X: tensor<16x16xf64>)
