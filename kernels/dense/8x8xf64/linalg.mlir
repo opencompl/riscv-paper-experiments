@@ -12,7 +12,8 @@
 func.func public @dense(%X: tensor<8x8xf64>,
                         %W: tensor<8x8xf64>,
                         %B: tensor<8x8xf64>,
-                        %Y: tensor<8x8xf64>) -> tensor<8x8xf64> {
+                        %Y: tensor<8x8xf64>) -> tensor<8x8xf64>
+                        attributes {arg_attrs = [{"llvm.noalias"}, {"llvm.noalias"}, {"llvm.noalias"}, {"llvm.noalias"}]} {
   %H0 = linalg.matmul ins(%X, %W : tensor<8x8xf64>, tensor<8x8xf64>) outs(%Y : tensor<8x8xf64>) -> tensor<8x8xf64>
   %H1 = linalg.generic #add_attributes
   ins(%B: tensor<8x8xf64>)
