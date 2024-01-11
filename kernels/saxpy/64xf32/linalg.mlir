@@ -8,9 +8,9 @@
 }
 
 func.func public @saxpy(%a: f32,
-                       %X: memref<64xf32>,
-                       %Y: memref<64xf32>,
-                       %Z: memref<64xf32>) -> () {
+                       %X: memref<64xf32> {"llvm.noalias"},
+                       %Y: memref<64xf32> {"llvm.noalias"},
+                       %Z: memref<64xf32> {"llvm.noalias"}) -> () {
   linalg.generic #axpy_attributes
   ins(%X, %Y: memref<64xf32>, memref<64xf32>)
   outs(%Z: memref<64xf32>) {
