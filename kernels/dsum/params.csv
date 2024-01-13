@@ -1,5 +1,5 @@
 8x16xf32,baseline,1202
-8x16xf32,linalg,1077
+8x16xf32,linalg,794
 8x16xf32,linalg_xdsl,194
 8x16xf32,snrt,187
 8x16xf32,ssr1d,253

@@ -2,7 +2,5 @@ baseline,1339
 ssr,846
 ssr_frep,327
 snrt,334
-linalg,1335
-linalg_xdsl,342
+linalg,1074
 snitch_stream,322
-scf_xdsl,5020

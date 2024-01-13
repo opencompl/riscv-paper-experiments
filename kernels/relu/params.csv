@@ -2,7 +2,5 @@
 16x16xf64,ssr,846
 16x16xf64,ssr_frep,327
 16x16xf64,snrt,334
-16x16xf64,linalg,1335
-16x16xf64,linalg_xdsl,342
+16x16xf64,linalg,1074
 16x16xf64,snitch_stream,322
-16x16xf64,scf_xdsl,5020

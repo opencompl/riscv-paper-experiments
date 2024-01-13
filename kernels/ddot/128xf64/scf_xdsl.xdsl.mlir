@@ -1,5 +1,5 @@
 module {
-  func.func public @ddot(%arg0: memref<128xf64>, %arg1: memref<128xf64>, %arg2: memref<f64>) -> memref<f64> {
+  func.func public @ddot(%arg0: memref<128xf64> {llvm.noalias}, %arg1: memref<128xf64> {llvm.noalias}, %arg2: memref<f64> {llvm.noalias}) -> memref<f64> {
     %c0 = arith.constant 0 : index
     %c128 = arith.constant 128 : index
     %c1 = arith.constant 1 : index

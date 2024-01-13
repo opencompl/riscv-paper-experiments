@@ -1,5 +1,5 @@
 module {
-  func.func public @pooling_nchw_max_d1_s2_3x3(%arg0: memref<1x1x16x16xf64>, %arg1: memref<1x1x7x7xf64>) -> memref<1x1x7x7xf64> {
+  func.func public @pooling_nchw_max_d1_s2_3x3(%arg0: memref<1x1x16x16xf64> {llvm.noalias}, %arg1: memref<1x1x7x7xf64> {llvm.noalias}) -> memref<1x1x7x7xf64> {
     %c2 = arith.constant 2 : index
     %c0 = arith.constant 0 : index
     %c1 = arith.constant 1 : index

@@ -125,7 +125,8 @@ MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snitch_stream.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
+# maxf renamed in MLIR 17
+# MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
 	./generate_tests_csv.sh $@ $^
@@ -158,9 +159,11 @@ RELU_16_TESTS += $(RELU_16)/ssr.csv
 RELU_16_TESTS += $(RELU_16)/ssr_frep.csv
 RELU_16_TESTS += $(RELU_16)/snrt.csv
 RELU_16_TESTS += $(RELU_16)/linalg.csv
-RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
+# maxf renamed in MLIR 17
+# RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
 RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
-RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
+# maxf renamed in MLIR 17
+# RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
 $(RELU_16)/tests.csv: $(RELU_16_TESTS)
 	./generate_tests_csv.sh $@ $^
