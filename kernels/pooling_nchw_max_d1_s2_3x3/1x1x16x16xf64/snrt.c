@@ -4,9 +4,6 @@
 
 #include <stdint.h>
 
-// Taken from math.h
-#define MAXFLOAT 0x1.fffffep+127f
-
 void pooling_nchw_max_d1_s2_3x3(const double* x, double* y) {
     snrt_ssr_loop_4d(SNRT_SSR_DM0,
                      // Bounds
@@ -23,17 +20,14 @@ void pooling_nchw_max_d1_s2_3x3(const double* x, double* y) {
 
     for (int y_row = 0; y_row < NEW_H; ++y_row) {
         for (int y_col = 0; y_col < NEW_W; ++y_col) {
-            register double max_value asm("ft3") = -10000.0;
-
             asm volatile(
-                "frep.o  %[nfrep], 1, 0, 0                 \n\t"
-                "fmax.d %[max_value], ft0, %[max_value]    \n\t"
-                : [max_value] "+f"(max_value)
-                : [nfrep] "r"(3 * 3 - 1)
+                "fld ft3, 0(%[array])        \n\t"
+                "frep.o  %[nfrep], 1, 0, 0   \n\t"
+                "fmax.d ft3, ft0, ft3        \n\t"
+                "fsd ft3, 0(%[array])        \n\t"
+                :
+                : [array] "r"(&y[y_row * NEW_W + y_col]), [nfrep] "r"(3 * 3 - 1)
                 : "ft0", "ft1", "ft2", "memory");
-
-            // Store the maximum value in the corresponding position in y
-            y[y_row * NEW_W + y_col] = max_value;
         }
     }
 

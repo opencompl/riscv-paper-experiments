@@ -20,7 +20,7 @@ void conv_2d_nchw_fchw_d1_s1_3x3(const double* x, const double* y, double* z) {
                     // Store the maximum value in the corresponding position in y
                     int z_index = (i * (C * NEW_H * NEW_W)) + (j * (NEW_H * NEW_W)) +
                                   (row * NEW_W) + col;
-                    z[z_index] = sum;
+                    z[z_index] = z[z_index] + sum;
                 }
             }
         }

@@ -18,6 +18,7 @@ int main() {
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
         snrt_dma_start_1d(local_x, X, N * C * H * W * sizeof(double));
+        snrt_dma_start_1d(local_y, Y_IN, N * C * NEW_H * NEW_W * sizeof(double));
     }
 
     snrt_cluster_hw_barrier();
@@ -33,7 +34,7 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < N * C * NEW_H * NEW_W; i++) {
-        double d = fabs(local_y[i] - Y[i]);
+        double d = fabs(local_y[i] - Y_OUT[i]);
         nerr += !(d <= 1E-2f);  // Make sure to take into account NaNs (e.g.: happy path
                                 // on the taken branch)
     }

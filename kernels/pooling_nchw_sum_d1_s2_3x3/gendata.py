@@ -119,12 +119,15 @@ if __name__ == "__main__":
     new_w = (w - pool_size[0]) // stride + 1
 
     # Perform the max pooling operation
-    y = np.zeros((n, c, new_h, new_w))
+    y_in = np.random.uniform(rmin, rmax, (n, c, new_h, new_w))
+    y_out = y_in.copy()
 
     for row in range(0, h - pool_size[0] + 1, stride):
         for col in range(0, w - pool_size[1] + 1, stride):
             pooling_region = x[:, :, row : row + pool_size[0], col : col + pool_size[1]]
-            y[:, :, row // stride, col // stride] = np.sum(pooling_region, axis=(2, 3))
+            y_out[:, :, row // stride, col // stride] += np.sum(
+                pooling_region, axis=(2, 3)
+            )
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
@@ -142,4 +145,16 @@ if __name__ == "__main__":
         printopts["sign"] = "+"
     np.set_printoptions(**printopts)
     print(fmt(x, shape="N * C * H * W", precision=args.precision, symbol="X"))
-    print(fmt(y, shape="N * C * NEW_H * NEW_W", precision=args.precision, symbol="Y"))
+    print(
+        fmt(
+            y_in, shape="N * C * NEW_H * NEW_W", precision=args.precision, symbol="Y_IN"
+        )
+    )
+    print(
+        fmt(
+            y_out,
+            shape="N * C * NEW_H * NEW_W",
+            precision=args.precision,
+            symbol="Y_OUT",
+        )
+    )

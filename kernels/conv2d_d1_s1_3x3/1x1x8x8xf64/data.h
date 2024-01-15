@@ -10,4 +10,5 @@
 
 extern const double X[N * C * H * W];
 extern const double Y[F * C * 3 * 3];
-extern const double Z[N * F * NEW_H * NEW_W];
+extern const double Z_IN[N * F * NEW_H * NEW_W];
+extern const double Z_OUT[N * F * NEW_H * NEW_W];

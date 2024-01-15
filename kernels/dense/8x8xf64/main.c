@@ -22,6 +22,7 @@ int main() {
         snrt_dma_start_1d(local_x, X, M * K * sizeof(double));
         snrt_dma_start_1d(local_w, W, K * N * sizeof(double));
         snrt_dma_start_1d(local_b, B, M * N * sizeof(double));
+        snrt_dma_start_1d(local_y, Y_IN, M * N * sizeof(double));
     }
 
     snrt_cluster_hw_barrier();
@@ -37,7 +38,7 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < M * N; i++) {
-        double d = fabs(local_y[i] - Y[i]);
+        double d = fabs(local_y[i] - Y_OUT[i]);
         nerr += !(d <= 1E-2f);  // Make sure to take into account NaNs (e.g.: happy path
                                 // on the taken branch)
     }

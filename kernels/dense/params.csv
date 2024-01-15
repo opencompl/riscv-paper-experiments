@@ -1,4 +1,4 @@
-8x8xf64,baseline,3240
-8x8xf64,fused,2970
-8x8xf64,linalg,4482
-8x8xf64,snrt,2711
+8x8xf64,baseline,3239
+8x8xf64,fused,2964
+8x8xf64,linalg,4494
+8x8xf64,snrt,2709

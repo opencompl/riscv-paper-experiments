@@ -264,7 +264,12 @@ const double Y[N] = {
 };
 
 
-const double G[1] = {
-111775.88993179
+const double G_IN[1] = {
+104.38493984
+};
+
+
+const double G_OUT[1] = {
+111880.27487163
 };
 
