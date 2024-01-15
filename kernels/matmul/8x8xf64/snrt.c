@@ -27,16 +27,14 @@ void matmul(const double* restrict x, const double* restrict y, double* restrict
 
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
-            register double c asm("ft3") = 0.;
-
             asm volatile(
-                "frep.o  %[nfrep], 1, 0, 0       \n\t"
-                "fmadd.d %[c], ft0, ft1, %[c]    \n\t"
-                : [c] "+f"(c)
-                : [nfrep] "r"(K - 1)
+                "fld ft3, 0(%[array])          \n\t"
+                "frep.o  %[nfrep], 1, 0, 0     \n\t"
+                "fmadd.d ft3, ft0, ft1, ft3    \n\t"
+                "fsd ft3, 0(%[array])          \n\t"
+                :
+                : [array] "r"(&g[m * N + n]), [nfrep] "r"(K - 1)
                 : "ft0", "ft1", "ft2", "memory");
-
-            g[m * N + n] = c;
         }
     }
 

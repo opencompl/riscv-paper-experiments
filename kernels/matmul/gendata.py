@@ -6,18 +6,18 @@ import sys
 
 
 C_TYPES = {
-    '32': 'float',
-    '64': 'double',
+    "32": "float",
+    "64": "double",
 }
 
 NUMPY_TYPES = {
-    '32': np.single,
-    '64': np.double,
+    "32": np.single,
+    "64": np.double,
 }
 
 MLIR_TYPES = {
-    '32': 'f32',
-    '64': 'f64',
+    "32": "f32",
+    "64": "f64",
 }
 
 MEMREF_GLOBAL = """
@@ -105,8 +105,9 @@ if __name__ == "__main__":
     np.random.seed(0)
     x = np.random.uniform(rmin, rmax, m * k).astype(np.float64).reshape((m, k))
     y = np.random.uniform(rmin, rmax, k * n).astype(np.float64).reshape((k, n))
+    g_in = np.random.uniform(rmin, rmax, (k, n)).astype(np.float64)
 
-    g = x @ y
+    g_out = x @ y + g_in
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
@@ -122,4 +123,5 @@ if __name__ == "__main__":
     np.set_printoptions(**printopts)
     print(fmt(x, shape="M * K", precision=args.precision, symbol="X"))
     print(fmt(y, shape="K * N", precision=args.precision, symbol="Y"))
-    print(fmt(g, shape="M * N", precision=args.precision, symbol="G"))
+    print(fmt(g_in, shape="M * N", precision=args.precision, symbol="G_IN"))
+    print(fmt(g_out, shape="M * N", precision=args.precision, symbol="G_OUT"))
