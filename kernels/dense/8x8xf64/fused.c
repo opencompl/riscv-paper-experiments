@@ -10,7 +10,7 @@
 // * Outputs: y[ M x N ]
 void dense(const double* restrict x, const double* restrict w, const double* restrict b,
            double* restrict y) {
-    // Y = relu(X W + B)
+    // Y = relu(X W + B + Y)
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             double v = y[i * N + j];

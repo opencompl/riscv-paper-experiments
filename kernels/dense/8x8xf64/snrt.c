@@ -39,23 +39,16 @@ void dense(const double* restrict x, const double* restrict w, const double* res
 
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
-            register double c asm("ft3") = 0.;
-
             asm volatile(
+                "fld ft3, 0(%[array])          \n\t"
                 "frep.o  %[nfrep], 1, 0, 0       \n\t"
-                "fmadd.d %[c], ft0, ft1, %[c]    \n\t"
-                : [c] "+f"(c)
-                : [nfrep] "r"(K - 1)
+                "fmadd.d ft3, ft0, ft1, ft3    \n\t"
+                "fadd.d ft3, ft2,  ft3         \n\t"
+                "fmax.d ft3, ft3, %[fzero]     \n\t"
+                "fsd ft3, 0(%[array])          \n\t"
+                :
+                : [array] "r"(&y[m * N + n]), [nfrep] "r"(K - 1), [fzero] "f"(fzero)
                 : "ft0", "ft1", "ft2", "memory");
-
-            asm volatile(
-                "fadd.d %[c], ft2,  %[c]         \n\t"
-                "fmax.d %[c], %[c], %[fzero]     \n\t"
-                : [c] "+f"(c)
-                : [fzero] "f"(fzero)
-                : "ft0", "ft1", "ft2", "memory");
-
-            y[m * N + n] = c;
         }
     }
 

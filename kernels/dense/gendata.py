@@ -106,8 +106,9 @@ if __name__ == "__main__":
     x = np.random.uniform(rmin, rmax, m * k).astype(np.float64).reshape((m, k))
     w = np.random.uniform(rmin, rmax, k * n).astype(np.float64).reshape((k, n))
     b = np.random.uniform(rmin, rmax, m * n).astype(np.float64).reshape((m, n))
+    y_in = np.random.uniform(rmin, rmax, (m, n)).astype(np.float64)
 
-    y = np.fmax(0.0, x @ w + b)
+    y_out = np.fmax(0.0, x @ w + b + y_in)
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
@@ -124,4 +125,5 @@ if __name__ == "__main__":
     print(fmt(x, shape="M * K", precision=args.precision, symbol="X"))
     print(fmt(w, shape="K * N", precision=args.precision, symbol="W"))
     print(fmt(b, shape="M * N", precision=args.precision, symbol="B"))
-    print(fmt(y, shape="M * N", precision=args.precision, symbol="Y"))
+    print(fmt(y_in, shape="M * N", precision=args.precision, symbol="Y_IN"))
+    print(fmt(y_out, shape="M * N", precision=args.precision, symbol="Y_OUT"))
