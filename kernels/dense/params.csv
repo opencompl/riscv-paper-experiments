@@ -2,3 +2,4 @@
 8x8xf64,fused,2964
 8x8xf64,linalg,4494
 8x8xf64,snrt,2709
+8x8xf64,snitch_stream,2734

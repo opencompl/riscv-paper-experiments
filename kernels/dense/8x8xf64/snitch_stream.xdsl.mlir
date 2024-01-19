@@ -33,8 +33,8 @@ riscv.assembly_section ".text" {
     "snitch_stream.streaming_region"(%X_moved, %W_moved, %B_moved, %stride_pattern_0, %stride_pattern_1, %stride_pattern_2) <{"operandSegmentSizes" = array<i32: 3, 0, 3>}> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %W_stream : !stream.readable<!riscv.freg<ft1>>, %B_stream : !stream.readable<!riscv.freg<ft2>>):
       riscv_scf.for %y_i : !riscv.reg<> = %c0 to %c512 step %c8 {
-        %c = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
-
+        %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+        %c = riscv.fld %Y_dest, 0 : (!riscv.reg<>) -> !riscv.freg<>
 
         %c7 = riscv.li 7 : () -> !riscv.reg<>
         %dot = riscv_snitch.frep_outer %c7 iter_args(%acc = %c) -> (!riscv.freg<>) {
@@ -48,7 +48,6 @@ riscv.assembly_section ".text" {
         %y_0 = riscv.fadd.d %b, %dot : (!riscv.freg<ft2>, !riscv.freg<>) -> !riscv.freg<>
         %y_1 = riscv.fmax.d %y_0, %zero_float : (!riscv.freg<>, !riscv.freg<>) -> !riscv.freg<>
 
-        %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
         riscv.fsd %Y_dest, %y_1, 0 : (!riscv.reg<>, !riscv.freg<>) -> ()
 
         riscv_scf.yield

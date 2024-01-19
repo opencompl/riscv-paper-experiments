@@ -26,7 +26,8 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
       %c288 = riscv.li 288 : () -> !riscv.reg<>
       riscv_scf.for %z_i : !riscv.reg<> = %c0 to %c288 step %c8 {
-        %c = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
+        %Z_dest = riscv.add %Z_moved, %z_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+        %c = riscv.fld %Z_dest, 0 : (!riscv.reg<>) -> !riscv.freg<>
 
         %z = riscv_snitch.frep_outer %c8 iter_args(%acc = %c) -> (!riscv.freg<>) {
           %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
@@ -35,7 +36,6 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
           riscv_snitch.frep_yield %res : !riscv.freg<>
         }
 
-        %Z_dest = riscv.add %Z_moved, %z_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
         riscv.fsd %Z_dest, %z, 0 : (!riscv.reg<>, !riscv.freg<>) -> ()
 
         riscv_scf.yield
