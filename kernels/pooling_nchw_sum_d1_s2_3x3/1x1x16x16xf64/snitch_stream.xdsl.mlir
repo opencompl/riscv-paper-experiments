@@ -16,15 +16,14 @@ riscv_func.func public @pooling_nchw_sum_d1_s2_3x3(
     %c8 = riscv.li 8 : () -> !riscv.reg<>
     %c512 = riscv.li 512 : () -> !riscv.reg<>
 
-    %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
-
     %stride_pattern_0 = "snitch_stream.stride_pattern"() {"ub" = [#builtin.int<3>, #builtin.int<3>, #builtin.int<7>, #builtin.int<7>], "strides" = [#builtin.int<8>, #builtin.int<128>, #builtin.int<16>, #builtin.int<256>], "dm" = #builtin.int<0>} : () -> !snitch_stream.stride_pattern_type<4>
 
     "snitch_stream.streaming_region"(%X_moved, %stride_pattern_0) <{"operandSegmentSizes" = array<i32: 1, 0, 1>}> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
       %c392 = riscv.li 392 : () -> !riscv.reg<>
       riscv_scf.for %y_i : !riscv.reg<> = %c0 to %c392 step %c8 {
-        %init = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
+        %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+        %init = riscv.fld %Y_dest, 0 : (!riscv.reg<>) -> !riscv.freg<>
 
         %y = riscv_snitch.frep_outer %c8 iter_args(%acc = %init) -> (!riscv.freg<>) {
           %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
@@ -32,7 +31,6 @@ riscv_func.func public @pooling_nchw_sum_d1_s2_3x3(
           riscv_snitch.frep_yield %res : !riscv.freg<>
         }
 
-        %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
         riscv.fsd %Y_dest, %y, 0 : (!riscv.reg<>, !riscv.freg<>) -> ()
 
         riscv_scf.yield
