@@ -149,9 +149,11 @@ XDSLOPTFLAGS += -t riscv-asm
 
 # MLIR
 
+MLIROPTFLAGS_GENERIC =
+MLIROPTFLAGS_GENERIC += -opaque-pointers=0
+MLIROPTFLAGS_GENERIC += --linalg-generalize-named-ops
+
 MLIROPTFLAGS_XDSL =
-MLIROPTFLAGS_XDSL += -opaque-pointers=0
-MLIROPTFLAGS_XDSL += --linalg-generalize-named-ops
 MLIROPTFLAGS_XDSL += --eliminate-empty-tensors
 MLIROPTFLAGS_XDSL += -empty-tensor-to-alloc-tensor
 MLIROPTFLAGS_XDSL += --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
@@ -175,7 +177,11 @@ MLIROPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
 MLIROPTFLAGS += --reconcile-unrealized-casts
 
 %.ll.mlir: %.mlir
-	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $<
+	$(eval TEMP_FILE1 := $(shell mktemp --suffix=.mlir))
+	$(eval TEMP_FILE2 := $(shell mktemp --suffix=.mlir))
+	$(MLIROPT) $(MLIROPTFLAGS_GENERIC) -o $(TEMP_FILE1) $<
+	$(MAKEFILE_RULES_DIRNAME)/add_fastmath_to_mlir.py < $(TEMP_FILE1) > $(TEMP_FILE2)
+	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $(TEMP_FILE2)
 
 %.ll: %.ll.mlir
 	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
