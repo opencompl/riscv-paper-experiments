@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void matmul(const double* x, const double* y, double* g) {
+void matmul(const double* restrict x, const double* restrict y, double* restrict g) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             for (uint32_t k = 0; k < K; ++k) {
