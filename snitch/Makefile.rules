@@ -178,10 +178,10 @@ MLIROPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
 MLIROPTFLAGS += --reconcile-unrealized-casts
 
 %.ll.mlir: %.mlir
-	$(TRANSLATE_MAXIMUMF_TO_MAXF) < $< | $(MLIROPT) $(MLIROPTFLAGS) -o $@
+	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $<
 
 %.ll: %.ll.mlir
-	$(TRANSLATE_MAXIMUMF_TO_MAXF) < $< | $(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@
+	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
 
 # Universal rules
 
