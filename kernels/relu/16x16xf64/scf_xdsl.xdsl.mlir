@@ -1,5 +1,5 @@
 module {
-  func.func public @relu(%arg0: memref<16x16xf64>, %arg1: memref<16x16xf64>) -> memref<16x16xf64> {
+  func.func public @relu(%arg0: memref<16x16xf64> {llvm.noalias}, %arg1: memref<16x16xf64> {llvm.noalias}) -> memref<16x16xf64> {
     %c0 = arith.constant 0 : index
     %c16 = arith.constant 16 : index
     %c1 = arith.constant 1 : index

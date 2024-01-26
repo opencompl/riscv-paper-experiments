@@ -20,6 +20,10 @@ XDSLOPT       = xdsl-opt
 XDSL_DIR         = /src/xdsl
 XDSL_COMMIT_FILE = /src/xdsl_commit.txt
 
+# conversion script for maxif -> maximumf translation:
+TRANSLATE_MAXIMUMF_TO_MAXF=sed 's/arith.maximumf/arith.maxf/g' -
+TRANSLATE_MAXF_TO_MAXIMUMF=sed 's/arith.maxf/arith.maximumf/g' -
+
 # Get the current commit hash of xdsl
 CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
 
@@ -137,7 +141,7 @@ XDSLOPTFLAGS += -t riscv-asm
 	$(MLIROPT) $(MLIROPTFLAGS_SCF_XDSL) --mlir-print-local-scope -o $@ $<
 
 %.S: %.xdsl.mlir $(XDSL_COMMIT_FILE)
-	$(XDSLOPT) $(XDSLOPTFLAGS) $< -o $@
+	$(TRANSLATE_MAXF_TO_MAXIMUMF) < $< | $(XDSLOPT) $(XDSLOPTFLAGS) | $(TRANSLATE_MAXIMUMF_TO_MAXF) > $@
 
 # cd /src/xdsl; pwd; . ../venv/bin/activate; python -m docs.Toy.toy --emit=snitch-asm $(abspath $<) --ir > $(abspath $@)
 
@@ -175,10 +179,10 @@ MLIROPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
 MLIROPTFLAGS += --reconcile-unrealized-casts
 
 %.ll.mlir: %.mlir
-	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $<
+	$(TRANSLATE_MAXIMUMF_TO_MAXF) < $< | $(MLIROPT) $(MLIROPTFLAGS) -o $@
 
 %.ll: %.ll.mlir
-	$(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@ $<
+	$(TRANSLATE_MAXIMUMF_TO_MAXF) < $< | $(MLIRTRANSLATE) -opaque-pointers=0 --mlir-to-llvmir -o $@
 
 # Universal rules
 
