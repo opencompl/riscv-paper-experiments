@@ -10,7 +10,13 @@ pivoted.csv: kernels.csv ../scripts/pivot.py
 
 # Remove all csv files in this folder, recursively
 clean:
-	find . -type f -name "*.csv" -print0 | xargs -0 rm
+	find . -type f -name "*.csv" -print0 | xargs -0 rm -f
+	find . -type f -name "*.x" -print0 | xargs -0 rm -f
+	find . -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
+	find . -type f -name "*.S" -print0 | xargs -0 rm -f
+	find . -type f -name "*.bc" -print0 | xargs -0 rm -f
+	find . -type f -name "*.ll" -print0 | xargs -0 rm -f
+	find . -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
 
 # kernels.csv is the aggregation of all kernels
 
@@ -127,7 +133,7 @@ MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snitch_stream.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
 # maxf renamed in MLIR 17
-# MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
+MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
 	./generate_tests_csv.sh $@ $^
@@ -163,7 +169,7 @@ RELU_16_TESTS += $(RELU_16)/linalg.csv
 # RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
 RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
 # maxf renamed in MLIR 17
-# RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
+RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
 $(RELU_16)/tests.csv: $(RELU_16_TESTS)
 	./generate_tests_csv.sh $@ $^
