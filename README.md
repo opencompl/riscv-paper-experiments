@@ -15,8 +15,9 @@ Alternatively, the current flow can be performed with:
 ```shell
 sudo docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest bash
 cd /src/xdsl
-make venv
+python3 -m venv venv
 source venv/bin/activate
+pip install -e .
 pip install pandas
 cd /src/kernels
 make pivoted.csv
