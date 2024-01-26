@@ -14,6 +14,7 @@ clean:
 	find . -type f -name "*.x" -print0 | xargs -0 rm -f
 	find . -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
 	find . -type f -name "*.S" -print0 | xargs -0 rm -f
+	find . -type f -name "*.bc" -print0 | xargs -0 rm -f
 	find . -type f -name "*.ll" -print0 | xargs -0 rm -f
 	find . -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
 
