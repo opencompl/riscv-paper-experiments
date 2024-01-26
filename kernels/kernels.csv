@@ -27,7 +27,7 @@ fill,16x16xf64,snrt,299
 fill,16x16xf64,scf_xdsl,2676
 matmul,8x8xf64,baseline,2562
 matmul,8x8xf64,linalg,3816
-matmul,8x8xf64,snitch_stream,2336
+matmul,8x8xf64,snitch_stream,2324
 matmul,8x8xf64,snrt,2304
 matmul,8x8xf64,scf_xdsl,21360
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,baseline,1435
