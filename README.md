@@ -2,11 +2,10 @@
 
 ## RTL Simulation Quickstart
 
-Let's start by spinning up the `snitch-toolchain` Docker container and mounting
-a clone of this repo inside it at `/src`:
+Let's start by spinning up the `snitch-toolchain` Docker container and mounting in it a clone of this repo at `/src`:
 
 ```shell
-git clone https://github.com/opencompl/riscv-paper-experiments.git
+git clone --recursive https://github.com/opencompl/riscv-paper-experiments.git
 docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest bash
 ```
 
