@@ -1,4 +1,4 @@
-1x1x16x16xf64,baseline,2096
+1x1x16x16xf64,baseline,1948
 1x1x16x16xf64,linalg,1948
 1x1x16x16xf64,snitch_stream,2000
 1x1x16x16xf64,snrt,1976

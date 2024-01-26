@@ -2,7 +2,8 @@
 
 #include <stdint.h>
 
-void conv_2d_nchw_fchw_d1_s1_3x3(const double* x, const double* y, double* z) {
+void conv_2d_nchw_fchw_d1_s1_3x3(const double* restrict x, const double* restrict y,
+                                 double* restrict z) {
     for (int row = 0; row < NEW_H; ++row) {
         for (int col = 0; col < NEW_W; ++col) {
             for (int i = 0; i < N; i++) {

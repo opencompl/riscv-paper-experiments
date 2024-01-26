@@ -26,7 +26,7 @@ double exp(double x) {
 // Copied from math.h
 double fmax(double __x, double __y) { return __builtin_fmax(__x, __y); }
 
-void softmax(const double* x, double* y) {
+void softmax(const double* restrict x, double* restrict y) {
     double sum = 0.0;
     double maxval = x[0];
 

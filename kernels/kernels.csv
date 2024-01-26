@@ -1,4 +1,4 @@
-conv2d_d1_s1_3x3,1x1x8x8xf64,baseline,1987
+conv2d_d1_s1_3x3,1x1x8x8xf64,baseline,1559
 conv2d_d1_s1_3x3,1x1x8x8xf64,linalg,2104
 conv2d_d1_s1_3x3,1x1x8x8xf64,snitch_stream,1499
 conv2d_d1_s1_3x3,1x1x8x8xf64,snrt,1486
@@ -25,7 +25,7 @@ fill,16x16xf64,linalg,347
 fill,16x16xf64,snitch_stream,294
 fill,16x16xf64,snrt,299
 fill,16x16xf64,scf_xdsl,2676
-matmul,8x8xf64,baseline,4229
+matmul,8x8xf64,baseline,2562
 matmul,8x8xf64,linalg,3816
 matmul,8x8xf64,snitch_stream,2336
 matmul,8x8xf64,snrt,2304
@@ -34,15 +34,15 @@ pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,baseline,1435
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,linalg,1201
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,snitch_stream,1118
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,snrt,1094
-pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,baseline,2096
+pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,baseline,1948
 pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,linalg,1948
 pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,snitch_stream,2000
 pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,snrt,1976
 pooling_nchw_sum_d1_s2_3x3,1x1x16x16xf64,scf_xdsl,24699
-relu,16x16xf64,baseline,1339
+relu,16x16xf64,baseline,1081
 relu,16x16xf64,ssr,846
 relu,16x16xf64,ssr_frep,327
 relu,16x16xf64,snrt,334
 relu,16x16xf64,linalg,1074
 relu,16x16xf64,snitch_stream,322
-softmax,16xf64,baseline,32611
+softmax,16xf64,baseline,32613
