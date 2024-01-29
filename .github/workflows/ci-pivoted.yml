@@ -19,7 +19,7 @@ jobs:
           make -q pivoted.csv
       - name: Read CSV
         id: csv
-        uses: juliangruber/read-file-action@v1
+        uses: juliangruber/read-file-action@v1.1.6
         with:
           path: kernels/pivoted.csv
       - name: Create MD
