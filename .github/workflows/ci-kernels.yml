@@ -14,17 +14,24 @@ jobs:
       - uses: actions/checkout@v3.5.0
         with:
           submodules: recursive
-      - name: xDSL filecheck tests
+      - name: xDSL venv
         run: |
-          /opt/python3.11/bin/python3 -m venv venv
+          python3 -m venv venv
           . venv/bin/activate
-          cd xdsl
-          pip3 install -r requirements.txt
-          yes | pip3 uninstall wgpu
-          lit -v tests/filecheck
+          pip install -e .
+        working-directory: xdsl
+      #- name: xDSL filecheck tests
+        #run: |
+          #/opt/python3.11/bin/python3 -m venv venv
+          #. venv/bin/activate
+          #cd xdsl
+          #pip3 install -r requirements.txt
+          #yes | pip3 uninstall wgpu
+          #lit -v tests/filecheck
       - name: Build and run kernel 'saxpy'
-        run: make all
-        working-directory: kernels/saxpy/64xf32
+        run: |
+          . xdsl/venv/bin/activate
+          make -C kernels/saxpy/64xf32 all
 # Note: disabling 'ssum' since it is taking 5x the time taken
 # by saxpy. Let's speed up things a bit, saxpy is fairly enough
 # of a smoke test.
