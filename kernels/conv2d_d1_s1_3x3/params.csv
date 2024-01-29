@@ -1,4 +1,4 @@
 1x1x8x8xf64,baseline,1559
-1x1x8x8xf64,linalg,2104
+1x1x8x8xf64,linalg,1489
 1x1x8x8xf64,snitch_stream,1499
 1x1x8x8xf64,snrt,1486

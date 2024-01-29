@@ -20,8 +20,9 @@ XDSLOPT       = xdsl-opt
 XDSL_DIR         = /src/xdsl
 XDSL_COMMIT_FILE = /src/xdsl_commit.txt
 
-# conversion script for maxif -> maximumf translation:
+# conversion scripts for maxif -> maximumf translation and vice verse:
 TRANSLATE_MAXF_TO_MAXIMUMF=sed 's/arith.maxf/arith.maximumf/g'
+TRANSLATE_MAXIMUMF_TO_MAXF=sed 's/arith.maximumf/arith.maxf/g'
 
 # Get the current commit hash of xdsl
 CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
@@ -165,7 +166,9 @@ MLIROPTFLAGS_SCF_XDSL += --convert-linalg-to-loops
 MLIROPTFLAGS_SCF_XDSL += --lower-affine
 MLIROPTFLAGS_SCF_XDSL += --canonicalize
 
-MLIROPTFLAGS = $(MLIROPTFLAGS_SCF_XDSL)
+MLIROPTFLAGS_PART1 = $(MLIROPTFLAGS_SCF_XDSL)
+
+MLIROPTFLAGS = 
 MLIROPTFLAGS += --convert-scf-to-cf
 MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --cse
@@ -177,7 +180,10 @@ MLIROPTFLAGS += --convert-cf-to-llvm=index-bitwidth=32
 MLIROPTFLAGS += --convert-arith-to-llvm=index-bitwidth=32
 MLIROPTFLAGS += --reconcile-unrealized-casts
 
-%.ll.mlir: %.mlir
+%.part1.mlir: %.mlir
+	$(MLIROPT) $(MLIROPTFLAGS_PART1) $< | $(TRANSLATE_MAXF_TO_MAXIMUMF) | $(XDSLOPT) -p arith-add-fastmath | $(TRANSLATE_MAXIMUMF_TO_MAXF) > $@
+
+%.ll.mlir: %.part1.mlir
 	$(MLIROPT) $(MLIROPTFLAGS) -o $@ $<
 
 %.ll: %.ll.mlir
