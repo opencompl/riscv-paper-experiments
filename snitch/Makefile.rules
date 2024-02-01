@@ -109,18 +109,7 @@ XDSLOPT_PASSES += convert-arith-to-riscv
 XDSLOPT_PASSES += convert-scf-to-riscv-scf
 XDSLOPT_PASSES += dce
 XDSLOPT_PASSES += reconcile-unrealized-casts
-XDSLOPT_PASSES += snitch-allocate-registers
-XDSLOPT_PASSES += convert-snitch-stream-to-snitch
-XDSLOPT_PASSES += lower-snitch
-XDSLOPT_PASSES += canonicalize
-XDSLOPT_PASSES += riscv-scf-loop-range-folding
-XDSLOPT_PASSES += canonicalize
-XDSLOPT_PASSES += riscv-reduce-register-pressure
-XDSLOPT_PASSES += riscv-allocate-registers
-XDSLOPT_PASSES += canonicalize
-XDSLOPT_PASSES += lower-riscv-func
-XDSLOPT_PASSES += convert-riscv-scf-to-riscv-cf
-XDSLOPT_PASSES += canonicalize
+XDSLOPT_PASSES += test-lower-linalg-to-snitch
 
 
 space := $(null) #
