@@ -119,7 +119,8 @@ XDSLOPT_PASSES += riscv-reduce-register-pressure
 XDSLOPT_PASSES += riscv-allocate-registers
 XDSLOPT_PASSES += canonicalize
 XDSLOPT_PASSES += lower-riscv-func
-XDSLOPT_PASSES += lower-riscv-scf-to-labels
+XDSLOPT_PASSES += convert-riscv-scf-to-riscv-cf
+XDSLOPT_PASSES += canonicalize
 
 
 space := $(null) #
@@ -168,7 +169,7 @@ MLIROPTFLAGS_SCF_XDSL += --canonicalize
 
 MLIROPTFLAGS_PART1 = $(MLIROPTFLAGS_SCF_XDSL)
 
-MLIROPTFLAGS = 
+MLIROPTFLAGS =
 MLIROPTFLAGS += --convert-scf-to-cf
 MLIROPTFLAGS += --canonicalize
 MLIROPTFLAGS += --cse
