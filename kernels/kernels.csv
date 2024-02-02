@@ -6,7 +6,7 @@ ddot,128xf64,baseline,929
 ddot,128xf64,linalg,937
 ddot,128xf64,snitch_stream,570
 ddot,128xf64,snrt,550
-ddot,128xf64,scf_xdsl,1587
+ddot,128xf64,scf_xdsl,1203
 ddot,128xf64,scf,937
 dense,8x8xf64,baseline,3239
 dense,8x8xf64,fused,2964
@@ -29,7 +29,7 @@ matmul,8x8xf64,baseline,2562
 matmul,8x8xf64,linalg,2560
 matmul,8x8xf64,snitch_stream,2324
 matmul,8x8xf64,snrt,2304
-matmul,8x8xf64,scf_xdsl,21335
+matmul,8x8xf64,scf_xdsl,20834
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,baseline,1435
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,linalg,1201
 pooling_nchw_max_d1_s2_3x3,1x1x16x16xf64,snitch_stream,1118
