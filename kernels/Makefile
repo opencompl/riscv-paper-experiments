@@ -63,8 +63,6 @@ DDOT_128_TESTS += $(DDOT_128)/snitch_stream.csv
 DDOT_128_TESTS += $(DDOT_128)/snrt.csv
 DDOT_128_TESTS += $(DDOT_128)/scf_xdsl.csv
 DDOT_128_TESTS += $(DDOT_128)/scf.csv
-# Fails for some reason
-# DDOT_128_TESTS += $(DDOT_128)/riscv_scf.csv
 
 $(DDOT_128)/tests.csv: $(DDOT_128_TESTS)
 	./generate_tests_csv.sh $@ $^
