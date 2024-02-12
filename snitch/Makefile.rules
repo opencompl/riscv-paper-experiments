@@ -103,6 +103,7 @@ XDSLOPT_PASSES =
 # XDSLOPT_PASSES += convert-linalg-to-stream
 # XDSLOPT_PASSES += convert-stream-to-snitch-stream
 XDSLOPT_PASSES += arith-add-fastmath
+XDSLOPT_PASSES += loop-hoist-memref
 XDSLOPT_PASSES += lower-affine
 XDSLOPT_PASSES += convert-func-to-riscv-func
 XDSLOPT_PASSES += convert-memref-to-riscv

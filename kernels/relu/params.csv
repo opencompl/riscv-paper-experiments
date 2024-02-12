@@ -4,4 +4,4 @@
 16x16xf64,snrt,334
 16x16xf64,linalg,1074
 16x16xf64,snitch_stream,322
-16x16xf64,scf_xdsl,5022
+16x16xf64,scf_xdsl,4974
