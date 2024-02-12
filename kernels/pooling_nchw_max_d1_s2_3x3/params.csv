@@ -2,4 +2,4 @@
 1x1x16x16xf64,linalg,1201
 1x1x16x16xf64,snitch_stream,1115
 1x1x16x16xf64,snrt,1094
-1x1x16x16xf64,scf_xdsl,24514
+1x1x16x16xf64,scf_xdsl,13548
