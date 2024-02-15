@@ -1,5 +1,6 @@
 baseline,2562
 linalg,2560
+linalg_xdsl,2343
 snitch_stream,2333
 snrt,2304
 scf_xdsl,13602

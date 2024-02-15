@@ -4,6 +4,7 @@ conv2d_d1_s1_3x3,1x1x8x8xf64,snitch_stream,1509
 conv2d_d1_s1_3x3,1x1x8x8xf64,snrt,1486
 ddot,128xf64,baseline,929
 ddot,128xf64,linalg,937
+ddot,128xf64,linalg_xdsl,565
 ddot,128xf64,snitch_stream,570
 ddot,128xf64,snrt,550
 ddot,128xf64,scf_xdsl,961
@@ -15,6 +16,7 @@ dense,8x8xf64,snrt,2709
 dense,8x8xf64,snitch_stream,2734
 dsum,8x16xf32,baseline,1202
 dsum,8x16xf32,linalg,794
+dsum,8x16xf32,linalg_xdsl,243
 dsum,8x16xf32,snrt,187
 dsum,8x16xf32,ssr1d,253
 dsum,8x16xf32,ssr2d,273
@@ -27,6 +29,7 @@ fill,16x16xf64,snrt,299
 fill,16x16xf64,scf_xdsl,2665
 matmul,8x8xf64,baseline,2562
 matmul,8x8xf64,linalg,2560
+matmul,8x8xf64,linalg_xdsl,2343
 matmul,8x8xf64,snitch_stream,2333
 matmul,8x8xf64,snrt,2304
 matmul,8x8xf64,scf_xdsl,13602
@@ -45,6 +48,7 @@ relu,16x16xf64,ssr,846
 relu,16x16xf64,ssr_frep,327
 relu,16x16xf64,snrt,334
 relu,16x16xf64,linalg,1074
+relu,16x16xf64,linalg_xdsl,333
 relu,16x16xf64,snitch_stream,322
 relu,16x16xf64,scf_xdsl,4974
 softmax,16xf64,baseline,32613

@@ -1,5 +1,6 @@
 8x8xf64,baseline,2562
 8x8xf64,linalg,2560
+8x8xf64,linalg_xdsl,2343
 8x8xf64,snitch_stream,2333
 8x8xf64,snrt,2304
 8x8xf64,scf_xdsl,13602

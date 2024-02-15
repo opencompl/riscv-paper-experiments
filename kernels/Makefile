@@ -42,6 +42,8 @@ CONV_8 = conv2d_d1_s1_3x3/1x1x8x8xf64
 CONV_8_TESTS =
 CONV_8_TESTS += $(CONV_8)/baseline.csv
 CONV_8_TESTS += $(CONV_8)/linalg.csv
+# Need to simplify the stride pattern first
+# CONV_8_TESTS += $(CONV_8)/linalg_xdsl.csv
 CONV_8_TESTS += $(CONV_8)/snitch_stream.csv
 CONV_8_TESTS += $(CONV_8)/snrt.csv
 # spill to j register...
@@ -59,6 +61,7 @@ DDOT_128 = ddot/128xf64
 DDOT_128_TESTS =
 DDOT_128_TESTS += $(DDOT_128)/baseline.csv
 DDOT_128_TESTS += $(DDOT_128)/linalg.csv
+DDOT_128_TESTS += $(DDOT_128)/linalg_xdsl.csv
 DDOT_128_TESTS += $(DDOT_128)/snitch_stream.csv
 DDOT_128_TESTS += $(DDOT_128)/snrt.csv
 DDOT_128_TESTS += $(DDOT_128)/scf_xdsl.csv
@@ -76,6 +79,8 @@ DENSE_8_TESTS =
 DENSE_8_TESTS += $(DENSE_8)/baseline.csv
 DENSE_8_TESTS += $(DENSE_8)/fused.csv
 DENSE_8_TESTS += $(DENSE_8)/linalg.csv
+# spill to j register...
+# DENSE_8_TESTS += $(DENSE_8)/linalg_xdsl.csv
 DENSE_8_TESTS += $(DENSE_8)/snrt.csv
 DENSE_8_TESTS += $(DENSE_8)/snitch_stream.csv
 # spill to j register...
@@ -93,7 +98,7 @@ DSUM_8_16 = dsum/8x16xf32
 DSUM_8_16_TESTS =
 DSUM_8_16_TESTS += $(DSUM_8_16)/baseline.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/linalg.csv
-# DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_xdsl.csv
+DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_xdsl.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv
@@ -112,6 +117,7 @@ MATMUL_8 = matmul/8x8xf64
 MATMUL_8_TESTS =
 MATMUL_8_TESTS += $(MATMUL_8)/baseline.csv
 MATMUL_8_TESTS += $(MATMUL_8)/linalg.csv
+MATMUL_8_TESTS += $(MATMUL_8)/linalg_xdsl.csv
 MATMUL_8_TESTS += $(MATMUL_8)/snitch_stream.csv
 MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
 MATMUL_8_TESTS += $(MATMUL_8)/scf_xdsl.csv
@@ -128,9 +134,10 @@ MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
 MAX_POOL_16_TESTS =
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
+# Don't handle scalar param for now
+# MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg_xdsl.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snitch_stream.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
-# maxf renamed in MLIR 17
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
@@ -145,6 +152,8 @@ SUM_POOL_16 = pooling_nchw_sum_d1_s2_3x3/1x1x16x16xf64
 SUM_POOL_16_TESTS =
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/baseline.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/linalg.csv
+# Don't handle scalar param for now
+# SUM_POOL_16_TESTS += $(SUM_POOL_16)/linalg_xdsl.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/snitch_stream.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/snrt.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/scf_xdsl.csv
@@ -164,9 +173,8 @@ RELU_16_TESTS += $(RELU_16)/ssr.csv
 RELU_16_TESTS += $(RELU_16)/ssr_frep.csv
 RELU_16_TESTS += $(RELU_16)/snrt.csv
 RELU_16_TESTS += $(RELU_16)/linalg.csv
-# RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
+RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
 RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
-# maxf renamed in MLIR 17
 RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
 $(RELU_16)/tests.csv: $(RELU_16_TESTS)
@@ -180,6 +188,7 @@ FILL_16 = fill/16x16xf64
 FILL_16_TESTS =
 FILL_16_TESTS += $(FILL_16)/baseline.csv
 FILL_16_TESTS += $(FILL_16)/linalg.csv
+# FILL_16_TESTS += $(FILL_16)/linalg_xdsl.csv
 FILL_16_TESTS += $(FILL_16)/snitch_stream.csv
 FILL_16_TESTS += $(FILL_16)/snrt.csv
 FILL_16_TESTS += $(FILL_16)/scf_xdsl.csv
