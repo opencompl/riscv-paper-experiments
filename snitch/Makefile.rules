@@ -240,7 +240,8 @@ LOG_DIR = $<.logs
 	$(DASM) < $< | $(GENTRACE) --permissive -d $*.trace.json > $*.trace.txt
 
 %.csv: %.x.logs/logs/trace_hart_00000000.trace.json
-	grep -o '"cycles": [0-9]*' $< | cut -d " " -f 2 | sed -n '2p' > $@
+	python3 -c "import json,sys; data = json.load(open(sys.argv[1])); keys = data[1].keys(); print(','.join(keys)); print(','.join(str(data[1][k]) for k in keys))" $< > $@
+
 
 define get_trace_targets
 	$(addsuffix .trace.txt, $(basename $(shell find $(1) -name 'trace_hart_*.dasm')))
