@@ -194,7 +194,7 @@ fill/params.csv: $(FILL_16)/tests.csv
 
 SOFTMAX_16 = softmax/16xf64
 
-SOFTMAX_16_TESTS =
+SOFTMAX_16_TESTS = 
 SOFTMAX_16_TESTS += $(SOFTMAX_16)/baseline.csv
 
 $(SOFTMAX_16)/tests.csv: $(SOFTMAX_16_TESTS)

@@ -10,11 +10,16 @@ shift  # Shift to exclude the first argument
 
 rm -f "$output_file"
 
+# Get header from the first input file
+header=$(head -n 1 "$1")
+
+echo "params,$header" > "$output_file"
+
 while [ "$#" -gt 0 ]; do
     file="$1"
 
 	pattern=$(echo $file | sed 's/[^/]*\/\([^/]*\)\/.*/\1/')
-    awk -v pattern="$pattern" '{print pattern "," $0}' $file >> "$output_file"
+    tail -n +2 "$file" | awk -v pattern="$pattern" '{print pattern "," $0}' >> "$output_file"
 
     shift
 done
