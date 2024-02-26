@@ -33,7 +33,7 @@ FOLDERS += relu
 FOLDERS += softmax
 
 kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
-	./generate_params_csv.sh $@ $(addprefix ./, $^)
+	python3 generate_params.py "kernel" $@ $(addprefix ./, $^)
 
 # individual tests below
 
@@ -51,7 +51,7 @@ $(CONV_8)/tests.csv: $(CONV_8_TESTS)
 	python3 generate_tests.py $@ $^
 
 conv2d_d1_s1_3x3/params.csv: $(CONV_8)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 DDOT_128 = ddot/128xf64
@@ -68,7 +68,7 @@ $(DDOT_128)/tests.csv: $(DDOT_128_TESTS)
 	python3 generate_tests.py $@ $^
 
 ddot/params.csv: $(DDOT_128)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 DENSE_8 = dense/8x8xf64
 
@@ -85,7 +85,7 @@ $(DENSE_8)/tests.csv: $(DENSE_8_TESTS)
 	python3 generate_tests.py $@ $^
 
 dense/params.csv: $(DENSE_8)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 DSUM_8_16 = dsum/8x16xf32
@@ -104,7 +104,7 @@ $(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 dsum/params.csv: $(DSUM_8_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 MATMUL_8 = matmul/8x8xf64
@@ -120,7 +120,7 @@ $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
 	python3 generate_tests.py $@ $^
 
 matmul/params.csv: $(MATMUL_8)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
@@ -137,7 +137,7 @@ $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 pooling_nchw_max_d1_s2_3x3/params.csv: $(MAX_POOL_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 SUM_POOL_16 = pooling_nchw_sum_d1_s2_3x3/1x1x16x16xf64
@@ -153,7 +153,7 @@ $(SUM_POOL_16)/tests.csv: $(SUM_POOL_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 pooling_nchw_sum_d1_s2_3x3/params.csv: $(SUM_POOL_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 RELU_16 = relu/16x16xf64
@@ -173,7 +173,7 @@ $(RELU_16)/tests.csv: $(RELU_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 relu/params.csv: $(RELU_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 FILL_16 = fill/16x16xf64
 
@@ -189,7 +189,7 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 fill/params.csv: $(FILL_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
 
 
 SOFTMAX_16 = softmax/16xf64
@@ -201,4 +201,4 @@ $(SOFTMAX_16)/tests.csv: $(SOFTMAX_16_TESTS)
 	python3 generate_tests.py $@ $^
 
 softmax/params.csv: $(SOFTMAX_16)/tests.csv
-	./generate_params_csv.sh $@ $^
+	python3 generate_params.py "params" $@ $^
