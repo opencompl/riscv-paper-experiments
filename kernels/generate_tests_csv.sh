@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -lt 3 ]; then
+if [ "$#" -lt 2 ]; then
     echo "Usage: $0 <output_path> <input_path1> [<input_path2> ...]"
     exit 1
 fi
