@@ -33,7 +33,7 @@ FOLDERS += relu
 FOLDERS += softmax
 
 kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
-	python3 generate_params.py "kernel" $@ $(addprefix ./, $^)
+	python3 generate_params.py "test" $@ $(addprefix ./, $^)
 
 # individual tests below
 

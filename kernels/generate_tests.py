@@ -16,7 +16,7 @@ def concatenate_csv(output_path, input_paths):
         filename = os.path.splitext(os.path.basename(file))[0]
 
         # Add "tests" column with filename as value
-        df.insert(0, "tests", filename)
+        df.insert(0, "impl", filename)
 
         # Concatenate with existing data
         output_df = pd.concat([output_df, df], ignore_index=True, sort=False)
