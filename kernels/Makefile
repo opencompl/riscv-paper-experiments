@@ -48,7 +48,7 @@ CONV_8_TESTS += $(CONV_8)/snrt.csv
 # CONV_8_TESTS += $(CONV_8)/scf_xdsl.csv
 
 $(CONV_8)/tests.csv: $(CONV_8_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 conv2d_d1_s1_3x3/params.csv: $(CONV_8)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -65,7 +65,7 @@ DDOT_128_TESTS += $(DDOT_128)/scf_xdsl.csv
 DDOT_128_TESTS += $(DDOT_128)/scf.csv
 
 $(DDOT_128)/tests.csv: $(DDOT_128_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 ddot/params.csv: $(DDOT_128)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -82,7 +82,7 @@ DENSE_8_TESTS += $(DENSE_8)/snitch_stream.csv
 # DENSE_8_TESTS += $(DENSE_8)/scf_xdsl.csv
 
 $(DENSE_8)/tests.csv: $(DENSE_8_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 dense/params.csv: $(DENSE_8)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -101,7 +101,7 @@ DSUM_8_16_TESTS += $(DSUM_8_16)/snitch_stream.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/scf_xdsl.csv
 
 $(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 dsum/params.csv: $(DSUM_8_16)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -117,7 +117,7 @@ MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
 MATMUL_8_TESTS += $(MATMUL_8)/scf_xdsl.csv
 
 $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 matmul/params.csv: $(MATMUL_8)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -134,7 +134,7 @@ MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 pooling_nchw_max_d1_s2_3x3/params.csv: $(MAX_POOL_16)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -150,7 +150,7 @@ SUM_POOL_16_TESTS += $(SUM_POOL_16)/snrt.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/scf_xdsl.csv
 
 $(SUM_POOL_16)/tests.csv: $(SUM_POOL_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 pooling_nchw_sum_d1_s2_3x3/params.csv: $(SUM_POOL_16)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -170,7 +170,7 @@ RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
 RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
 $(RELU_16)/tests.csv: $(RELU_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 relu/params.csv: $(RELU_16)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -186,7 +186,7 @@ FILL_16_TESTS += $(FILL_16)/scf_xdsl.csv
 
 
 $(FILL_16)/tests.csv: $(FILL_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 fill/params.csv: $(FILL_16)/tests.csv
 	./generate_params_csv.sh $@ $^
@@ -194,11 +194,11 @@ fill/params.csv: $(FILL_16)/tests.csv
 
 SOFTMAX_16 = softmax/16xf64
 
-SOFTMAX_16_TESTS = 
+SOFTMAX_16_TESTS =
 SOFTMAX_16_TESTS += $(SOFTMAX_16)/baseline.csv
 
 $(SOFTMAX_16)/tests.csv: $(SOFTMAX_16_TESTS)
-	./generate_tests_csv.sh $@ $^
+	python3 generate_tests.py $@ $^
 
 softmax/params.csv: $(SOFTMAX_16)/tests.csv
 	./generate_params_csv.sh $@ $^
