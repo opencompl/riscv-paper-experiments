@@ -1,7 +1,7 @@
 import pandas as pd
 import math
 
-df = pd.read_csv("kernels.csv", header=None, names=("test", "params", "impl", "cycles"))
+df = pd.read_csv("kernels.csv")
 
 df["kernels"] = df["test"].astype(str) + " " + df["params"]
 

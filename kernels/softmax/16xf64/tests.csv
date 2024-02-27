@@ -1,1 +1,2 @@
-baseline,32613
+impl,tstart,start,snitch_issues,snitch_stores,snitch_fseq_offloads,end_fpss,fpss_issues,fpss_stores,fpss_loads,fpss_load_latency,fpss_fpu_issues,fpss_fpu_latency,snitch_loads,snitch_load_latency,tend,end,snitch_avg_load_latency,snitch_occupancy,snitch_fseq_rel_offloads,fseq_yield,fseq_fpu_yield,fpss_section_latency,fpss_avg_fpu_latency,fpss_avg_load_latency,fpss_occupancy,fpss_fpu_occupancy,fpss_fpu_rel_occupancy,cycles,total_ipc
+baseline,0.0,707,2477,2,4965,33319,4965,38,54,181,4870,34633,2,6,0.0,33255,3.0,0.0759513077607089,0.6671593657618919,1.0,1.0,64,7.111498973305955,3.351851851851852,0.1522399043326281,0.1493269555085395,0.9808660624370594,32613,0.228191212093337
