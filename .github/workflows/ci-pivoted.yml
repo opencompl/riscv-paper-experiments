@@ -9,7 +9,7 @@ on:
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
-    container: ghcr.io/nazavode/snitch-toolchain:latest
+    container: ghcr.io/opencompl/snitch-toolchain:latest
     steps:
       - uses: actions/checkout@v3.5.0
         with:
