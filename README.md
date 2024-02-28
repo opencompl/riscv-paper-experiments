@@ -6,13 +6,13 @@ Let's start by spinning up the `snitch-toolchain` Docker container and mounting 
 
 ```shell
 git clone --recursive https://github.com/opencompl/riscv-paper-experiments.git
-docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest bash
+docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/opencompl/snitch-toolchain:latest bash
 ```
 
 Alternatively, the current flow can be performed with:
 
 ```shell
-sudo docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/nazavode/snitch-toolchain:latest bash
+sudo docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/opencompl/snitch-toolchain:latest bash
 cd /src/xdsl
 python3 -m venv venv
 source venv/bin/activate
@@ -26,11 +26,6 @@ This creates a Python virtual env for xDSL and the Python scripts used in this r
 executes them with Verilator, processes the traces from these runs and plots the results.
 The overall results are collated in the`pivoted.csv` file.
 Individual CSV files per kernel directory contain the result in cycles for each version of the kernel.
-
-*Note: `opencompl` members seem not to have enough rights to push packages to the organization's
-package registry. The image built from [`snitch/docker/Dockerfile`](snitch/docker/Dockerfile) is
-currently made available at:
-[`ghcr.io/nazavode/snitch-toolchain:latest`](https://github.com/users/nazavode/packages/container/package/snitch-toolchain)*
 
 *Note: if on macOS, be aware that the official Docker app is trash, [OrbStack](https://orbstack.dev/)
 is highly recommended instead.*
