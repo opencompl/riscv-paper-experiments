@@ -101,3 +101,5 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
 
 # Make our own python3.11 available for current $USER:
 ENV PATH "/opt/python3.11/bin:${PATH}"
+
+ENTRYPOINT ["/src/snitch/docker/entrypoint.sh"]
