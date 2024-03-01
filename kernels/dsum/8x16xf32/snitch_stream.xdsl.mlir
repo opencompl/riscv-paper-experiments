@@ -9,7 +9,7 @@
 
     "snitch_stream.streaming_region"(%0, %1, %2) <{
       "stride_patterns" = [
-        #snitch_stream.stride_pattern<ub = [256], strides = [8]>
+        #snitch_stream.stride_pattern<ub = [128], strides = [8]>
       ],
       "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
