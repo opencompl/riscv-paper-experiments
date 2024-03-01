@@ -13,18 +13,18 @@ Alternatively, the current flow can be performed with:
 
 ```shell
 sudo docker run --rm -ti --volume $PWD/riscv-paper-experiments:/src ghcr.io/opencompl/snitch-toolchain:latest bash
-cd /src/xdsl
-python3 -m venv venv
-source venv/bin/activate
-pip install -e .
-pip install pandas
 cd /src/kernels
 make pivoted.csv
 ```
 
-This creates a Python virtual env for xDSL and the Python scripts used in this repo, builds the kernels, 
-executes them with Verilator, processes the traces from these runs and plots the results.
-The overall results are collated in the`pivoted.csv` file.
+or as one-shot:
+
+```bash
+ sudo docker run -ti --volume ${PWD}/riscv-paper-experiments:/src ghcr.io/opencompl/snitch-toolchain bash -c "make -C /src/kernels pivoted.csv"
+```
+
+This builds the kernels, executes them with Verilator, processes the traces from these runs and plots the results.
+The overall results are collated in the `pivoted.csv` file.
 Individual CSV files per kernel directory contain the result in cycles for each version of the kernel.
 
 *Note: if on macOS, be aware that the official Docker app is trash, [OrbStack](https://orbstack.dev/)
