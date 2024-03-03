@@ -6,6 +6,7 @@ on:
       - '*'
     paths:
       - 'snitch/docker/Dockerfile'
+  pull_request:
 
 jobs:
   build-and-publish:
