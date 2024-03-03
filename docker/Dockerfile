@@ -98,6 +98,7 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
 ENV PATH "/opt/python3.11/bin:${PATH}"
 # Env variable that forces venv environment creation in the entrypoint when set
 ENV FORCE_VENV=0
+ENV TODO_VAR=0
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
