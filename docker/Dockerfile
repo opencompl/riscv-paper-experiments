@@ -96,6 +96,8 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
 
 # Make our own python3.11 available for current $USER:
 ENV PATH "/opt/python3.11/bin:${PATH}"
+# Env variable that forces venv environment creation in the entrypoint when set
+ENV FORCE_VENV=0
 
 COPY entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

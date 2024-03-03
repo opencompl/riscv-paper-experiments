@@ -1,0 +1,34 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    branches:
+      - '*'
+    paths:
+      - 'Dockerfile'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-action@v2
+
+      - name: Login to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and Push Docker Image
+        run: |
+          docker build -t ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:latest .
+          docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ github.sha }}
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            docker tag ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:latest ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:${{ github.sha }}
+            docker push ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}:latest
+          else
+            echo "Not on the main branch, skipping push to latest tag."
+          fi
+
