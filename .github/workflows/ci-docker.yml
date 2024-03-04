@@ -12,11 +12,6 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        env:
-          SNITCH_TOOLCHAIN_REPO: snitch-toolchain
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -30,11 +25,11 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker buildx build -t ghcr.io/${{ github.repository_owner }}/${SNITCH_TOOLCHAIN_REPO}:${{ github.sha }} -f snitch/docker/Dockerfile .
-          docker push ghcr.io/${{ github.repository_owner }}/${SNITCH_TOOLCHAIN_REPO}:${{ github.sha }}
+          docker buildx build -t ghcr.io/${{ github.repository_owner }}/snitch-toolchain:${{ github.sha }} -f snitch/docker/Dockerfile .
+          docker push ghcr.io/${{ github.repository_owner }}/snitch-toolchain:${{ github.sha }}
           if [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            docker buildx imagetools create ghcr.io/${{ github.repository_owner }}/${SNITCH_TOOLCHAIN_REPO}:${{ github.sha }} --tag ghcr.io/${{ github.repository_owner }}/${SNITCH_TOOLCHAIN_REPO}:latest
-            docker push ghcr.io/${{ github.repository_owner }}/${SNITCH_TOOLCHAIN_REPO}:latest
+            docker buildx imagetools create ghcr.io/${{ github.repository_owner }}/snitch-toolchain:${{ github.sha }} --tag ghcr.io/${{ github.repository_owner }}/snitch-toolchain:latest
+            docker push ghcr.io/${{ github.repository_owner }}/snitch-toolchain:latest
           else
             echo "Not on the main branch, skipping push to latest tag."
           fi
