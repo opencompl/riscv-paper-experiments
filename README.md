@@ -165,3 +165,53 @@ $ grep fmul\.s linalg.x.logs/trace_hart_00000001.trace.txt  | wc -l
 The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
+
+## Performance Measurements
+
+Alongside *execution traces*, *performance reports* are produced in the form
+of `json` files summing up measurements for the Verilator run at hand.
+Each counter refers to a specific *scope* in the Snitch cluster micro-architecture:
+
+![Snitch cluster micro-architecture.](docs/snitch-uarch.png)
+
+All the counters provided for each measurement section are listed below.
+
+| Counter                    | Unit       | Scope           | Description                                                                                                                                                                                                                   |
+| -------------------------- | ---------- | --------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tstart`                   | cycles     | cc              | The global simulation time when the `mcycle` instruction opening the current measurement region is issued                                                                                                                     |
+| `tend`                     | cycles     | cc              | The global simulation time when the `mcycle` instruction closing the current measurement region is issued                                                                                                                     |
+| `start`                    | cycles     | cc              | The core complex cycle count when the `mcycle` instruction opening the current measurement region is issued                                                                                                                   |
+| `end`                      | cycles     | cc              | The core complex cycle count when the `mcycle` instruction closing the current measurement region is issued                                                                                                                   |
+| `end_fpss`                 | cycles     | cc > fpss       | The core complex cycle count when the last FP operation issued in the current measurement region retires                                                                                                                      |
+| `snitch_issues`            | inst       | cc > snitch     | Total number of instructions issued by Snitch, excluding those offloaded to the FPSS (see `snitch_fseq_offloads`)                                                                                                             |
+| `snitch_occupancy`         | inst/cycle | cc > snitch     | IPC of the Snitch core, calculated as `snitch_issues / cycles`                                                                                                                                                                |
+| `snitch_fseq_offloads`     | inst       | cc > snitch     | No. of instructions offloaded by the Snitch to the FPSS                                                                                                                                                                       |
+| `snitch_fseq_rel_offloads` | %          | cc > snitch     | The ratio between `snitch_fseq_offloads` and the total number of instructions issued by Snitch core proper, i.e. `snitch_issues + snitch_fseq_offloads`                                                                       |
+| `snitch_load_latency`      | cycles     | cc > snitch     | Cumulative latency of all loads issued by Snitch's own LSU. The latency of a load is measured from the cycle the load is issued to the cycle it is retired, i.e. it writes back to the register file. See `fpss_load_latency` |
+| `snitch_avg_load_latency`  | cycles     | cc > snitch     | Average latency of a load issued by Snitch own LSU (see `snitch_load_latency`)                                                                                                                                                |
+| `snitch_loads`             | inst       | cc > snitch     | No. of load instructions retired by the Snitch own LSU                                                                                                                                                                        |
+| `fseq_yield`               | %          | cc > fseq       | The ratio between `fpss_issues` and `snitch_fseq_offloads`. The difference lies in the FREP sequencer possibly replicating instructions. If the sequencer is not used this ratio should amount to 1                           |
+| `fseq_fpu_yield`           | %          | cc > fseq       | **FIXME** Currently identical to `fseq_yield`, **probably a bug in the trace postprocessor**. Most likely originally intended to be the ratio between `fpss_fpu_issues` and `snitch_fseq_offloads`                            |
+| `fpss_issues`              | inst       | cc > fpss       | Total number of instructions issued by the FPSS. It counts repeated issues from the FREP sequencer                                                                                                                            |
+| `fpss_fpu_issues`          | inst       | cc > fpss > fpu | Similar to `fpss_issues`, but counts only instructions destined to the FPU proper. It does not for instance include instructions issued to the FPSS own LSU                                                                   |
+| `fpss_fpu_latency`         | cycles     | cc > fpss > fpu | Cumulative latency of all FPU instructions. The latency of an FPU instruction is measured from the cycle the instruction is issued to the cycle it is retired, i.e. it writes back to the register file                       |
+| `fpss_avg_fpu_latency`     | cycles     | cc > fpss > fpu | Average latency of an FPU instruction (see `fpss_fpu_latency`)                                                                                                                                                                |
+| `fpss_load_latency`        | cycles     | cc > fpss       | Cumulative latency of all loads issued by FPSS own LSU. The latency of a load is measured from the cycle the load is issued to the cycle it is retired, i.e. it writes back to the register file. See `snitch_load_latency`   |
+| `fpss_avg_load_latency`    | cycles     | cc > fpss       | Average latency of a load issued by FPSS own LSU (see `fpss_load_latency`)                                                                                                                                                    |
+| `fpss_loads`               | inst       | cc > fpss       | No. of load instructions retired by the FPSS own LSU                                                                                                                                                                          |
+| `fpss_section_latency`     | cycles     | cc > fpss       | `max(end_fpss - end, 0)`                                                                                                                                                                                                      |
+| `fpss_occupancy`           | inst/cycle | cc > fpss       | IPC of the FPSS, calculated as `fpss_issues / cycles`                                                                                                                                                                         |
+| `fpss_fpu_occupancy`       | inst/cycle | cc > fpss > fpu | IPC of the FPU, calculated as `fpss_fpu_issues / cycles`                                                                                                                                                                      |
+| `fpss_fpu_rel_occupancy`   | %          | cc > fpss > fpu | The ratio between `fpss_fpu_occupancy` and `fpss_occupancy`, equals to `fpss_fpu_issues / fpss_issues`                                                                                                                        |
+| `cycles`                   | cycles     | cc              | Overall cycles spent in the current measurement region, calculated as `max(end, end_fpss) - start + 1`                                                                                                                        |
+| `total_ipc`                | inst/cycle | cc              | The overall IPC of the core complex, calculated as `snitch_occupancy + fpss_occupancy`                                                                                                                                        |
+
+
+
+
+
+
+
+
+
+
