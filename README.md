@@ -205,13 +205,3 @@ All the counters provided for each measurement section are listed below.
 | `fpss_fpu_rel_occupancy`   | %          | cc > fpss > fpu | The ratio between `fpss_fpu_occupancy` and `fpss_occupancy`, equals to `fpss_fpu_issues / fpss_issues`                                                                                                                        |
 | `cycles`                   | cycles     | cc              | Overall cycles spent in the current measurement region, calculated as `max(end, end_fpss) - start + 1`                                                                                                                        |
 | `total_ipc`                | inst/cycle | cc              | The overall IPC of the core complex, calculated as `snitch_occupancy + fpss_occupancy`                                                                                                                                        |
-
-
-
-
-
-
-
-
-
-
