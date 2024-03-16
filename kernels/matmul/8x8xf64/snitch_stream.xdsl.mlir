@@ -19,18 +19,20 @@ riscv.assembly_section ".text" {
     %c8 = riscv.li 8 : () -> !riscv.reg<>
     %c512 = riscv.li 512 : () -> !riscv.reg<>
 
-    "snitch_stream.streaming_region"(%X_moved, %Y_moved) <{
+    %zero = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
+
+    "snitch_stream.streaming_region"(%X_moved, %Y_moved, %G_moved) <{
       "stride_patterns" = [
         #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [64, 0, 8]>,
-        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [0, 8, 64]>
+        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [0, 8, 64]>,
+        #snitch_stream.stride_pattern<ub = [8, 8], strides = [64, 8]>
       ],
-      "operandSegmentSizes" = array<i32: 2, 0>
+      "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
+    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>, %G_stream : !stream.writable<!riscv.freg<ft2>>):
       %c7 = riscv.li 7 : () -> !riscv.reg<>
       riscv_scf.for %g_i : !riscv.reg<> = %c0 to %c512 step %c8 {
-        %G_dest = riscv.add %G_moved, %g_i : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-        %init = riscv.fld %G_dest, 0 : (!riscv.reg<>) -> !riscv.freg<>
+        %init = riscv.fmv.d %zero : (!riscv.freg<>) -> !riscv.freg<>
 
         %g = riscv_snitch.frep_outer %c7 iter_args(%acc = %init) -> (!riscv.freg<>) {
           %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
@@ -39,11 +41,12 @@ riscv.assembly_section ".text" {
           riscv_snitch.frep_yield %res : !riscv.freg<>
         }
 
-        riscv.fsd %G_dest, %g, 0 : (!riscv.reg<>, !riscv.freg<>) -> ()
+        %g_moved = riscv.fmv.d %g : (!riscv.freg<>) -> !riscv.freg<ft2>
+        riscv_snitch.write %g_moved to %G_stream : !riscv.freg<ft2>
 
         riscv_scf.yield
       }
-    }) : (!riscv.reg<>, !riscv.reg<>) -> ()
+    }) : (!riscv.reg<>, !riscv.reg<>, !riscv.reg<>) -> ()
 
     riscv_func.return
   }
