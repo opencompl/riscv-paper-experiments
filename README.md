@@ -24,7 +24,7 @@ or as one-shot:
 ```
 
 This builds the kernels, executes them with Verilator, processes the traces from these runs and plots the results.
-The overall results are collated in the `pivoted.csv` file.
+The overall results are collated in the `pivoted.csv` and `pivoted_fpu.csv` files.
 Individual CSV files per kernel directory contain the result in cycles for each version of the kernel.
 
 *Note: if on macOS, be aware that the official Docker app is trash, [OrbStack](https://orbstack.dev/)
@@ -92,7 +92,7 @@ To disassemble and decode the execution traces:
 $ make traces
 $ ls linalg.x.logs/
 linalg.x.logs/trace_hart_00000000.trace.txt  # decoded trace
-linalg.x.logs/trace_hart_00000000.trace.json # json performance data per section 
+linalg.x.logs/trace_hart_00000000.trace.json # json performance data per section
 ```
 
 *Note: the current version of `spike-dasm` included in the Docker image doesn't support

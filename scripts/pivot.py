@@ -5,15 +5,18 @@ df = pd.read_csv("kernels.csv")
 
 df["kernels"] = df["test"].astype(str) + " " + df["params"]
 
-pivoted = df.pivot(index="kernels", columns="impl")["cycles"]
+# Filter the DataFrame to keep only the necessary columns
+df = df[["kernels", "impl", "cycles", "fpss_fpu_occupancy"]]
 
 PIVOTED_COLS = set(
     ("linalg", "baseline", "snitch_stream", "snrt", "linalg_xdsl", "scf_xdsl")
 )
 
-for col in pivoted:
-    if col not in PIVOTED_COLS:
-        del pivoted[col]
+df = df[df["impl"].isin(PIVOTED_COLS)]
+
+pivoted_all = df.pivot(index="kernels", columns="impl")
+pivoted = pivoted_all["cycles"]
+pivoted_fpu = pivoted_all["fpss_fpu_occupancy"]
 
 pivoted["min_llvm_mlir"] = pivoted[["baseline", "linalg"]].min(axis=1)
 
@@ -24,3 +27,4 @@ pivoted["min_llvm_mlir"] = pivoted[["baseline", "linalg"]].min(axis=1)
 # print(bla.dtype)
 
 pivoted.to_csv("pivoted.csv", float_format=lambda val: str(int(val)))
+pivoted_fpu.to_csv("pivoted_fpu.csv", float_format=lambda val: f"{val:.2f}")

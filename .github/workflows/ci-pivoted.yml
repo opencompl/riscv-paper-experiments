@@ -21,7 +21,9 @@ jobs:
         id: csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path: kernels/pivoted.csv
+          path:
+            kernels/pivoted.csv
+            kernels/pivoted_fpu.csv
       - name: Create MD
         uses: petems/csv-to-md-table-action@master
         id: csv-table-output
