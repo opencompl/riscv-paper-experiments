@@ -17,22 +17,37 @@ jobs:
       - name: Check pivoted is up to date
         run: cd kernels
           make -q pivoted.csv
-      - name: Read CSV
-        id: csv
+      - name: Read Cycles CSV
+        id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path:
-            kernels/pivoted.csv
-            kernels/pivoted_fpu.csv
+          path: kernels/pivoted.csv
       - name: Create MD
         uses: petems/csv-to-md-table-action@master
-        id: csv-table-output
+        id: cycles-csv-table-output
         with:
-          csvinput: ${{ steps.csv.outputs.content }}
+          csvinput: ${{ steps.cycles-csv.outputs.content }}
       - uses: mshick/add-pr-comment@v1
         with:
           message: |
-            ${{steps.csv-table-output.outputs.markdown-table}}
+            ${{steps.cycles-csv-table-output.outputs.markdown-table}}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
+          allow-repeats: true
+      - name: Read FPU CSV
+        id: fpu-csv
+        uses: juliangruber/read-file-action@v1.1.6
+        with:
+          path: kernels/pivoted_fpu.csv
+      - name: Create MD
+        uses: petems/csv-to-md-table-action@master
+        id: fpu-csv-table-output
+        with:
+          csvinput: ${{ steps.fpu-csv.outputs.content }}
+      - uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            ${{steps.fpu-csv-table-output.outputs.markdown-table}}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
           allow-repeats: true
