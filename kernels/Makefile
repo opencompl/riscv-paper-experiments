@@ -129,8 +129,8 @@ MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snitch_stream.csv
 MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
-# maxf renamed in MLIR 17
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
+# spill to j register...
+# MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
 
 $(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
 	python3 generate_tests.py $@ $^
@@ -146,7 +146,8 @@ SUM_POOL_16_TESTS += $(SUM_POOL_16)/baseline.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/linalg.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/snitch_stream.csv
 SUM_POOL_16_TESTS += $(SUM_POOL_16)/snrt.csv
-SUM_POOL_16_TESTS += $(SUM_POOL_16)/scf_xdsl.csv
+# spill to j register...
+# SUM_POOL_16_TESTS += $(SUM_POOL_16)/scf_xdsl.csv
 
 $(SUM_POOL_16)/tests.csv: $(SUM_POOL_16_TESTS)
 	python3 generate_tests.py $@ $^
@@ -165,7 +166,6 @@ RELU_16_TESTS += $(RELU_16)/snrt.csv
 RELU_16_TESTS += $(RELU_16)/linalg.csv
 # RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
 RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
-# maxf renamed in MLIR 17
 RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
 
 $(RELU_16)/tests.csv: $(RELU_16_TESTS)

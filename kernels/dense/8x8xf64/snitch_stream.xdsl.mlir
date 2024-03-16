@@ -26,8 +26,8 @@ riscv.assembly_section ".text" {
 
     "snitch_stream.streaming_region"(%X_moved, %W_moved, %B_moved) <{
       "stride_patterns" = [
-        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [8, 0, 64]>,
-        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [64, 8, 0]>,
+        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [64, 0, 8]>,
+        #snitch_stream.stride_pattern<ub = [8, 8, 8], strides = [0, 8, 64]>,
         #snitch_stream.stride_pattern<ub = [64], strides = [8]>
       ],
       "operandSegmentSizes" = array<i32: 3, 0>

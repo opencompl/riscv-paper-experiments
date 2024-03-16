@@ -18,7 +18,7 @@ riscv_func.func public @pooling_nchw_sum_d1_s2_3x3(
 
     "snitch_stream.streaming_region"(%X_moved) <{
       "stride_patterns" = [
-        #snitch_stream.stride_pattern<ub = [3, 3, 7, 7], strides = [8, 128, 16, 256]>
+        #snitch_stream.stride_pattern<ub = [7, 7, 3, 3], strides = [256, 16, 128, 8]>
       ],
       "operandSegmentSizes" = array<i32: 1, 0>
     }> ({
