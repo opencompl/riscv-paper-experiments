@@ -5,7 +5,7 @@ include ../snitch/Makefile.rules
 
 # Top-level result, pivots the flat results in kernels.csv
 
-pivoted.csv: kernels.csv ../scripts/pivot.py
+pivoted.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
 
 # Remove all csv files in this folder, recursively
@@ -30,7 +30,6 @@ FOLDERS += matmul
 FOLDERS += pooling_nchw_max_d1_s2_3x3
 FOLDERS += pooling_nchw_sum_d1_s2_3x3
 FOLDERS += relu
-FOLDERS += softmax
 
 kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
 	python3 generate_params.py "test" $@ $(addprefix ./, $^)
@@ -191,14 +190,3 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 fill/params.csv: $(FILL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
-
-SOFTMAX_16 = softmax/16xf64
-
-SOFTMAX_16_TESTS =
-SOFTMAX_16_TESTS += $(SOFTMAX_16)/baseline.csv
-
-$(SOFTMAX_16)/tests.csv: $(SOFTMAX_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-softmax/params.csv: $(SOFTMAX_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
