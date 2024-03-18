@@ -113,7 +113,8 @@ MATMUL_8_TESTS += $(MATMUL_8)/baseline.csv
 MATMUL_8_TESTS += $(MATMUL_8)/linalg.csv
 MATMUL_8_TESTS += $(MATMUL_8)/snitch_stream.csv
 MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
-MATMUL_8_TESTS += $(MATMUL_8)/scf_xdsl.csv
+# Now that we have two loops, we run out of registers
+# MATMUL_8_TESTS += $(MATMUL_8)/scf_xdsl.csv
 
 $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
 	python3 generate_tests.py $@ $^

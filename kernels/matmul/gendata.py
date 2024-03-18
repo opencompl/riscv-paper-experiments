@@ -107,7 +107,7 @@ if __name__ == "__main__":
     y = np.random.uniform(rmin, rmax, k * n).astype(np.float64).reshape((k, n))
     g_in = np.random.uniform(rmin, rmax, (k, n)).astype(np.float64)
 
-    g_out = x @ y + g_in
+    g_out = x @ y
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
