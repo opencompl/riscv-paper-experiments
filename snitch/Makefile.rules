@@ -112,7 +112,7 @@ XDSLOPT_PASSES += canonicalize
 XDSLOPT_PASSES += convert-scf-to-riscv-scf
 XDSLOPT_PASSES += dce
 XDSLOPT_PASSES += reconcile-unrealized-casts
-XDSLOPT_PASSES += test-lower-linalg-to-snitch
+XDSLOPT_PASSES += test-lower-snitch-stream-to-asm
 
 
 space := $(null) #

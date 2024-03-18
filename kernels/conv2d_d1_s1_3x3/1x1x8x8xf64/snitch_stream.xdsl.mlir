@@ -21,8 +21,8 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
 
     "snitch_stream.streaming_region"(%X_moved, %Y_moved) <{
       "stride_patterns" = [
-        #snitch_stream.stride_pattern<ub = [3, 3, 6, 6], strides = [8, 64, 8, 64]>,
-        #snitch_stream.stride_pattern<ub = [3, 3, 36], strides = [8, 24, 0]>
+        #snitch_stream.stride_pattern<ub = [6, 6, 3, 3], strides = [64, 8, 64, 8]>,
+        #snitch_stream.stride_pattern<ub = [36, 3, 3], strides = [0, 24, 8]>
       ],
       "operandSegmentSizes" = array<i32: 2, 0>
     }> ({
