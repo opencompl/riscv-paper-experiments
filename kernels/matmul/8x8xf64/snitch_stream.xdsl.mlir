@@ -17,7 +17,7 @@ riscv.assembly_section ".text" {
     %c0 = riscv.get_register : () -> !riscv.reg<zero>
     %c1 = riscv.li 1 : () -> !riscv.reg<>
     %c8 = riscv.li 8 : () -> !riscv.reg<>
-    %c512 = riscv.li 512 : () -> !riscv.reg<>
+    %c63 = riscv.li 63 : () -> !riscv.reg<>
 
     %zero = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
 
@@ -30,21 +30,38 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>, %G_stream : !stream.writable<!riscv.freg<ft2>>):
-      %c7 = riscv.li 7 : () -> !riscv.reg<>
-      riscv_scf.for %g_i : !riscv.reg<> = %c0 to %c512 step %c8 {
+      riscv_snitch.frep_outer %c63 {
         %init = riscv.fmv.d %zero : (!riscv.freg<>) -> !riscv.freg<>
 
-        %g = riscv_snitch.frep_outer %c7 iter_args(%acc = %init) -> (!riscv.freg<>) {
-          %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
-          %y = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
-          %res = riscv.fmadd.d %x, %y, %acc : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
-          riscv_snitch.frep_yield %res : !riscv.freg<>
-        }
+        %x0 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y0 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc0 = riscv.fmadd.d %x0, %y0, %init : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x1 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y1 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc1 = riscv.fmadd.d %x1, %y1, %acc0 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x2 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y2 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc2 = riscv.fmadd.d %x2, %y2, %acc1 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x3 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y3 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc3 = riscv.fmadd.d %x3, %y3, %acc2 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x4 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y4 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc4 = riscv.fmadd.d %x4, %y4, %acc3 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x5 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y5 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc5 = riscv.fmadd.d %x5, %y5, %acc4 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x6 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y6 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %acc6 = riscv.fmadd.d %x6, %y6, %acc5 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
+        %x7 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
+        %y7 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
+        %res = riscv.fmadd.d %x7, %y7, %acc6 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
 
-        %g_moved = riscv.fmv.d %g : (!riscv.freg<>) -> !riscv.freg<ft2>
+        %g_moved = riscv.fmv.d %res : (!riscv.freg<>) -> !riscv.freg<ft2>
         riscv_snitch.write %g_moved to %G_stream : !riscv.freg<ft2>
 
-        riscv_scf.yield
+        riscv_snitch.frep_yield
       }
     }) : (!riscv.reg<>, !riscv.reg<>, !riscv.reg<>) -> ()
 
