@@ -29,6 +29,7 @@ int main() {
 
     (void)snrt_mcycle();
     pooling_nchw_max_d1_s2_3x3(local_x, local_y);
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check

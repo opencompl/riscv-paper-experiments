@@ -28,6 +28,7 @@ int main() {
 
     (void)snrt_mcycle();
     softmax(local_x, local_y);
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check

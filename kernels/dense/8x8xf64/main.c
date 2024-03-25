@@ -33,6 +33,7 @@ int main() {
 
     (void)snrt_mcycle();
     dense(local_x, local_w, local_b, local_y);
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check

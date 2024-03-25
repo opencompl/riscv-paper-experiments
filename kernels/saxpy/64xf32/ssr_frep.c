@@ -51,8 +51,6 @@ void saxpy(float a, float* x, float* y, float* z) {
         : [nfrep] "r"(nfrep), [va] "f"(va)
         : "ft0", "ft1", "ft2", "memory");
 
-    snrt_fpu_fence();  // Syncronize integer and floating point pipelines that
-                       // operate indipendently during frep loops
     snrt_ssr_disable();
 }
 
