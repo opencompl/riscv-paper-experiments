@@ -5,7 +5,7 @@ include ../snitch/Makefile.rules
 
 # Top-level result, pivots the flat results in kernels.csv
 
-pivoted.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
+pivoted.csv pivoted_ipc.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
 
 # Remove all csv files in this folder, recursively
