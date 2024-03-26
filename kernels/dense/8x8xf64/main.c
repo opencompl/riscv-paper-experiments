@@ -31,6 +31,7 @@ int main() {
     int thiscore = snrt_cluster_core_idx();
     if (thiscore != 0) return 0;
 
+    snrt_fpu_fence();
     (void)snrt_mcycle();
     dense(local_x, local_w, local_b, local_y);
     snrt_fpu_fence();
