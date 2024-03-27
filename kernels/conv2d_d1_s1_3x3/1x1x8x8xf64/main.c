@@ -31,6 +31,7 @@ int main() {
 
     (void)snrt_mcycle();
     conv_2d_nchw_fchw_d1_s1_3x3(local_x, local_y, local_z);
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check

@@ -22,7 +22,5 @@ void dsum(double* x, double* y, double* z) {
         : [nfrep] "r"(niter - 1)
         : "ft0", "ft1", "ft2", "memory");
 
-    snrt_fpu_fence();
-
     snrt_ssr_disable();
 }

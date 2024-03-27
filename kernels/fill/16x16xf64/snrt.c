@@ -22,7 +22,5 @@ void fill(const double x, double* y) {
         : [nfrep] "r"(niter - 1), [fval] "f"(fval)
         : "ft0", "ft3", "memory");
 
-    snrt_fpu_fence();
-
     snrt_ssr_disable();
 }

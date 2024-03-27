@@ -39,6 +39,5 @@ void ssum(float* restrict x, float* restrict y, float* restrict z) {
         : [nfrep] "r"(nfrep)
         : "ft0", "ft1", "ft2", "memory");
 
-    snrt_fpu_fence();
     snrt_ssr_disable();
 }

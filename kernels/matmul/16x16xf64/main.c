@@ -30,6 +30,7 @@ int main() {
 
     (void)snrt_mcycle();
     matmul(local_x, local_y, local_z);
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check
