@@ -207,6 +207,9 @@ GEN_PARAMS += $(MATMUL_8)
 define generate_target
 $(1)/data.h: $(1)/../data.h.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
+
+$(1)/snitch_stream.xdsl.mlir: $(1)/../snitch_stream.xdsl.mlir.template $(1)/params.json
+	python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
 endef
 
 $(foreach param,$(GEN_PARAMS),$(eval $(call generate_target,$(param))))
