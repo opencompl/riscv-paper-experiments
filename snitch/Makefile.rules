@@ -251,3 +251,11 @@ define get_trace_targets
 endef
 
 traces: $(call get_trace_targets,.)
+
+# Templating
+
+TARGETS := $(patsubst %,%,$(wildcard ../*.template))
+
+# Rule to generate each target file
+$(TARGETS): %: ../%.template ./params.json
+	python /src/scripts/template.py %< "$(cat params.json)" > $@

@@ -200,3 +200,13 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 fill/params.csv: $(FILL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
+GEN_PARAMS =
+GEN_PARAMS += $(MATMUL_4)
+GEN_PARAMS += $(MATMUL_8)
+
+define generate_target
+$(1)/data.h: $(1)/../data.h.template $(1)/params.json
+	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
+endef
+
+$(foreach param,$(GEN_PARAMS),$(eval $(call generate_target,$(param))))
