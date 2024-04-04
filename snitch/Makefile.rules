@@ -83,6 +83,9 @@ LDFLAGS += -lsnRuntime
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+%.o: ../%.c
+	$(CC) $(CFLAGS) -I$(dir $(abspath $@)) -c $< -o $@
+
 %.ll.txt: %.c
 	$(CC) $(CFLAGS) -S -emit-llvm -c $< -o $@
 
