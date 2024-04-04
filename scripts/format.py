@@ -3,6 +3,7 @@ Usage: python format.py test.txt.format '{"Name": "World"}'
 """
 
 import json
+import re
 import sys
 
 
@@ -10,16 +11,18 @@ def format_text_with_json(text, json_data):
     # Load JSON data into Python context
     json_dict = json.loads(json_data)
     # Add JSON data to local context
-    locals().update(json_dict)
 
-    # Convert text to an f-string
+    # Use regex to match only the content within double curly braces
+    def replace_match(match):
+        expr = match.group(1)
+        try:
+            return str(eval(expr, globals(), json_dict))
+        except Exception as e:
+            print(f"Error occurred while evaluating expression '{expr}': {e}")
+            return match.group(0)
 
-    try:
-        formatted_text = eval(f'f"""{text}"""')
-        return formatted_text
-    except Exception as e:
-        print("Error occurred while formatting the text:", e)
-        return None
+    formatted_text = re.sub(r"\{\{(.*?)\}\}", replace_match, text)
+    return formatted_text
 
 
 def main():
