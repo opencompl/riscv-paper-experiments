@@ -114,12 +114,22 @@ MATMUL_4_TESTS += $(MATMUL_4)/snitch_stream.csv
 $(MATMUL_4)/tests.csv: $(MATMUL_4_TESTS)
 	python3 generate_tests.py $@ $^
 
+
 MATMUL_4_8 = matmul/4x8xf64
 
 MATMUL_4_8_TESTS =
 MATMUL_4_8_TESTS += $(MATMUL_4_8)/snitch_stream.csv
 
 $(MATMUL_4_8)/tests.csv: $(MATMUL_4_8_TESTS)
+	python3 generate_tests.py $@ $^
+
+
+MATMUL_4_12 = matmul/4x12xf64
+
+MATMUL_4_12_TESTS =
+MATMUL_4_12_TESTS += $(MATMUL_4_12)/snitch_stream.csv
+
+$(MATMUL_4_12)/tests.csv: $(MATMUL_4_12_TESTS)
 	python3 generate_tests.py $@ $^
 
 
@@ -144,7 +154,7 @@ MATMUL_20_TESTS += $(MATMUL_20)/snitch_stream.csv
 $(MATMUL_20)/tests.csv: $(MATMUL_20_TESTS)
 	python3 generate_tests.py $@ $^
 
-matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv $(MATMUL_4_8)/tests.csv $(MATMUL_20)/tests.csv
+matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv $(MATMUL_4_8)/tests.csv $(MATMUL_4_12)/tests.csv $(MATMUL_20)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
@@ -219,6 +229,7 @@ fill/params.csv: $(FILL_16)/tests.csv
 GEN_PARAMS =
 GEN_PARAMS += $(MATMUL_4)
 GEN_PARAMS += $(MATMUL_4_8)
+GEN_PARAMS += $(MATMUL_4_12)
 GEN_PARAMS += $(MATMUL_8)
 GEN_PARAMS += $(MATMUL_20)
 
@@ -226,7 +237,7 @@ define generate_target
 $(1)/data.h: $(1)/../data.h.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
 
-$(1)/data.c: $(1)/params.json
+$(1)/data.c: $(1)/params.json $(1)/data.h
 	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
 
 # python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
