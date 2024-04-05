@@ -9,7 +9,7 @@ import argparse
 import sys
 from typing import Iterator
 
-from gendatautils import array_to_c, array_to_memref, Define, Array
+from gendatautils import get_printer, Define, Array
 
 
 def matrix_data(
@@ -57,28 +57,5 @@ if __name__ == "__main__":
     with open(args.params, "r") as f:
         params = json.load(f)
 
-    printopts = {"linewidth": None, "threshold": sys.maxsize}
-
-    if args.format == "c":
-        fmt = array_to_c
-        printopts["formatter"] = {"double ": lambda x: f"{x:+}f"}
-    else:
-        assert args.format == "mlir"
-        fmt = array_to_memref
-        printopts["sign"] = "+"
-
-    np.set_printoptions(**printopts)
-    for item in matrix_data(**params):
-        match item:
-            case Define():
-                print(f"#define {item.name} {item.value}")
-            case Array():
-                shape = " * ".join(item.shape_names)
-                print(
-                    fmt(
-                        item.data,
-                        shape=shape,
-                        precision=params["precision"],
-                        symbol=item.name,
-                    )
-                )
+    printer = get_printer(args.format)
+    printer.print_items(matrix_data(**params))
