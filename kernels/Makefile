@@ -154,7 +154,15 @@ MATMUL_20_TESTS += $(MATMUL_20)/snitch_stream.csv
 $(MATMUL_20)/tests.csv: $(MATMUL_20_TESTS)
 	python3 generate_tests.py $@ $^
 
-matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv $(MATMUL_4_8)/tests.csv $(MATMUL_4_12)/tests.csv $(MATMUL_20)/tests.csv
+MATMUL_32x32x32 = matmul/32x32xf64
+
+MATMUL_32x32x32_TESTS =
+MATMUL_32x32x32_TESTS += $(MATMUL_32x32x32)/snitch_stream.csv
+
+$(MATMUL_32x32x32)/tests.csv: $(MATMUL_32x32x32_TESTS)
+	python3 generate_tests.py $@ $^
+
+matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv $(MATMUL_4_8)/tests.csv $(MATMUL_4_12)/tests.csv $(MATMUL_20)/tests.csv $(MATMUL_32x32x32)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
@@ -232,6 +240,7 @@ GEN_PARAMS += $(MATMUL_4_8)
 GEN_PARAMS += $(MATMUL_4_12)
 GEN_PARAMS += $(MATMUL_8)
 GEN_PARAMS += $(MATMUL_20)
+GEN_PARAMS += $(MATMUL_32x32x32)
 
 define generate_target
 $(1)/data.h: $(1)/../data.h.template $(1)/params.json
