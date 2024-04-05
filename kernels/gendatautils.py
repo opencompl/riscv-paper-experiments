@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
 
+import json
+from pathlib import Path
 import numpy as np
 import argparse
 import sys
 import abc
 
-from typing import Iterator, Literal, NamedTuple
+from typing import Callable, Iterator, Literal, NamedTuple, ParamSpec
 
 
 class Define(NamedTuple):
@@ -146,3 +148,29 @@ const {type} {symbol}[{shape}] = {{
 {initializer}
 }};
 """
+
+_P = ParamSpec("_P")
+
+
+def main(items_iterator_factory: Callable[_P, Iterator[Define | Array]]) -> None:
+    parser = argparse.ArgumentParser(
+        prog="gendata.py",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "-p",
+        "--params",
+        type=Path,
+        required=True,
+        help="parameters for data generation",
+    )
+    parser.add_argument(
+        "--format", default="c", choices=["mlir", "c"], help="output format"
+    )
+    args = parser.parse_args()
+
+    with open(args.params, "r") as f:
+        params = json.load(f)
+
+    printer = get_printer(args.format)
+    printer.print_items(items_iterator_factory(**params))

@@ -2,14 +2,10 @@
 
 # usage: `python -m matmul.gendata -p matmul/4x4xf64/params.json`
 
-import json
-from pathlib import Path
 import numpy as np
-import argparse
-import sys
 from typing import Iterator
 
-from gendatautils import get_printer, Define, Array
+from gendatautils import main, Define, Array
 
 
 def matrix_data(
@@ -38,24 +34,4 @@ def matrix_data(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        prog="gendata.py",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "-p",
-        "--params",
-        type=Path,
-        required=True,
-        help="parameters for data generation",
-    )
-    parser.add_argument(
-        "--format", default="c", choices=["mlir", "c"], help="output format"
-    )
-    args = parser.parse_args()
-
-    with open(args.params, "r") as f:
-        params = json.load(f)
-
-    printer = get_printer(args.format)
-    printer.print_items(matrix_data(**params))
+    main(matrix_data)
