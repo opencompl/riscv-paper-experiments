@@ -116,9 +116,9 @@ class MLIRPrinter(Printer):
 
 def get_printer(format: Literal["c", "mlir"]):
     return {
-        "c": CPrinter(),
-        "mlir": MLIRPrinter(),
-    }[format]
+        "c": CPrinter,
+        "mlir": MLIRPrinter,
+    }[format]()
 
 
 C_TYPES = {

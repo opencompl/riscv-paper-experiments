@@ -18,13 +18,13 @@ riscv.assembly_section ".text" {
     %c1 = riscv.li 1 : () -> !riscv.reg<>
     %c4 = riscv.li 4 : () -> !riscv.reg<>
     %frep_count_minus_one = riscv.li 5 : () -> !riscv.reg<>
-    %target_count = riscv.li 64 : () -> !riscv.reg<>
+    %target_count = riscv.li 16 : () -> !riscv.reg<>
 
     "snitch_stream.streaming_region"(%X_moved, %Y_moved, %G_moved) <{
       "stride_patterns" = [
-        #snitch_stream.stride_pattern<ub = [8, 2, 8, 4], strides = [64, 0, 8, 0]>,
-        #snitch_stream.stride_pattern<ub = [8, 2, 8, 4], strides = [0, 32, 64, 8]>,
-        #snitch_stream.stride_pattern<ub = [64], strides = [8]>
+        #snitch_stream.stride_pattern<ub = [4, 1, 8, 4], strides = [64, 0, 8, 0]>,
+        #snitch_stream.stride_pattern<ub = [4, 1, 8, 4], strides = [0, 32, 32, 8]>,
+        #snitch_stream.stride_pattern<ub = [16], strides = [8]>
       ],
       "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
