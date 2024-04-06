@@ -2,7 +2,8 @@ FROM ghcr.io/pulp-platform/snitch_cluster@sha256:9978f9d0e3e6b7ad1b2c1f0eb628a11
 
 RUN git clone --recursive https://github.com/nazavode/snitch_cluster.git /src \
  && cd /src \
- && git checkout nazavode/xdsl-ci \
+ && git reset --hard 6c63f4c65d115ce16193f4f9a030ac08416a4acf \
+ && git submodule update \
  # verilator model
  && cd /src/target/snitch_cluster \
  && make CFG_OVERRIDE=cfg/fdiv.hjson bin/snitch_cluster.vlt \
