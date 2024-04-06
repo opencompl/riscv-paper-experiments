@@ -106,7 +106,7 @@ dsum/params.csv: $(DSUM_8_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-MATMUL_4 = matmul/4x4xf64
+MATMUL_4 = matmul/4x4x4xf64
 
 MATMUL_4_TESTS =
 MATMUL_4_TESTS += $(MATMUL_4)/snitch_stream.csv
@@ -115,7 +115,7 @@ $(MATMUL_4)/tests.csv: $(MATMUL_4_TESTS)
 	python3 generate_tests.py $@ $^
 
 
-MATMUL_4_8 = matmul/4x8xf64
+MATMUL_4_8 = matmul/4x8x4xf64
 
 MATMUL_4_8_TESTS =
 MATMUL_4_8_TESTS += $(MATMUL_4_8)/snitch_stream.csv
@@ -124,7 +124,7 @@ $(MATMUL_4_8)/tests.csv: $(MATMUL_4_8_TESTS)
 	python3 generate_tests.py $@ $^
 
 
-MATMUL_4_12 = matmul/4x12xf64
+MATMUL_4_12 = matmul/4x12x4xf64
 
 MATMUL_4_12_TESTS =
 MATMUL_4_12_TESTS += $(MATMUL_4_12)/snitch_stream.csv
@@ -133,7 +133,7 @@ $(MATMUL_4_12)/tests.csv: $(MATMUL_4_12_TESTS)
 	python3 generate_tests.py $@ $^
 
 
-MATMUL_8 = matmul/8x8xf64
+MATMUL_8 = matmul/8x8x8xf64
 
 MATMUL_8_TESTS =
 MATMUL_8_TESTS += $(MATMUL_8)/baseline.csv
@@ -146,7 +146,7 @@ MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
 $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
 	python3 generate_tests.py $@ $^
 
-MATMUL_20 = matmul/4x20xf64
+MATMUL_20 = matmul/4x20x4xf64
 
 MATMUL_20_TESTS =
 MATMUL_20_TESTS += $(MATMUL_20)/snitch_stream.csv
@@ -154,7 +154,7 @@ MATMUL_20_TESTS += $(MATMUL_20)/snitch_stream.csv
 $(MATMUL_20)/tests.csv: $(MATMUL_20_TESTS)
 	python3 generate_tests.py $@ $^
 
-MATMUL_32x32x32 = matmul/32x32xf64
+MATMUL_32x32x32 = matmul/32x32x32xf64
 
 MATMUL_32x32x32_TESTS =
 MATMUL_32x32x32_TESTS += $(MATMUL_32x32x32)/snitch_stream.csv
