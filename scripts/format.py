@@ -7,11 +7,7 @@ import re
 import sys
 
 
-def format_text_with_json(text, json_data):
-    # Load JSON data into Python context
-    json_dict = json.loads(json_data)
-    # Add JSON data to local context
-
+def format_text_with_json(text, json_dict):
     # Use regex to match only the content within double curly braces
     def replace_match(match):
         expr = match.group(1)
@@ -32,7 +28,7 @@ def main():
         sys.exit(1)
 
     text_file_path = sys.argv[1]
-    json_string = sys.argv[2]
+    json_path = sys.argv[2]
 
     # Load text from file
     try:
@@ -45,8 +41,11 @@ def main():
         print("An error occurred while reading the file:", e)
         sys.exit(1)
 
+    with open(json_path, "r") as f:
+        json_dict = json.load(f)
+
     # Format text with JSON data
-    formatted_text = format_text_with_json(text, json_string)
+    formatted_text = format_text_with_json(text, json_dict)
     if formatted_text is not None:
         print(formatted_text)
 
