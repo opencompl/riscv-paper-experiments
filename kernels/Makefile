@@ -106,66 +106,6 @@ dsum/params.csv: $(DSUM_8_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-MATMUL_4 = matmul/4x4x4xf64
-
-MATMUL_4_TESTS =
-MATMUL_4_TESTS += $(MATMUL_4)/snitch_stream.csv
-
-$(MATMUL_4)/tests.csv: $(MATMUL_4_TESTS)
-	python3 generate_tests.py $@ $^
-
-
-MATMUL_4_8 = matmul/4x8x4xf64
-
-MATMUL_4_8_TESTS =
-MATMUL_4_8_TESTS += $(MATMUL_4_8)/snitch_stream.csv
-
-$(MATMUL_4_8)/tests.csv: $(MATMUL_4_8_TESTS)
-	python3 generate_tests.py $@ $^
-
-
-MATMUL_4_12 = matmul/4x12x4xf64
-
-MATMUL_4_12_TESTS =
-MATMUL_4_12_TESTS += $(MATMUL_4_12)/snitch_stream.csv
-
-$(MATMUL_4_12)/tests.csv: $(MATMUL_4_12_TESTS)
-	python3 generate_tests.py $@ $^
-
-
-MATMUL_8 = matmul/8x8x8xf64
-
-MATMUL_8_TESTS =
-MATMUL_8_TESTS += $(MATMUL_8)/baseline.csv
-MATMUL_8_TESTS += $(MATMUL_8)/linalg.csv
-MATMUL_8_TESTS += $(MATMUL_8)/snitch_stream.csv
-MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
-# Now that we have two loops, we run out of registers
-# MATMUL_8_TESTS += $(MATMUL_8)/scf_xdsl.csv
-
-$(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
-	python3 generate_tests.py $@ $^
-
-MATMUL_20 = matmul/4x20x4xf64
-
-MATMUL_20_TESTS =
-MATMUL_20_TESTS += $(MATMUL_20)/snitch_stream.csv
-
-$(MATMUL_20)/tests.csv: $(MATMUL_20_TESTS)
-	python3 generate_tests.py $@ $^
-
-MATMUL_32x32x32 = matmul/32x32x32xf64
-
-MATMUL_32x32x32_TESTS =
-MATMUL_32x32x32_TESTS += $(MATMUL_32x32x32)/snitch_stream.csv
-
-$(MATMUL_32x32x32)/tests.csv: $(MATMUL_32x32x32_TESTS)
-	python3 generate_tests.py $@ $^
-
-matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv $(MATMUL_4_8)/tests.csv $(MATMUL_4_12)/tests.csv $(MATMUL_20)/tests.csv $(MATMUL_32x32x32)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
 MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
 
 MAX_POOL_16_TESTS =
@@ -234,6 +174,13 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 fill/params.csv: $(FILL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
+
+MATMUL_4 = matmul/4x4x4xf64
+MATMUL_4_8 = matmul/4x8x4xf64
+MATMUL_4_12 = matmul/4x12x4xf64
+MATMUL_8 = matmul/8x8x8xf64
+MATMUL_20 = matmul/4x20x4xf64
+
 GEN_PARAMS =
 GEN_PARAMS += $(MATMUL_4)
 GEN_PARAMS += $(MATMUL_4_8)
@@ -242,19 +189,26 @@ GEN_PARAMS += $(MATMUL_8)
 GEN_PARAMS += $(MATMUL_20)
 GEN_PARAMS += $(MATMUL_32x32x32)
 
+MATMUL_TEST_CSVS = $(patsubst %,%/tests.csv,$(GEN_PARAMS))
+
+matmul/params.csv: $(MATMUL_TEST_CSVS)
+	echo $(GEN_PARAMS)
+	python3 generate_params.py "params" $@ $^
+
 define generate_target
+
+$(1)/tests.csv: $(1)/snitch_stream.csv
+	python3 generate_tests.py $$@ $$^
+
 $(1)/data.h: $(1)/../data.h.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
 
 $(1)/data.c: $(1)/params.json $(1)/data.h
 	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
 
-# python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
-# python -m matmul.gendata -p matmul/8x8xf64/params.json
-# echo $(basename $(dir $(1)))
-
 $(1)/snitch_stream.xdsl.mlir: $(1)/../snitch_stream.xdsl.mlir.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
+
 endef
 
 $(foreach param,$(GEN_PARAMS),$(eval $(call generate_target,$(param))))
