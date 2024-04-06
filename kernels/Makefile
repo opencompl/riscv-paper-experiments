@@ -182,10 +182,39 @@ MATMUL_8 = matmul/8x8x8xf64
 MATMUL_20 = matmul/4x20x4xf64
 
 GEN_PARAMS =
-GEN_PARAMS += $(MATMUL_4)
-GEN_PARAMS += $(MATMUL_4_8)
-GEN_PARAMS += $(MATMUL_4_12)
-GEN_PARAMS += $(MATMUL_8)
+
+RANGE := $(shell seq 4 4 8)
+
+# Triple for loop macro to generate matmul kernel sizes
+define generate_folders
+
+GEN_PARAMS += matmul/$(1)x$(2)x$(3)xf64
+
+# Rule to generate JSON file
+matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"K": $(2),\n\
+	\t"N": $(3),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+# Rule to create the target directory if it doesn't exist
+matmul/$(1)x$(2)x$(3)xf64:
+	@mkdir -p matmul/$(1)x$(2)x$(3)xf64
+
+endef
+
+$(foreach M,$(RANGE),\
+	$(foreach K,$(RANGE),\
+		$(foreach N,$(RANGE),\
+			$(eval $(call generate_folders,$(M),$(K),$(N)))\
+		)\
+	)\
+)
+
 GEN_PARAMS += $(MATMUL_20)
 GEN_PARAMS += $(MATMUL_32x32x32)
 
@@ -198,7 +227,7 @@ matmul/params.csv: $(MATMUL_TEST_CSVS)
 define generate_target
 
 $(1)/tests.csv: $(1)/snitch_stream.csv
-	python3 generate_tests.py $$@ $$^
+	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
 
 $(1)/data.h: $(1)/../data.h.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
@@ -206,7 +235,7 @@ $(1)/data.h: $(1)/../data.h.template $(1)/params.json
 $(1)/data.c: $(1)/params.json $(1)/data.h
 	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
 
-$(1)/snitch_stream.xdsl.mlir: $(1)/../snitch_stream.xdsl.mlir.template $(1)/params.json
+$(1)/snitch_stream.xdsl.mlir: $(1) $(dir $(1))/snitch_stream.xdsl.mlir.template $(1)/params.json
 	python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
 
 endef

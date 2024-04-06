@@ -83,8 +83,8 @@ LDFLAGS += -lsnRuntime
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ../%.c
-	$(CC) $(CFLAGS) -I$(dir $(abspath $@)) -c $< -o $@
+%/main.o: % %/data.h
+	$(CC) $(CFLAGS) -I$(dir $(abspath $@)) -c $(dir $(abspath $@))../main.c -o $@
 
 %.ll.txt: %.c
 	$(CC) $(CFLAGS) -S -emit-llvm -c $< -o $@
@@ -257,5 +257,5 @@ traces: $(call get_trace_targets,.)
 TARGETS := $(patsubst %,%,$(wildcard ../*.template))
 
 # Rule to generate each target file
-$(TARGETS): %: ../%.template ./params.json
+$(TARGETS): %: $(dir %)/%.template ./params.json
 	python /src/scripts/template.py %< "$(cat params.json)" > $@
