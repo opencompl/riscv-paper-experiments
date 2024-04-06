@@ -215,8 +215,8 @@ $(foreach M,$(RANGE),\
 	)\
 )
 
-GEN_PARAMS += $(MATMUL_20)
-GEN_PARAMS += $(MATMUL_32x32x32)
+# GEN_PARAMS += $(MATMUL_20)
+# GEN_PARAMS += $(MATMUL_32x32x32)
 
 MATMUL_TEST_CSVS = $(patsubst %,%/tests.csv,$(GEN_PARAMS))
 
@@ -229,14 +229,17 @@ define generate_target
 $(1)/tests.csv: $(1)/snitch_stream.csv
 	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
 
-$(1)/data.h: $(1)/../data.h.template $(1)/params.json
-	python /src/scripts/format.py $(1)/../data.h.template "$$$$(cat $(1)/params.json)" > $$@
+$(1)/data.h: $(dir $(1))data.h.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))data.h.template $(1)/params.json > $$@
 
 $(1)/data.c: $(1)/params.json $(1)/data.h
 	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
 
-$(1)/snitch_stream.xdsl.mlir: $(1) $(dir $(1))/snitch_stream.xdsl.mlir.template $(1)/params.json
-	python /src/scripts/format.py $(1)/../snitch_stream.xdsl.mlir.template "$$$$(cat $(1)/params.json)" > $$@
+$(1)/snitch_stream.xdsl.mlir: $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json > $$@
+
+$(1)/main.o: $(dir $(1))main.c $(1)/data.h
+	$(CC) $(CFLAGS) -I$(1)/ -c $$< -o $$@
 
 endef
 
