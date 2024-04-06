@@ -13,13 +13,13 @@ int main() {
     // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
     // essentially providing the same memory regions to all the cores in this cluster.
     double *local_x = (double *)snrt_l1_next();
-    double *local_y = local_x + K * N;
-    double *local_z = local_y + M * N;
+    double *local_y = local_x + M * K;
+    double *local_z = local_y + K * N;
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * N * sizeof(double));
-        snrt_dma_start_1d(local_y, Y, M * N * sizeof(double));
+        snrt_dma_start_1d(local_x, X, M * K * sizeof(double));
+        snrt_dma_start_1d(local_y, Y, K * N * sizeof(double));
         snrt_dma_start_1d(local_z, G_IN, M * N * sizeof(double));
     }
 

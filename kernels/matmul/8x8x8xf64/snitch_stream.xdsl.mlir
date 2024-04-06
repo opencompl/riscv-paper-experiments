@@ -17,11 +17,8 @@ riscv.assembly_section ".text" {
     %c0 = riscv.get_register : () -> !riscv.reg<zero>
     %c1 = riscv.li 1 : () -> !riscv.reg<>
     %c4 = riscv.li 4 : () -> !riscv.reg<>
-    %c5 = riscv.li 5 : () -> !riscv.reg<>
-    %c6 = riscv.li 6 : () -> !riscv.reg<>
-    %c7 = riscv.li 7 : () -> !riscv.reg<>
-    %c8 = riscv.li 8 : () -> !riscv.reg<>
-    %c64 = riscv.li 64 : () -> !riscv.reg<>
+    %frep_count_minus_one = riscv.li 5 : () -> !riscv.reg<>
+    %target_count = riscv.li 64 : () -> !riscv.reg<>
 
     "snitch_stream.streaming_region"(%X_moved, %Y_moved, %G_moved) <{
       "stride_patterns" = [
@@ -32,7 +29,7 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>, %G_stream : !stream.writable<!riscv.freg<ft2>>):
-      riscv_scf.for %g_i : !riscv.reg<> = %c0 to %c64 step %c4 {
+      riscv_scf.for %g_i : !riscv.reg<> = %c0 to %target_count step %c4 {
         %x00 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
         %y00 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
         %init0 = riscv.fmul.d %x00, %y00 : (!riscv.freg<ft0>, !riscv.freg<ft1>) -> !riscv.freg<>
@@ -46,7 +43,7 @@ riscv.assembly_section ".text" {
         %y03 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
         %init3 = riscv.fmul.d %x03, %y03 : (!riscv.freg<ft0>, !riscv.freg<ft1>) -> !riscv.freg<>
 
-        %g00, %g01, %g02, %g03 = riscv_snitch.frep_outer %c5 iter_args(%acc0 = %init0, %acc1 = %init1, %acc2 = %init2, %acc3 = %init3) -> (!riscv.freg<>, !riscv.freg<>, !riscv.freg<>, !riscv.freg<>) {
+        %g00, %g01, %g02, %g03 = riscv_snitch.frep_outer %frep_count_minus_one iter_args(%acc0 = %init0, %acc1 = %init1, %acc2 = %init2, %acc3 = %init3) -> (!riscv.freg<>, !riscv.freg<>, !riscv.freg<>, !riscv.freg<>) {
           %x10 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
           %y10 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
           %res0 = riscv.fmadd.d %x10, %y10, %acc0 : (!riscv.freg<ft0>, !riscv.freg<ft1>, !riscv.freg<>) -> !riscv.freg<>
@@ -87,3 +84,4 @@ riscv.assembly_section ".text" {
     riscv_func.return
   }
 }
+
