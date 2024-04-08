@@ -200,3 +200,22 @@ $(FILL_16)/tests.csv: $(FILL_16_TESTS)
 fill/params.csv: $(FILL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
+
+define generate_main
+
+$(1)/main.o: $(dir $(1))main.c $(1)/data.h
+	$(CC) $(CFLAGS) -I$$(dir $$@) -c $$< -o $$@
+
+endef
+
+GEN_MAIN =
+GEN_MAIN += $(MATMUL_4)
+GEN_MAIN += $(MATMUL_8)
+GEN_MAIN += $(CONV_8)
+GEN_MAIN += $(DDOT_128)
+GEN_MAIN += $(DENSE_8)
+GEN_MAIN += $(DSUM_8_16)
+GEN_MAIN += $(MAX_POOL_16)
+GEN_MAIN += $(SUM_POOL_16)
+
+$(foreach param,$(GEN_MAIN),$(eval $(call generate_main,$(param))))
