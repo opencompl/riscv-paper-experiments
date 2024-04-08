@@ -166,6 +166,16 @@ The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
 
+## Using Singularity instead of Docker
+
+On multi-user systems (e.g.: HPC clusters) where Docker is not available, [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/introduction.html) is usually provided as an *almost* drop-in replacement.
+To run the experiments harness:
+
+```shell
+$ singularity pull snitch-toolchain.sif docker://ghcr.io/opencompl/snitch-toolchain:latest
+$ singularity run --bind ${PWD}/riscv-paper-experiments:/src snitch-toolchain.sif bash -c "make -C /src/kernels pivoted.csv"
+```
+
 ## Performance Measurements
 
 Alongside *execution traces*, *performance reports* are produced in the form
