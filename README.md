@@ -1,4 +1,4 @@
-# riscv-paper-experiments 
+# riscv-paper-experiments
 
 ## RTL Simulation Quickstart
 
@@ -166,7 +166,7 @@ The core (a.k.a. *hart* in RISC-V jargon) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
 
-## Usign Singularity instead of Docker
+## Using Singularity instead of Docker
 
 On multi-user systems (e.g.: HPC clusters) where Docker is not available, [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/introduction.html) is usually provided as an *almost* drop-in replacement.
 To run the experiments harness:
