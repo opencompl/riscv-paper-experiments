@@ -106,6 +106,15 @@ dsum/params.csv: $(DSUM_8_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
+MATMUL_4 = matmul/4x4xf64
+
+MATMUL_4_TESTS =
+MATMUL_4_TESTS += $(MATMUL_4)/snitch_stream.csv
+
+$(MATMUL_4)/tests.csv: $(MATMUL_4_TESTS)
+	python3 generate_tests.py $@ $^
+
+
 MATMUL_8 = matmul/8x8xf64
 
 MATMUL_8_TESTS =
@@ -119,7 +128,7 @@ MATMUL_8_TESTS += $(MATMUL_8)/snrt.csv
 $(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
 	python3 generate_tests.py $@ $^
 
-matmul/params.csv: $(MATMUL_8)/tests.csv
+matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
