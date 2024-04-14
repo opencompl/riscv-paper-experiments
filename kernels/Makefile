@@ -177,7 +177,9 @@ fill/params.csv: $(FILL_16)/tests.csv
 
 GEN_PARAMS =
 
-RANGE := $(shell seq 4 4 8)
+MATMUL_RANGE_M := 4 8
+MATMUL_RANGE_N := 4 8 16 32 64
+MATMUL_RANGE_K := 4 8 16 32 64
 
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders
@@ -201,9 +203,9 @@ matmul/$(1)x$(2)x$(3)xf64:
 
 endef
 
-$(foreach M,$(RANGE),\
-	$(foreach K,$(RANGE),\
-		$(foreach N,$(RANGE),\
+$(foreach M,$(MATMUL_RANGE_M),\
+	$(foreach K,$(MATMUL_RANGE_K),\
+		$(foreach N,$(MATMUL_RANGE_N),\
 			$(eval $(call generate_folders,$(M),$(K),$(N)))\
 		)\
 	)\
