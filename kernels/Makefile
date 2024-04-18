@@ -25,11 +25,11 @@ FOLDERS += conv2d_d1_s1_3x3
 FOLDERS += ddot
 FOLDERS += dense
 FOLDERS += dsum
-FOLDERS += fill
+# FOLDERS += fill
 FOLDERS += matmul
 FOLDERS += pooling_nchw_max_d1_s2_3x3
 FOLDERS += pooling_nchw_sum_d1_s2_3x3
-FOLDERS += relu
+# FOLDERS += relu
 
 kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
 	python3 generate_params.py "test" $@ $(addprefix ./, $^)
