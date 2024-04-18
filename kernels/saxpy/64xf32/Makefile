@@ -12,3 +12,5 @@ TESTS += linalg.x
 
 include ../../Makefile.kernels
 
+%.o: ../%.c
+	$(CC) $(CFLAGS) -I$(dir $(abspath $@)) -c $< -o $@
