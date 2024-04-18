@@ -106,27 +106,6 @@ dsum/params.csv: $(DSUM_8_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-MATMUL_4 = matmul/4x4x4xf64
-
-MATMUL_4_TESTS =
-MATMUL_4_TESTS += $(MATMUL_4)/snitch_stream.csv
-
-$(MATMUL_4)/tests.csv: $(MATMUL_4_TESTS)
-	python3 generate_tests.py $@ $^
-
-
-MATMUL_8 = matmul/8x8x8xf64
-
-MATMUL_8_TESTS =
-MATMUL_8_TESTS += $(MATMUL_8)/snitch_stream.csv
-
-$(MATMUL_8)/tests.csv: $(MATMUL_8_TESTS)
-	python3 generate_tests.py $@ $^
-
-matmul/params.csv: $(MATMUL_8)/tests.csv $(MATMUL_4)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
 MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
 
 MAX_POOL_16_TESTS =
@@ -196,6 +175,63 @@ fill/params.csv: $(FILL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
+GEN_PARAMS =
+
+RANGE := $(shell seq 4 4 8)
+
+# Triple for loop macro to generate matmul kernel sizes
+define generate_folders
+
+GEN_PARAMS += matmul/$(1)x$(2)x$(3)xf64
+
+# Rule to generate JSON file
+matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"K": $(2),\n\
+	\t"N": $(3),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+# Rule to create the target directory if it doesn't exist
+matmul/$(1)x$(2)x$(3)xf64:
+	@mkdir -p matmul/$(1)x$(2)x$(3)xf64
+
+endef
+
+$(foreach M,$(RANGE),\
+	$(foreach K,$(RANGE),\
+		$(foreach N,$(RANGE),\
+			$(eval $(call generate_folders,$(M),$(K),$(N)))\
+		)\
+	)\
+)
+
+MATMUL_TESTS = $(patsubst %,%/tests.csv,$(GEN_PARAMS))
+
+matmul/params.csv: $(MATMUL_TESTS)
+	python3 generate_params.py "params" $@ $^
+
+define generate_target
+
+$(1)/tests.csv: $(1)/snitch_stream.csv
+	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
+
+$(1)/data.h: $(dir $(1))data.h.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))data.h.template $(1)/params.json > $$@
+
+$(1)/data.c: $(1)/params.json $(1)/data.h
+	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
+
+$(1)/snitch_stream.xdsl.mlir: $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json > $$@
+
+endef
+
+$(foreach param,$(GEN_PARAMS),$(eval $(call generate_target,$(param))))
+
 define generate_main
 
 $(1)/main.o: $(dir $(1))main.c $(1)/data.h
@@ -203,9 +239,7 @@ $(1)/main.o: $(dir $(1))main.c $(1)/data.h
 
 endef
 
-GEN_MAIN =
-GEN_MAIN += $(MATMUL_4)
-GEN_MAIN += $(MATMUL_8)
+GEN_MAIN = $(GEN_PARAMS)
 GEN_MAIN += $(CONV_8)
 GEN_MAIN += $(DDOT_128)
 GEN_MAIN += $(DENSE_8)
