@@ -177,7 +177,7 @@ fill/params.csv: $(FILL_16)/tests.csv
 
 GEN_PARAMS =
 
-MATMUL_RANGE_M := 4 8
+MATMUL_RANGE_M := 4
 MATMUL_RANGE_N := 4 8 16 32 64
 MATMUL_RANGE_K := 4 8 16 32 64
 
