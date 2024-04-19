@@ -177,9 +177,9 @@ fill/params.csv: $(FILL_16)/tests.csv
 
 GEN_PARAMS =
 
-MATMUL_RANGE_M := 4
-MATMUL_RANGE_N := 4 8 16 32 64
-MATMUL_RANGE_K := 4 8 16 32 64
+MATMUL_RANGE_M := 4 8
+MATMUL_RANGE_N := 4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64
+MATMUL_RANGE_K := 4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64
 
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders
