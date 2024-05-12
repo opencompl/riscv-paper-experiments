@@ -97,7 +97,7 @@ DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv
 DSUM_8_16_TESTS += $(DSUM_8_16)/snitch_stream.csv
-# DSUM_8_16_TESTS += $(DSUM_8_16)/scf_xdsl.csv
+DSUM_8_16_TESTS += $(DSUM_8_16)/scf_xdsl.csv
 
 $(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
 	python3 generate_tests.py $@ $^
