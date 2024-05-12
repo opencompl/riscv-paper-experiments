@@ -125,7 +125,7 @@ if __name__ == "__main__":
     for row in range(0, h - pool_size[0] + 1, stride):
         for col in range(0, w - pool_size[1] + 1, stride):
             pooling_region = x[:, :, row : row + pool_size[0], col : col + pool_size[1]]
-            y_out[:, :, row // stride, col // stride] += np.sum(
+            y_out[:, :, row // stride, col // stride] = np.sum(
                 pooling_region, axis=(2, 3)
             )
 

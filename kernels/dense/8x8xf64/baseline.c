@@ -12,6 +12,7 @@ void dense(const double* restrict x, const double* restrict w, const double* res
     // Y = X W
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
+            y[i * N + j] = 0.0;
             for (uint32_t k = 0; k < K; ++k) {
                 y[i * N + j] += x[i * K + k] * w[k * N + j];
             }

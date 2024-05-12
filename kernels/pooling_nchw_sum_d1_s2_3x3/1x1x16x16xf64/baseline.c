@@ -11,7 +11,7 @@ void pooling_nchw_sum_d1_s2_3x3(const double* restrict x, double* restrict y) {
                     int y_col = col / 2;
                     int y_index = (i * (C * NEW_H * NEW_W)) + (j * (NEW_H * NEW_W)) +
                                   (y_row * NEW_W) + y_col;
-                    double sum = y[y_index];
+                    double sum = 0.0;
                     for (int k = 0; k < 3; k++) {
                         for (int l = 0; l < 3; l++) {
                             int x_index = (i * (C * H * W)) + (j * (H * W)) +

@@ -9,7 +9,7 @@ void pooling_nchw_max_d1_s2_3x3(const double* restrict x, double* restrict y) {
             int y_col = col / 2;
             int y_index = (y_row * NEW_W) + y_col;
             // Load initial value in y
-            double max_value = y[y_index];
+            double max_value = -10000.0;
             for (int k = 0; k < 3; k++) {
                 for (int l = 0; l < 3; l++) {
                     int x_index = ((row + k) * W) + (col + l);

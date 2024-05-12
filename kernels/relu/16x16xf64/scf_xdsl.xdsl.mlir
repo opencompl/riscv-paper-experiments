@@ -6,6 +6,11 @@ module {
     %cst = arith.constant 0.000000e+00 : f64
     scf.for %arg2 = %c0 to %c16 step %c1 {
       scf.for %arg3 = %c0 to %c16 step %c1 {
+        memref.store %cst, %arg1[%arg2, %arg3] : memref<16x16xf64>
+      }
+    }
+    scf.for %arg2 = %c0 to %c16 step %c1 {
+      scf.for %arg3 = %c0 to %c16 step %c1 {
         %0 = memref.load %arg0[%arg2, %arg3] : memref<16x16xf64>
         %1 = arith.maxf %0, %cst : f64
         memref.store %1, %arg1[%arg2, %arg3] : memref<16x16xf64>

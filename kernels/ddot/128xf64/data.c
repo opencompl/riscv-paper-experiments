@@ -270,6 +270,6 @@ const double G_IN[1] = {
 
 
 const double G_OUT[1] = {
-111880.27487163
+111775.88993179
 };
 

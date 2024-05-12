@@ -108,7 +108,7 @@ if __name__ == "__main__":
     b = np.random.uniform(rmin, rmax, m * n).astype(np.float64).reshape((m, n))
     y_in = np.random.uniform(rmin, rmax, (m, n)).astype(np.float64)
 
-    y_out = np.fmax(0.0, x @ w + b + y_in)
+    y_out = np.fmax(0.0, x @ w + b)
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":

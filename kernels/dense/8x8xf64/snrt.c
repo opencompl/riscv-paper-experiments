@@ -40,7 +40,7 @@ void dense(const double* restrict x, const double* restrict w, const double* res
     for (uint32_t m = 0; m < M; ++m) {
         for (uint32_t n = 0; n < N; ++n) {
             asm volatile(
-                "fld ft3, 0(%[array])          \n\t"
+                "fmv.d ft3, %[fzero]          \n\t"
                 "frep.o  %[nfrep], 1, 0, 0       \n\t"
                 "fmadd.d ft3, ft0, ft1, ft3    \n\t"
                 "fadd.d ft3, ft2,  ft3         \n\t"
