@@ -118,9 +118,9 @@ if __name__ == "__main__":
                 receptive_field = x[
                     :, :, row : row + kernel_size[0], col : col + kernel_size[1]
                 ]
-                z_old = z_in[:, i, row // stride, col // stride]
-                z = z_old + np.sum(receptive_field * y[i, :, :, :])
-                z_out[:, i, row // stride, col // stride] = z
+                z_out[:, i, row // stride, col // stride] = np.sum(
+                    receptive_field * y[i, :, :, :]
+                )
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
