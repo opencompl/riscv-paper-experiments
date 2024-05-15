@@ -17,7 +17,7 @@ class Define(NamedTuple):
 
 class Array(NamedTuple):
     name: str
-    shape_names: tuple[str]
+    shape_names: tuple[str, ...]
     data: np.ndarray
 
 
