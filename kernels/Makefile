@@ -163,7 +163,7 @@ GEN_PARAMS_SNITCH_STREAM =
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders_matmul
 
-GEN_PARAMS_SNITCH_STREAM += matmul/$(1)x$(2)x$(3)xf64
+MATMUL_PARAMS += matmul/$(1)x$(2)x$(3)xf64
 
 # Rule to generate JSON file
 matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
@@ -188,14 +188,14 @@ $(foreach M,$(RANGE_4_4_8),\
 	)\
 )
 
-MATMUL_TESTS = $(patsubst %,%/tests.csv,$(GEN_PARAMS_SNITCH_STREAM))
+GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 
-matmul/params.csv: $(MATMUL_TESTS)
+matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
 	python3 generate_params.py "params" $@ $^
 
 define generate_folders_dsum
 
-GEN_PARAMS_LINALG += dsum/$(1)x$(2)xf64
+GEN_PARAMS_DSUM += dsum/$(1)x$(2)xf64
 
 # Rule to generate JSON file
 dsum/$(1)x$(2)xf64/params.json: | dsum/$(1)x$(2)xf64
@@ -217,9 +217,9 @@ $(foreach M,$(RANGE_4_4_16),\
 	)\
 )
 
-DSUM_TESTS = $(patsubst %,%/tests.csv,$(GEN_PARAMS_LINALG))
+GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
 
-dsum/params.csv: $(DSUM_TESTS)
+dsum/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_DSUM))
 	python3 generate_params.py "params" $@ $^
 
 GEN_PARAMS =
