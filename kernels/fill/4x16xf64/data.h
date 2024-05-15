@@ -1,6 +1,6 @@
 #pragma once
 
-#define M 16
+#define M 4
 #define N 16
 
 extern const double X;

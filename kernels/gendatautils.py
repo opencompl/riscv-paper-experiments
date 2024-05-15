@@ -15,6 +15,12 @@ class Define(NamedTuple):
     value: int
 
 
+class Scalar(NamedTuple):
+    name: str
+    precision: int
+    value: object
+
+
 class Array(NamedTuple):
     name: str
     shape_names: tuple[str, ...]
@@ -70,14 +76,21 @@ class Printer(abc.ABC):
             )
         )
 
-    def print(self, item: Define | Array):
+    @classmethod
+    @abc.abstractmethod
+    def print_scalar(cls, scalar: Scalar) -> None:
+        raise NotImplementedError
+
+    def print(self, item: Define | Array | Scalar):
         match item:
             case Define():
                 self.print_define(item)
             case Array():
                 self.print_array(item)
+            case Scalar():
+                self.print_scalar(item)
 
-    def print_items(self, items: Iterator[Define | Array]):
+    def print_items(self, items: Iterator[Define | Array | Scalar]):
         for item in items:
             self.print(item)
 
@@ -95,6 +108,16 @@ class CPrinter(Printer):
             type=C_TYPES[str(precision)],
             shape=shape or "*".join(str(dim) for dim in array.shape),
             initializer=array_to_c_initializer(array),
+        )
+
+    @classmethod
+    def print_scalar(cls, scalar: Scalar) -> None:
+        print(
+            SCALAR_GLOBAL.format(
+                symbol=scalar.name,
+                type=C_TYPES[str(scalar.precision)],
+                value=scalar.value,
+            )
         )
 
 
@@ -149,10 +172,16 @@ const {type} {symbol}[{shape}] = {{
 }};
 """
 
+SCALAR_GLOBAL = """
+const {type} {symbol} = {value};
+"""
+
 _P = ParamSpec("_P")
 
 
-def main(items_iterator_factory: Callable[_P, Iterator[Define | Array]]) -> None:
+def main(
+    items_iterator_factory: Callable[_P, Iterator[Define | Array | Scalar]]
+) -> None:
     parser = argparse.ArgumentParser(
         prog="gendata.py",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,

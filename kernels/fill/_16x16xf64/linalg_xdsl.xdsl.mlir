@@ -7,4 +7,3 @@ module {
     return %arg1 : memref<16x16xf64>
   }
 }
-

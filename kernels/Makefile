@@ -121,42 +121,6 @@ pooling_nchw_sum_d1_s2_3x3/params.csv: $(SUM_POOL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-RELU_16 = relu/16x16xf64
-
-RELU_16_TESTS =
-RELU_16_TESTS += $(RELU_16)/baseline.csv
-RELU_16_TESTS += $(RELU_16)/ssr.csv
-RELU_16_TESTS += $(RELU_16)/ssr_frep.csv
-RELU_16_TESTS += $(RELU_16)/snrt.csv
-RELU_16_TESTS += $(RELU_16)/linalg.csv
-RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
-RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
-RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
-
-$(RELU_16)/tests.csv: $(RELU_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-relu/params.csv: $(RELU_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-FILL_16 = fill/16x16xf64
-
-FILL_16_TESTS =
-FILL_16_TESTS += $(FILL_16)/baseline.csv
-FILL_16_TESTS += $(FILL_16)/linalg.csv
-FILL_16_TESTS += $(FILL_16)/linalg_xdsl.csv
-FILL_16_TESTS += $(FILL_16)/snitch_stream.csv
-FILL_16_TESTS += $(FILL_16)/snrt.csv
-FILL_16_TESTS += $(FILL_16)/scf_xdsl.csv
-
-
-$(FILL_16)/tests.csv: $(FILL_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-fill/params.csv: $(FILL_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
 GEN_PARAMS_LINALG =
 GEN_PARAMS_SNITCH_STREAM =
 
@@ -220,6 +184,35 @@ $(foreach M,$(RANGE_4_4_16),\
 GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
 
 dsum/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_DSUM))
+	python3 generate_params.py "params" $@ $^
+
+define generate_folders_fill
+
+GEN_PARAMS_FILL += fill/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+fill/$(1)x$(2)xf64/params.json: | fill/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_4_4_16 := $(shell seq 4 4 16)
+
+$(foreach M,$(RANGE_4_4_16),\
+	$(foreach N,$(RANGE_4_4_16),\
+		$(eval $(call generate_folders_fill,$(M),$(N)))\
+	)\
+)
+
+GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
+
+fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
 	python3 generate_params.py "params" $@ $^
 
 GEN_PARAMS =
