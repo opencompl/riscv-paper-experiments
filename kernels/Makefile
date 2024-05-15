@@ -215,6 +215,35 @@ GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
 fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
 	python3 generate_params.py "params" $@ $^
 
+define generate_folders_relu
+
+GEN_PARAMS_RELU += relu/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+relu/$(1)x$(2)xf64/params.json: | relu/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_4_4_16 := $(shell seq 4 4 16)
+
+$(foreach M,$(RANGE_4_4_16),\
+	$(foreach N,$(RANGE_4_4_16),\
+		$(eval $(call generate_folders_relu,$(M),$(N)))\
+	)\
+)
+
+GEN_PARAMS_LINALG += $(GEN_PARAMS_RELU)
+
+relu/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_RELU))
+	python3 generate_params.py "params" $@ $^
+
 GEN_PARAMS =
 GEN_PARAMS += $(GEN_PARAMS_LINALG)
 GEN_PARAMS += $(GEN_PARAMS_SNITCH_STREAM)

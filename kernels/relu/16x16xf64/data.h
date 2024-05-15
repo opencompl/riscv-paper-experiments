@@ -5,3 +5,4 @@
 
 extern const double X[M * N];
 extern const double Y[M * N];
+
