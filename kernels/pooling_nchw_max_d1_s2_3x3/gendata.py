@@ -127,7 +127,9 @@ if __name__ == "__main__":
             pooling_region = x[:, :, row : row + pool_size[0], col : col + pool_size[1]]
             dest = y_out[:, :, row // stride, col // stride]
             # update the destination in-place
-            np.maximum(dest, np.max(pooling_region, axis=(2, 3)), dest)
+            y_out[:, :, row // stride, col // stride] = np.max(
+                pooling_region, axis=(2, 3)
+            )
 
     printopts = {"linewidth": None, "threshold": sys.maxsize}
     if args.format == "c":
