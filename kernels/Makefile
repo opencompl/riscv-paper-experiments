@@ -210,6 +210,8 @@ $(foreach M,$(RANGE_4_4_16),\
 	)\
 )
 
+$(eval $(call generate_folders_fill,64,64))
+
 GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
 
 fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
@@ -238,6 +240,8 @@ $(foreach M,$(RANGE_4_4_16),\
 		$(eval $(call generate_folders_relu,$(M),$(N)))\
 	)\
 )
+
+$(eval $(call generate_folders_relu,64,64))
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_RELU)
 
