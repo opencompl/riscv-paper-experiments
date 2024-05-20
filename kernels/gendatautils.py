@@ -36,12 +36,21 @@ def array_to_c_initializer(array: np.array):
     return np.array2string(array.flatten(), separator=",\n").strip(" []")
 
 
+def float_to_c_literal(x) -> str:
+    if x.itemsize == 4:
+        return f"{x:+}f"
+    if x.itemsize == 2:
+        return f"{x:+}"
+    # FIXME to handle fp8 we need something that is able to compute on e5m2 floats, numpy is definitely not able to do that
+    return f"{x:+}"
+
+
 class Printer(abc.ABC):
 
     BASE_PRINTOPTIONS = {"linewidth": None, "threshold": sys.maxsize}
     C_PRINTOPTIONS = {
         **BASE_PRINTOPTIONS,
-        "formatter": {"double ": lambda x: f"{x:+}f"},
+        "formatter": {"float": float_to_c_literal},
     }
     MLIR_PRINTOPTIONS = {**BASE_PRINTOPTIONS, "sign": "+"}
 

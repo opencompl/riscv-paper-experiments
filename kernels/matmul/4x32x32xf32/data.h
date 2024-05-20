@@ -1,10 +1,10 @@
 #pragma once
 
-#define M {{M}}
-#define K {{K}}
-#define N {{N}}
+#define M 4
+#define K 32
+#define N 32
 
-#define PRECISION {{precision}}
+#define PRECISION 32
 
 #if PRECISION == 64
 #define TYPE double
@@ -18,3 +18,4 @@ extern const TYPE X[M * K];
 extern const TYPE Y[K * N];
 extern const TYPE G_IN[M * N];
 extern const TYPE G_OUT[M * N];
+

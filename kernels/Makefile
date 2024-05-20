@@ -4,7 +4,6 @@ include ../snitch/Makefile.rules
 .PHONY: clean
 
 # Top-level result, pivots the flat results in kernels.csv
-
 pivoted.csv pivoted_ipc.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
 
@@ -182,32 +181,34 @@ RANGE := $(shell seq 4 4 8)
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders
 
-GEN_PARAMS += matmul/$(1)x$(2)x$(3)xf64
+GEN_PARAMS += matmul/$(1)x$(2)x$(3)xf$(4)
 
 # Rule to generate JSON file
-matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
+matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf$(4)
 	@echo '{\n\
 	\t"M": $(1),\n\
 	\t"K": $(2),\n\
 	\t"N": $(3),\n\
 	\t"rmin": -1000.0,\n\
 	\t"rmax": 1000.0,\n\
-	\t"precision": 64\n\
+	\t"precision": $(4)\n\
 	}' > $$@
 
 # Rule to create the target directory if it doesn't exist
-matmul/$(1)x$(2)x$(3)xf64:
-	@mkdir -p matmul/$(1)x$(2)x$(3)xf64
+matmul/$(1)x$(2)x$(3)xf$(4):
+	@mkdir -p matmul/$(1)x$(2)x$(3)xf$(4)
 
 endef
 
 $(foreach M,$(RANGE),\
 	$(foreach K,$(RANGE),\
 		$(foreach N,$(RANGE),\
-			$(eval $(call generate_folders,$(M),$(K),$(N)))\
+			$(eval $(call generate_folders,$(M),$(K),$(N),64))\
 		)\
 	)\
 )
+
+$(eval $(call generate_folders,4,32,32,32))
 
 MATMUL_TESTS = $(patsubst %,%/tests.csv,$(GEN_PARAMS))
 
@@ -218,6 +219,7 @@ define generate_target
 
 $(1)/tests.csv: $(1)/snitch_stream.csv
 	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
+
 
 $(1)/data.h: $(dir $(1))data.h.template $(1)/params.json
 	python /src/scripts/format.py $(dir $(1))data.h.template $(1)/params.json > $$@

@@ -18,10 +18,6 @@ typedef float v2f32 __attribute__((vector_size(8)));
 #error N must be a multiple of the number of SIMD lanes
 #endif
 
-#if sizeof(v2f32) != __riscv_flen
-#error size of a SIMD vector is not FLEN, SSRs are't going to behave how we expect
-#endif
-
 // x[ M x K ]
 // y[ K x N ]
 // c[ M x N ]
@@ -44,7 +40,7 @@ void matmul(const float* restrict x, const float* restrict y, float* restrict c)
 
     v2f32 dot[UNROLL];
 
-    const double fzero asm("ft4") = 0.;
+    const double fzero = 0.;
 
     snrt_ssr_enable();
 
@@ -82,21 +78,20 @@ void matmul(const float* restrict x, const float* restrict y, float* restrict c)
                 "vfsum.s %[dot4], %[dot6] \n"
                 // Depth 3: final result in dot0
                 "vfsum.s %[dot0], %[dot4] \n"
-                :
+                : [dot0] "=&f"(dot[0]),
+                  [dot1] "=&f"(dot[1]),
+                  [dot2] "=&f"(dot[2]),
+                  [dot3] "=&f"(dot[3]),
+                  [dot4] "=&f"(dot[4]),
+                  [dot5] "=&f"(dot[5]),
+                  [dot6] "=&f"(dot[6]),
+                  [dot7] "=&f"(dot[7])
                 : [nfrep] "r"(K / UNROLL - 1),
                   [unroll] "i"(UNROLL),
-                  [fzero] "f"(fzero),
-                  [dot0] "+f"(dot[0]),
-                  [dot1] "+f"(dot[1]),
-                  [dot2] "+f"(dot[2]),
-                  [dot3] "+f"(dot[3]),
-                  [dot4] "+f"(dot[4]),
-                  [dot5] "+f"(dot[5]),
-                  [dot6] "+f"(dot[6]),
-                  [dot7] "+f"(dot[7])
-                : "ft0", "ft1", "ft2", "memory");
+                  [fzero] "f"(fzero)
+                  : "ft0", "ft1", "ft2", "memory");
             
-            c[m * N + n] = dot[0];
+            *((v2f32*)(c + m * N + n)) = dot[0];
         }
     }
 
