@@ -113,6 +113,7 @@ XDSLOPT_PASSES += convert-arith-to-riscv
 XDSLOPT_PASSES += convert-scf-to-riscv-scf
 XDSLOPT_PASSES += dce
 XDSLOPT_PASSES += reconcile-unrealized-casts
+XDSLOPT_PASSES += riscv-scf-loop-flatten
 XDSLOPT_PASSES += test-lower-snitch-stream-to-asm
 
 
