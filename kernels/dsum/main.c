@@ -37,7 +37,7 @@ int main() {
 
     // Correctness check
     int nerr = 0;
-    for (int i = 0; i < M * N; i++) {
+    for (int i = 0; i < TEST_COUNT; i++) {
         double d = fabs(local_z[i] - G[i]);
         nerr += !(d <= 1E-2);  // Make sure to take into account NaNs (e.g.: happy path
                                // on the taken branch)
