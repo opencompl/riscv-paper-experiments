@@ -1,5 +1,5 @@
 kernels,baseline,linalg,linalg_xdsl,scf_xdsl,snitch_stream,snrt,min_llvm_mlir
-conv2d_d1_s1_3x3 1x1x8x8xf64,1456,1732,,,1513,1493,1456
+conv2d_d1_s1_3x3 1x1x8x8xf64,1456,1732,,,527,1493,1456
 ddot 128xf64,956,965,,2250,206,577,956
 dense 8x8xf64,3206,3530,,,2731,2723,3206
 dsum 12x12xf64,,,192,,,,
