@@ -20,6 +20,7 @@ int main() {
     if (snrt_is_dm_core()) {
         snrt_dma_start_1d(local_x, X, M * N * sizeof(float));
         snrt_dma_start_1d(local_y, Y, M * N * sizeof(float));
+        snrt_dma_wait_all();
     }
 
     snrt_cluster_hw_barrier();

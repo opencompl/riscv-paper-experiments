@@ -21,6 +21,7 @@ int main() {
         snrt_dma_start_1d(local_x, X, N * C * H * W * sizeof(double));
         snrt_dma_start_1d(local_y, Y, F * C * 3 * 3 * sizeof(double));
         snrt_dma_start_1d(local_z, Z_IN, N * F * NEW_H * NEW_W * sizeof(double));
+        snrt_dma_wait_all();
     }
 
     snrt_cluster_hw_barrier();
