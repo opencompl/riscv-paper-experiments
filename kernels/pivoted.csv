@@ -42,8 +42,8 @@ matmul 8x4x4xf64,,,,,264,,
 matmul 8x4x8xf64,,,,,381,,
 matmul 8x8x4xf64,,,,,385,,
 matmul 8x8x8xf64,,,,,648,,
-pooling_nchw_max_d1_s2_3x3 1x1x16x16xf64,1388,1432,,,1117,1101,1388
-pooling_nchw_sum_d1_s2_3x3 1x1x16x16xf64,1702,2172,,,1998,1989,1702
+pooling_nchw_max_d1_s2_3x3 1x1x16x16xf64,1388,1432,,,635,1101,1388
+pooling_nchw_sum_d1_s2_3x3 1x1x16x16xf64,1702,2172,,,649,1989,1702
 relu 12x12xf64,,,213,,,,
 relu 12x16xf64,,,261,,,,
 relu 12x4xf64,,,117,,,,
