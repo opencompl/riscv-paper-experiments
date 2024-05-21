@@ -18,6 +18,7 @@ int main() {
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
         snrt_dma_start_1d(local_x, X, N * sizeof(double));
+        snrt_dma_wait_all();
     }
 
     snrt_cluster_hw_barrier();
