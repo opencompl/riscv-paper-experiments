@@ -3,6 +3,7 @@
 
 const double X = 4.0;
 
+
 const double Y[M * N] = {
 4.,
 4.,

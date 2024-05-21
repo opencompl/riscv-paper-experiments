@@ -1,0 +1,8 @@
+#pragma once
+
+#define M {{M}}
+#define N {{N}}
+
+extern const double X[N * M];
+extern const double Y[N * M];
+extern const double G[N * M];

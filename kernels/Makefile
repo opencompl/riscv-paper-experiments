@@ -87,25 +87,6 @@ dense/params.csv: $(DENSE_8)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-DSUM_8_16 = dsum/8x16xf32
-
-DSUM_8_16_TESTS =
-DSUM_8_16_TESTS += $(DSUM_8_16)/baseline.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/linalg.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/linalg_xdsl.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/snrt.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/ssr1d.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/ssr2d.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/snitch_stream.csv
-DSUM_8_16_TESTS += $(DSUM_8_16)/scf_xdsl.csv
-
-$(DSUM_8_16)/tests.csv: $(DSUM_8_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-dsum/params.csv: $(DSUM_8_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
 MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
 
 MAX_POOL_16_TESTS =
@@ -140,50 +121,13 @@ pooling_nchw_sum_d1_s2_3x3/params.csv: $(SUM_POOL_16)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-RELU_16 = relu/16x16xf64
-
-RELU_16_TESTS =
-RELU_16_TESTS += $(RELU_16)/baseline.csv
-RELU_16_TESTS += $(RELU_16)/ssr.csv
-RELU_16_TESTS += $(RELU_16)/ssr_frep.csv
-RELU_16_TESTS += $(RELU_16)/snrt.csv
-RELU_16_TESTS += $(RELU_16)/linalg.csv
-RELU_16_TESTS += $(RELU_16)/linalg_xdsl.csv
-RELU_16_TESTS += $(RELU_16)/snitch_stream.csv
-RELU_16_TESTS += $(RELU_16)/scf_xdsl.csv
-
-$(RELU_16)/tests.csv: $(RELU_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-relu/params.csv: $(RELU_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-FILL_16 = fill/16x16xf64
-
-FILL_16_TESTS =
-FILL_16_TESTS += $(FILL_16)/baseline.csv
-FILL_16_TESTS += $(FILL_16)/linalg.csv
-FILL_16_TESTS += $(FILL_16)/linalg_xdsl.csv
-FILL_16_TESTS += $(FILL_16)/snitch_stream.csv
-FILL_16_TESTS += $(FILL_16)/snrt.csv
-FILL_16_TESTS += $(FILL_16)/scf_xdsl.csv
-
-
-$(FILL_16)/tests.csv: $(FILL_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-fill/params.csv: $(FILL_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
-GEN_PARAMS =
-
-RANGE := $(shell seq 4 4 8)
+GEN_PARAMS_LINALG =
+GEN_PARAMS_SNITCH_STREAM =
 
 # Triple for loop macro to generate matmul kernel sizes
-define generate_folders
+define generate_folders_matmul
 
-GEN_PARAMS += matmul/$(1)x$(2)x$(3)xf64
+MATMUL_PARAMS += matmul/$(1)x$(2)x$(3)xf64
 
 # Rule to generate JSON file
 matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
@@ -196,29 +140,115 @@ matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
 	\t"precision": 64\n\
 	}' > $$@
 
-# Rule to create the target directory if it doesn't exist
-matmul/$(1)x$(2)x$(3)xf64:
-	@mkdir -p matmul/$(1)x$(2)x$(3)xf64
-
 endef
 
-$(foreach M,$(RANGE),\
-	$(foreach K,$(RANGE),\
-		$(foreach N,$(RANGE),\
-			$(eval $(call generate_folders,$(M),$(K),$(N)))\
+RANGE_4_4_8 := $(shell seq 4 4 8)
+
+$(foreach M,$(RANGE_4_4_8),\
+	$(foreach K,$(RANGE_4_4_8),\
+		$(foreach N,$(RANGE_4_4_8),\
+			$(eval $(call generate_folders_matmul,$(M),$(K),$(N)))\
 		)\
 	)\
 )
 
-MATMUL_TESTS = $(patsubst %,%/tests.csv,$(GEN_PARAMS))
+GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 
-matmul/params.csv: $(MATMUL_TESTS)
+matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
 	python3 generate_params.py "params" $@ $^
 
-define generate_target
+define generate_folders_dsum
 
-$(1)/tests.csv: $(1)/snitch_stream.csv
-	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
+GEN_PARAMS_DSUM += dsum/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+dsum/$(1)x$(2)xf64/params.json: | dsum/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_4_4_16 := $(shell seq 4 4 16)
+
+$(foreach M,$(RANGE_4_4_16),\
+	$(foreach N,$(RANGE_4_4_16),\
+		$(eval $(call generate_folders_dsum,$(M),$(N)))\
+	)\
+)
+
+GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
+
+dsum/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_DSUM))
+	python3 generate_params.py "params" $@ $^
+
+define generate_folders_fill
+
+GEN_PARAMS_FILL += fill/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+fill/$(1)x$(2)xf64/params.json: | fill/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_4_4_16 := $(shell seq 4 4 16)
+
+$(foreach M,$(RANGE_4_4_16),\
+	$(foreach N,$(RANGE_4_4_16),\
+		$(eval $(call generate_folders_fill,$(M),$(N)))\
+	)\
+)
+
+GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
+
+fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
+	python3 generate_params.py "params" $@ $^
+
+define generate_folders_relu
+
+GEN_PARAMS_RELU += relu/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+relu/$(1)x$(2)xf64/params.json: | relu/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_4_4_16 := $(shell seq 4 4 16)
+
+$(foreach M,$(RANGE_4_4_16),\
+	$(foreach N,$(RANGE_4_4_16),\
+		$(eval $(call generate_folders_relu,$(M),$(N)))\
+	)\
+)
+
+GEN_PARAMS_LINALG += $(GEN_PARAMS_RELU)
+
+relu/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_RELU))
+	python3 generate_params.py "params" $@ $^
+
+GEN_PARAMS =
+GEN_PARAMS += $(GEN_PARAMS_LINALG)
+GEN_PARAMS += $(GEN_PARAMS_SNITCH_STREAM)
+
+define generate_target
 
 $(1)/data.h: $(dir $(1))data.h.template $(1)/params.json
 	python /src/scripts/format.py $(dir $(1))data.h.template $(1)/params.json > $$@
@@ -226,12 +256,39 @@ $(1)/data.h: $(dir $(1))data.h.template $(1)/params.json
 $(1)/data.c: $(1)/params.json $(1)/data.h
 	python -m $(patsubst %/,%.,$(dir $(1)))"gendata" -p $(1)/params.json > $$@
 
-$(1)/snitch_stream.xdsl.mlir: $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json
-	python /src/scripts/format.py $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json > $$@
+# Rule to create the target directory if it doesn't exist
+$(1):
+	@mkdir -p $(1)
 
 endef
 
 $(foreach param,$(GEN_PARAMS),$(eval $(call generate_target,$(param))))
+
+
+define generate_target_snitch_stream
+
+$(1)/snitch_stream.xdsl.mlir: $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json > $$@
+
+$(1)/tests.csv: $(1)/snitch_stream.csv
+	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
+
+endef
+
+$(foreach param,$(GEN_PARAMS_SNITCH_STREAM),$(eval $(call generate_target_snitch_stream,$(param))))
+
+
+define generate_target_linalg
+
+$(1)/linalg_xdsl.xdsl.mlir: $(dir $(1))linalg_xdsl.xdsl.mlir.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))linalg_xdsl.xdsl.mlir.template $(1)/params.json > $$@
+
+$(1)/tests.csv: $(1)/linalg_xdsl.csv
+	python3 generate_tests.py $$@ $(1)/linalg_xdsl.csv
+
+endef
+
+$(foreach param,$(GEN_PARAMS_LINALG),$(eval $(call generate_target_linalg,$(param))))
 
 define generate_main
 
@@ -239,6 +296,7 @@ $(1)/main.o: $(dir $(1))main.c $(1)/data.h
 	$(CC) $(CFLAGS) -I$$(dir $$@) -c $$< -o $$@
 
 endef
+
 
 GEN_MAIN = $(GEN_PARAMS)
 GEN_MAIN += $(CONV_8)
