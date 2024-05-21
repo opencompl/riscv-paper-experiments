@@ -87,22 +87,6 @@ dense/params.csv: $(DENSE_8)/tests.csv
 	python3 generate_params.py "params" $@ $^
 
 
-MAX_POOL_16 = pooling_nchw_max_d1_s2_3x3/1x1x16x16xf64
-
-MAX_POOL_16_TESTS =
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/baseline.csv
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/linalg.csv
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/snitch_stream.csv
-MAX_POOL_16_TESTS += $(MAX_POOL_16)/snrt.csv
-# spill to j register...
-# MAX_POOL_16_TESTS += $(MAX_POOL_16)/scf_xdsl.csv
-
-$(MAX_POOL_16)/tests.csv: $(MAX_POOL_16_TESTS)
-	python3 generate_tests.py $@ $^
-
-pooling_nchw_max_d1_s2_3x3/params.csv: $(MAX_POOL_16)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
 GEN_PARAMS_LINALG =
 GEN_PARAMS_SNITCH_STREAM =
 
@@ -168,6 +152,37 @@ $(foreach H,$(RANGE_10_8_18),\
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_SUM_POOL)
 
 pooling_nchw_sum_d1_s2_3x3/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_SUM_POOL))
+	python3 generate_params.py "params" $@ $^
+
+# Double for loop macro to generate max pool kernel sizes
+define generate_folders_max_pool
+
+GEN_PARAMS_MAX_POOL += pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"H": $(1),\n\
+	\t"W": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+# 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
+RANGE_10_8_18 := $(shell seq 10 8 18)
+
+$(foreach H,$(RANGE_10_8_18),\
+	$(foreach W,$(RANGE_10_8_18),\
+		$(eval $(call generate_folders_max_pool,$(H),$(W)))\
+	)\
+)
+
+GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_MAX_POOL)
+
+pooling_nchw_max_d1_s2_3x3/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_MAX_POOL))
 	python3 generate_params.py "params" $@ $^
 
 define generate_folders_dsum
