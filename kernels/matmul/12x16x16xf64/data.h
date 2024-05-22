@@ -1,6 +1,6 @@
 #pragma once
 
-#define M 16
+#define M 12
 #define K 16
 #define N 16
 

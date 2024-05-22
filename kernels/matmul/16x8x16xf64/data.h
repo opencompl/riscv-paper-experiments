@@ -1,7 +1,7 @@
 #pragma once
 
 #define M 16
-#define K 16
+#define K 8
 #define N 16
 
 extern const double X[M * K];

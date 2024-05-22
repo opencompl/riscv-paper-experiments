@@ -91,15 +91,17 @@ matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
 
 endef
 
-RANGE_4_4_8 := $(shell seq 4 4 8)
-
-$(foreach M,$(RANGE_4_4_8),\
-	$(foreach K,$(RANGE_4_4_8),\
-		$(foreach N,$(RANGE_4_4_8),\
-			$(eval $(call generate_folders_matmul,$(M),$(K),$(N)))\
-		)\
-	)\
+$(foreach M,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,$(M),16,16))\
 )
+$(foreach K,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,16,$(K),16))\
+)
+$(foreach N,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,16,16,$(N)))\
+)
+
+$(eval $(call generate_folders_matmul,16,16,16))
 
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 

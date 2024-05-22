@@ -2,7 +2,7 @@
 
 #define M 16
 #define K 16
-#define N 16
+#define N 8
 
 extern const double X[M * K];
 extern const double Y[K * N];
