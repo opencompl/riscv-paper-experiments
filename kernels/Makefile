@@ -214,12 +214,16 @@ dsum/$(1)x$(2)xf64/params.json: | dsum/$(1)x$(2)xf64
 
 endef
 
-RANGE_4_4_16 := $(shell seq 4 4 16)
+$(eval $(call generate_folders_dsum,32,32))
 
-$(foreach M,$(RANGE_4_4_16),\
-	$(foreach N,$(RANGE_4_4_16),\
-		$(eval $(call generate_folders_dsum,$(M),$(N)))\
-	)\
+RANGE_4_4_28 := $(shell seq 4 4 28)
+
+$(foreach M,$(RANGE_4_4_28),\
+	$(eval $(call generate_folders_dsum,$(M),32))\
+)
+
+$(foreach N,$(RANGE_4_4_28),\
+	$(eval $(call generate_folders_dsum,32,$(N)))\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
