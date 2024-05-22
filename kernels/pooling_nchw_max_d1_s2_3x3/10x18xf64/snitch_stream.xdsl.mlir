@@ -13,13 +13,13 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %c8 = riscv.li 8 : () -> !riscv.reg<>
     %c16 = riscv.li 16 : () -> !riscv.reg<>
 
-    %h = riscv.li {{H}} : () -> !riscv.reg<>
-    %w = riscv.li {{W}} : () -> !riscv.reg<>
-    %new_h = riscv.li {{((H - 3) // 2) + 1}} : () -> !riscv.reg<>
-    %new_w = riscv.li {{((W - 3) // 2) + 1}} : () -> !riscv.reg<>
+    %h = riscv.li 10 : () -> !riscv.reg<>
+    %w = riscv.li 18 : () -> !riscv.reg<>
+    %new_h = riscv.li 4 : () -> !riscv.reg<>
+    %new_w = riscv.li 8 : () -> !riscv.reg<>
     %x_stride = riscv.mul %w, %c16 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
     %y_stride = riscv.mul %new_w, %c8 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-    %tile_count = riscv.li {{(((W - 3) // 2) + 1) // 4}} : () -> !riscv.reg<>
+    %tile_count = riscv.li 2 : () -> !riscv.reg<>
 
     %min_val_int = riscv.li -10000 : () -> !riscv.reg<>
     %min_val = fcvt.d.w %min_val_int : (!riscv.reg<>) -> !riscv.freg<>
@@ -27,8 +27,8 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %last_x, %last_y = riscv_scf.for %row : !riscv.reg<> = %c0 to %new_h step %c1 iter_args(%x_row = %X_moved, %y_row = %Y_moved) -> (!riscv.reg<>, !riscv.reg<>) {
       "snitch_stream.streaming_region"(%x_row, %y_row) <{
         "stride_patterns" = [
-          #snitch_stream.stride_pattern<ub = [{{(((W - 3) // 2) + 1) // 4}}, 3, 3, 4], strides = [64, {{W * 8}}, 8, 16]>,
-          #snitch_stream.stride_pattern<ub = [{{((W - 3) // 2) + 1}}], strides = [8]>
+          #snitch_stream.stride_pattern<ub = [2, 3, 3, 4], strides = [64, 144, 8, 16]>,
+          #snitch_stream.stride_pattern<ub = [8], strides = [8]>
         ],
         "operandSegmentSizes" = array<i32: 1, 1>
       }> ({
@@ -71,3 +71,4 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     riscv_func.return
   }
 }
+

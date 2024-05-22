@@ -17,8 +17,8 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %w = riscv.li 10 : () -> !riscv.reg<>
     %new_h = riscv.li 4 : () -> !riscv.reg<>
     %new_w = riscv.li 4 : () -> !riscv.reg<>
-    %x_stride = riscv.mul %h, %c16 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-    %y_stride = riscv.mul %new_h, %c8 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+    %x_stride = riscv.mul %w, %c16 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
+    %y_stride = riscv.mul %new_w, %c8 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
     %tile_count = riscv.li 1 : () -> !riscv.reg<>
 
     %min_val_int = riscv.li -10000 : () -> !riscv.reg<>
