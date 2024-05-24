@@ -8,15 +8,17 @@ include ../snitch/Makefile.rules
 pivoted.csv pivoted_ipc.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
 
+CLEAN_PATH = .
+
 # Remove all csv files in this folder, recursively
 clean:
-	find . -type f -name "*.csv" -print0 | xargs -0 rm -f
-	find . -type f -name "*.x" -print0 | xargs -0 rm -f
-	find . -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
-	find . -type f -name "*.S" -print0 | xargs -0 rm -f
-	find . -type f -name "*.bc" -print0 | xargs -0 rm -f
-	find . -type f -name "*.ll" -print0 | xargs -0 rm -f
-	find . -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.csv" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.x" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
+	find $(CLEAN_PATH) -type f -name "*.S" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.bc" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.ll" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
 
 # kernels.csv is the aggregation of all kernels
 
