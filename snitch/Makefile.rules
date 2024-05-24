@@ -239,6 +239,10 @@ LOG_DIR = $<.logs
 	$(DASM) < logs/trace_hart_00000000.dasm | $(GENTRACE) --permissive -d logs/trace_hart_00000000.trace.json > logs/trace_hart_00000000.trace.txt; \
 	cd --
 
+# Do not create json, only used for debugging
+%.trace_debug.txt: %.dasm
+	$(DASM) < $< | $(GENTRACE) --permissive > $*.trace_debug.txt
+
 %.csv: %.x.logs/logs/trace_hart_00000000.trace.json
 	set -e ;\
 	TMP=$$(mktemp) ;\
