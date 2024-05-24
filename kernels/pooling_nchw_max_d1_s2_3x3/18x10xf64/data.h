@@ -5,7 +5,7 @@
 #define H 18
 #define W 10
 #define NEW_H 8
-#define NEW_W 8
+#define NEW_W 4
 
 extern const double X[N * C * H * W];
 extern const double Y_IN[N * C * NEW_H * NEW_W];
