@@ -13,13 +13,13 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %c8 = riscv.li 8 : () -> !riscv.reg<>
     %c16 = riscv.li 16 : () -> !riscv.reg<>
 
-    %h = riscv.li {{H}} : () -> !riscv.reg<>
-    %w = riscv.li {{W}} : () -> !riscv.reg<>
-    %new_h = riscv.li {{((H - 3) // 2) + 1}} : () -> !riscv.reg<>
-    %new_w = riscv.li {{((W - 3) // 2) + 1}} : () -> !riscv.reg<>
+    %h = riscv.li 10 : () -> !riscv.reg<>
+    %w = riscv.li 34 : () -> !riscv.reg<>
+    %new_h = riscv.li 4 : () -> !riscv.reg<>
+    %new_w = riscv.li 16 : () -> !riscv.reg<>
     %x_stride = riscv.mul %w, %c16 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
     %y_stride = riscv.mul %new_w, %c8 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
-    %tile_count = riscv.li {{(((W - 3) // 2) + 1) // 4}} : () -> !riscv.reg<>
+    %tile_count = riscv.li 4 : () -> !riscv.reg<>
 
     %min_val_int = riscv.li -10000 : () -> !riscv.reg<>
     %min_val = fcvt.d.w %min_val_int : (!riscv.reg<>) -> !riscv.freg<>
@@ -27,7 +27,7 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %0 = riscv.li 4 : () -> !riscv.reg<>
     %1 = riscv.li 3 : () -> !riscv.reg<>
     %2 = riscv.li 3 : () -> !riscv.reg<>
-    %3 = riscv.li {{(((W - 3) // 2) + 1) // 4}} : () -> !riscv.reg<>
+    %3 = riscv.li 4 : () -> !riscv.reg<>
     %4 = riscv.addi %0, -1 : (!riscv.reg<>) -> !riscv.reg<>
     "snitch.ssr_set_dimension_bound"(%4) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<0>} : (!riscv.reg<>) -> ()
     %5 = riscv.addi %1, -1 : (!riscv.reg<>) -> !riscv.reg<>
@@ -38,7 +38,7 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     "snitch.ssr_set_dimension_bound"(%7) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<3>} : (!riscv.reg<>) -> ()
     %8 = riscv.li 16 : () -> !riscv.reg<>
     %9 = riscv.li 8 : () -> !riscv.reg<>
-    %10 = riscv.li {{W * 8}} : () -> !riscv.reg<>
+    %10 = riscv.li 272 : () -> !riscv.reg<>
     %11 = riscv.li 64 : () -> !riscv.reg<>
     "snitch.ssr_set_dimension_stride"(%8) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<0>} : (!riscv.reg<>) -> ()
     %12 = riscv.li 0 : () -> !riscv.reg<>
@@ -54,7 +54,7 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %20 = riscv.add %17, %19 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
     %21 = riscv.sub %11, %20 : (!riscv.reg<>, !riscv.reg<>) -> !riscv.reg<>
     "snitch.ssr_set_dimension_stride"(%21) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<3>} : (!riscv.reg<>) -> ()
-    %22 = riscv.li {{((W - 3) // 2) + 1}} : () -> !riscv.reg<>
+    %22 = riscv.li 16 : () -> !riscv.reg<>
     %23 = riscv.addi %22, -1 : (!riscv.reg<>) -> !riscv.reg<>
     "snitch.ssr_set_dimension_bound"(%23) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<0>} : (!riscv.reg<>) -> ()
     %24 = riscv.li 8 : () -> !riscv.reg<>
@@ -101,3 +101,4 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     riscv_func.return
   }
 }
+

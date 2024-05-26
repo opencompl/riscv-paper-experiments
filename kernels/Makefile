@@ -191,12 +191,14 @@ pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_max_d1_s2_3
 endef
 
 # 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
-RANGE_10_8_18 := $(shell seq 10 8 18)
+$(eval $(call generate_folders_max_pool,34,34))
 
-$(foreach H,$(RANGE_10_8_18),\
-	$(foreach W,$(RANGE_10_8_18),\
-		$(eval $(call generate_folders_max_pool,$(H),$(W)))\
-	)\
+$(foreach H,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_max_pool,$(H),34))\
+)
+
+$(foreach W,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_max_pool,34,$(W)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_MAX_POOL)
