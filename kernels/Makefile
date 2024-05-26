@@ -127,12 +127,16 @@ conv2d_d1_s1_3x3/$(1)x$(2)xf64/params.json: | conv2d_d1_s1_3x3/$(1)x$(2)xf64
 
 endef
 
-RANGE_6_4_10 := $(shell seq 6 4 10)
+RANGE_6_4_10 :=
 
-$(foreach H,$(RANGE_6_4_10),\
-	$(foreach W,$(RANGE_6_4_10),\
-		$(eval $(call generate_folders_conv,$(H),$(W)))\
-	)\
+$(eval $(call generate_folders_conv,18,18))
+
+$(foreach H,$(shell seq 6 4 14),\
+	$(eval $(call generate_folders_conv,$(H),18))\
+)
+
+$(foreach W,$(shell seq 6 4 14),\
+	$(eval $(call generate_folders_conv,18,$(W)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
