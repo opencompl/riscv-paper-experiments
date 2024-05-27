@@ -14,5 +14,5 @@ extern const double Z_IN[N * F * NEW_H * NEW_W];
 extern const double Z_OUT[N * F * NEW_H * NEW_W];
 
 // volatile const int TEST_COUNT = 1;
-volatile const int TEST_COUNT = N * F * NEW_H * NEW_W;
+static volatile const int TEST_COUNT = N * F * NEW_H * NEW_W;
 
