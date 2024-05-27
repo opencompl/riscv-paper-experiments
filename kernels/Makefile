@@ -273,6 +273,7 @@ $(foreach N,$(shell seq 4 4 28),\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
+GEN_PARAMS_SNRT += $(GEN_PARAMS_FILL)
 
 fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
 	python3 generate_params.py "params" $@ $^
