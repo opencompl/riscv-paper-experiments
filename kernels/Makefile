@@ -74,6 +74,7 @@ dense/params.csv: $(DENSE_8)/tests.csv
 
 GEN_PARAMS_LINALG =
 GEN_PARAMS_SNITCH_STREAM =
+GEN_PARAMS_SNRT =
 
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders_matmul
@@ -106,6 +107,7 @@ $(foreach N,$(shell seq 4 4 12),\
 $(eval $(call generate_folders_matmul,16,16,16))
 
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
+GEN_PARAMS_SNRT += $(MATMUL_PARAMS)
 
 matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
 	python3 generate_params.py "params" $@ $^
@@ -305,6 +307,7 @@ relu/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_RELU))
 GEN_PARAMS =
 GEN_PARAMS += $(GEN_PARAMS_LINALG)
 GEN_PARAMS += $(GEN_PARAMS_SNITCH_STREAM)
+GEN_PARAMS += $(GEN_PARAMS_SNRT)
 
 define generate_target
 
@@ -347,6 +350,18 @@ $(1)/tests.csv: $(1)/linalg_xdsl.csv
 endef
 
 $(foreach param,$(GEN_PARAMS_LINALG),$(eval $(call generate_target_linalg,$(param))))
+
+define generate_target_snrt
+
+$(1)/snrt.c: $(dir $(1))snrt.c.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))snrt.c.template $(1)/params.json > $$@
+
+$(1)/tests.csv: $(1)/snrt.csv
+	python3 generate_tests.py $$@ $(1)/snrt.csv
+
+endef
+
+$(foreach param,$(GEN_PARAMS_SNRT),$(eval $(call generate_target_snrt,$(param))))
 
 define generate_main
 
