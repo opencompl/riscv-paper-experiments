@@ -241,6 +241,7 @@ $(foreach N,$(shell seq 4 4 28),\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
+GEN_PARAMS_SNRT += $(GEN_PARAMS_DSUM)
 
 dsum/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_DSUM))
 	python3 generate_params.py "params" $@ $^
