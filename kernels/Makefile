@@ -140,6 +140,7 @@ $(foreach N,$(shell seq 4 4 12),\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
+GEN_PARAMS_SNRT += $(CONV_PARAMS)
 
 conv2d_d1_s1_3x3/params.csv: $(patsubst %,%/tests.csv,$(CONV_PARAMS))
 	python3 generate_params.py "params" $@ $^
