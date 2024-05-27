@@ -9,21 +9,24 @@ from gendatautils import main, Define, Array, Scalar
 
 
 def sum_pool_data(
-    H: int, W: int, rmin: float, rmax: float, precision: int
+    M: int, N: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array | Scalar]:
     n = 1  # n for number of elements in a batch
     c = 1  # c for channels
-
-    np.random.seed(0)
-    t = {64: np.float64, 32: np.float32}[precision]
-    x = np.random.uniform(rmin, rmax, (n, c, H, W)).astype(t)
 
     # Define the pooling parameters
     pool_size = (3, 3)
     stride = 2
 
-    new_h = (H - pool_size[0]) // stride + 1
-    new_w = (W - pool_size[1]) // stride + 1
+    new_h = M
+    new_w = N
+
+    H = (new_h - 1) * stride + pool_size[0] + 1
+    W = (new_w - 1) * stride + pool_size[1] + 1
+
+    np.random.seed(0)
+    t = {64: np.float64, 32: np.float32}[precision]
+    x = np.random.uniform(rmin, rmax, (n, c, H, W)).astype(t)
 
     # Perform the max pooling operation
     y_in = np.random.uniform(rmin, rmax, (n, c, new_h, new_w))

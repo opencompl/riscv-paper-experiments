@@ -2,11 +2,11 @@
 
 #define N 1
 #define C 1
-#define H {{H}}
-#define W {{W}}
+#define H {{M + 2}}
+#define W {{N + 2}}
 #define F 1
-#define NEW_H {{H - 2}}
-#define NEW_W {{W - 2}}
+#define NEW_H {{M}}
+#define NEW_W {{N}}
 
 extern const double X[N * C * H * W];
 extern const double Y[F * C * 3 * 3];
