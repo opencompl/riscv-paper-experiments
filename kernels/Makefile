@@ -175,6 +175,7 @@ $(foreach N,$(shell seq 4 4 12),\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_SUM_POOL)
+GEN_PARAMS_SNRT += $(GEN_PARAMS_SUM_POOL)
 
 pooling_nchw_sum_d1_s2_3x3/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_SUM_POOL))
 	python3 generate_params.py "params" $@ $^
