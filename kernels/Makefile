@@ -74,8 +74,8 @@ dense/params.csv: $(DENSE_8)/tests.csv
 
 GEN_PARAMS_LINALG =
 GEN_PARAMS_SNITCH_STREAM =
-GEN_PARAMS_SNRT =
-GEN_PARAMS_BASELINE =
+# GEN_PARAMS_SNRT =
+# GEN_PARAMS_BASELINE =
 
 # Triple for loop macro to generate matmul kernel sizes
 define generate_folders_matmul
@@ -109,7 +109,7 @@ $(eval $(call generate_folders_matmul,16,16,16))
 
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 # GEN_PARAMS_SNRT += $(MATMUL_PARAMS)
-GEN_PARAMS_BASELINE += $(MATMUL_PARAMS)
+# GEN_PARAMS_BASELINE += $(MATMUL_PARAMS)
 
 matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
 	python3 generate_params.py "params" $@ $^
@@ -143,7 +143,7 @@ $(foreach N,$(shell seq 4 4 12),\
 
 GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
 # GEN_PARAMS_SNRT += $(CONV_PARAMS)
-GEN_PARAMS_BASELINE += $(CONV_PARAMS)
+# GEN_PARAMS_BASELINE += $(CONV_PARAMS)
 
 conv2d_d1_s1_3x3/params.csv: $(patsubst %,%/tests.csv,$(CONV_PARAMS))
 	python3 generate_params.py "params" $@ $^
@@ -179,7 +179,7 @@ $(foreach N,$(shell seq 4 4 12),\
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_SUM_POOL)
 # GEN_PARAMS_SNRT += $(GEN_PARAMS_SUM_POOL)
-GEN_PARAMS_BASELINE += $(GEN_PARAMS_SUM_POOL)
+# GEN_PARAMS_BASELINE += $(GEN_PARAMS_SUM_POOL)
 
 pooling_nchw_sum_d1_s2_3x3/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_SUM_POOL))
 	python3 generate_params.py "params" $@ $^
@@ -214,7 +214,7 @@ $(foreach N,$(shell seq 4 4 12),\
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_MAX_POOL)
 # GEN_PARAMS_SNRT += $(GEN_PARAMS_MAX_POOL)
-GEN_PARAMS_BASELINE += $(GEN_PARAMS_MAX_POOL)
+# GEN_PARAMS_BASELINE += $(GEN_PARAMS_MAX_POOL)
 
 pooling_nchw_max_d1_s2_3x3/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_MAX_POOL))
 	python3 generate_params.py "params" $@ $^
@@ -247,7 +247,7 @@ $(foreach N,$(shell seq 4 4 28),\
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
 # GEN_PARAMS_SNRT += $(GEN_PARAMS_DSUM)
-GEN_PARAMS_BASELINE += $(GEN_PARAMS_DSUM)
+# GEN_PARAMS_BASELINE += $(GEN_PARAMS_DSUM)
 
 dsum/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_DSUM))
 	python3 generate_params.py "params" $@ $^
@@ -280,7 +280,7 @@ $(foreach N,$(shell seq 4 4 28),\
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
 # GEN_PARAMS_SNRT += $(GEN_PARAMS_FILL)
-GEN_PARAMS_BASELINE += $(GEN_PARAMS_FILL)
+# GEN_PARAMS_BASELINE += $(GEN_PARAMS_FILL)
 
 fill/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_FILL))
 	python3 generate_params.py "params" $@ $^
@@ -313,7 +313,7 @@ $(foreach N,$(shell seq 4 4 28),\
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_RELU)
 # GEN_PARAMS_SNRT += $(GEN_PARAMS_RELU)
-GEN_PARAMS_BASELINE += $(GEN_PARAMS_RELU)
+# GEN_PARAMS_BASELINE += $(GEN_PARAMS_RELU)
 
 relu/params.csv: $(patsubst %,%/tests.csv,$(GEN_PARAMS_RELU))
 	python3 generate_params.py "params" $@ $^
@@ -322,7 +322,7 @@ GEN_PARAMS =
 GEN_PARAMS += $(GEN_PARAMS_LINALG)
 GEN_PARAMS += $(GEN_PARAMS_SNITCH_STREAM)
 # GEN_PARAMS += $(GEN_PARAMS_SNRT)
-GEN_PARAMS += $(GEN_PARAMS_BASELINE)
+# GEN_PARAMS += $(GEN_PARAMS_BASELINE)
 
 define generate_target
 
@@ -346,8 +346,11 @@ define generate_target_snitch_stream
 $(1)/snitch_stream.xdsl.mlir: $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json
 	python /src/scripts/format.py $(dir $(1))snitch_stream.xdsl.mlir.template $(1)/params.json > $$@
 
-$(1)/tests.csv: $(1)/snitch_stream.csv
-	python3 generate_tests.py $$@ $(1)/snitch_stream.csv
+$(1)/baseline.c: $(dir $(1))baseline.c.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))baseline.c.template $(1)/params.json > $$@
+
+$(1)/tests.csv: $(1)/snitch_stream.csv $(1)/baseline.csv
+	python3 generate_tests.py $$@ $(1)/snitch_stream.csv $(1)/baseline.csv
 
 endef
 
@@ -359,36 +362,16 @@ define generate_target_linalg
 $(1)/linalg_xdsl.xdsl.mlir: $(dir $(1))linalg_xdsl.xdsl.mlir.template $(1)/params.json
 	python /src/scripts/format.py $(dir $(1))linalg_xdsl.xdsl.mlir.template $(1)/params.json > $$@
 
-$(1)/tests.csv: $(1)/linalg_xdsl.csv
-	python3 generate_tests.py $$@ $(1)/linalg_xdsl.csv
+$(1)/baseline.c: $(dir $(1))baseline.c.template $(1)/params.json
+	python /src/scripts/format.py $(dir $(1))baseline.c.template $(1)/params.json > $$@
+
+$(1)/tests.csv: $(1)/linalg_xdsl.csv $(1)/baseline.csv
+	python3 generate_tests.py $$@ $(1)/linalg_xdsl.csv $(1)/baseline.csv
 
 endef
 
 $(foreach param,$(GEN_PARAMS_LINALG),$(eval $(call generate_target_linalg,$(param))))
 
-# define generate_target_snrt
-#
-# $(1)/snrt.c: $(dir $(1))snrt.c.template $(1)/params.json
-# 	python /src/scripts/format.py $(dir $(1))snrt.c.template $(1)/params.json > $$@
-#
-# $(1)/tests.csv: $(1)/snrt.csv
-# 	python3 generate_tests.py $$@ $(1)/snrt.csv
-#
-# endef
-#
-# $(foreach param,$(GEN_PARAMS_SNRT),$(eval $(call generate_target_snrt,$(param))))
-
-define generate_target_baseline
-
-$(1)/baseline.c: $(dir $(1))baseline.c.template $(1)/params.json
-	python /src/scripts/format.py $(dir $(1))baseline.c.template $(1)/params.json > $$@
-
-$(1)/tests.csv: $(1)/baseline.csv
-	python3 generate_tests.py $$@ $(1)/baseline.csv
-
-endef
-
-$(foreach param,$(GEN_PARAMS_BASELINE),$(eval $(call generate_target_baseline,$(param))))
 
 define generate_main
 
