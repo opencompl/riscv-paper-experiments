@@ -388,7 +388,7 @@ $(1)/tests.csv: $(1)/baseline.csv
 
 endef
 
-$(foreach param,$(GEN_PARAMS_BASELINE),$(eval $(call generate_target_snrt,$(param))))
+$(foreach param,$(GEN_PARAMS_BASELINE),$(eval $(call generate_target_baseline,$(param))))
 
 define generate_main
 
