@@ -354,7 +354,6 @@ endef
 
 $(foreach param,$(GEN_PARAMS_LINALG),$(eval $(call generate_target_linalg,$(param))))
 
-
 define generate_main
 
 $(1)/main.o: $(dir $(1))main.c $(1)/data.h
