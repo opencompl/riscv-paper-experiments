@@ -17,7 +17,7 @@ def format_text_with_json(text, json_dict):
             print(f"Error occurred while evaluating expression '{expr}': {e}")
             return match.group(0)
 
-    formatted_text = re.sub(r"\{\{(.*)\}\}", replace_match, text)
+    formatted_text = re.sub(r"\{\{(.*?)\}\}", replace_match, text)
     return formatted_text
 
 
