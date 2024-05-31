@@ -9,7 +9,9 @@ on:
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
-    container: ghcr.io/opencompl/snitch-toolchain:latest
+    container:
+      image: ghcr.io/opencompl/snitch-toolchain:latest
+      options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v3.5.0
         with:
