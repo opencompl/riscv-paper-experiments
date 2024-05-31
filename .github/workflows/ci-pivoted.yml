@@ -32,7 +32,7 @@ jobs:
       - name: Check pivoted has not changed
         run: |
           cd /src/
-          scripts/nodiff.sh kernels/pivoted.csv
+          ./scripts/nodiff.sh kernels/pivoted.csv kernels/pivoted_old.csv.txt
       - name: Read Cycles CSV
         id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
