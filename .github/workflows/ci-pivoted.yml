@@ -30,7 +30,9 @@ jobs:
           make clean
           make pivoted.csv -j
       - name: Check pivoted has not changed
-        run: . /src/scripts/nodiff.sh /src/kernels/pivoted.csv
+        run: |
+          cd /src/
+          scripts/nodiff.sh kernels/pivoted.csv
       - name: Read Cycles CSV
         id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
