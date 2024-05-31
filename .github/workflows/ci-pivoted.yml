@@ -28,7 +28,7 @@ jobs:
           . venv/bin/activate
           cd kernels
           make clean
-          make pivoted.csv
+          make pivoted.csv -j
       - name: Check pivoted has not changed
         uses: tj-actions/verify-changed-files@v20
         id: verify-changed-files
