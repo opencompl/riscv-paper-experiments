@@ -17,8 +17,11 @@ jobs:
         with:
           submodules: recursive
       - name: Clean and make pivoted
-        run:
-          cd kernels && make clean && make pivoted.csv
+        run: |
+          pip install pandas==2.1.4
+          cd kernels
+          make clean
+          make pivoted.csv
       - name: Check pivoted has not changed
         uses: tj-actions/verify-changed-files@v20
         id: verify-changed-files
