@@ -300,8 +300,8 @@ $(foreach param,$(GEN_MAIN),$(eval $(call generate_main,$(param))))
 
 
 clean_codegen:
-	@for folder in $(GEN_MAIN); do \
-		find $$folder -mindepth 1 -type d -print0 | xargs -0 rm -rf; \
+	@for folder in $(GEN_PARAMS); do \
+		find $$folder -type d -print0 | xargs -0 rm -rf; \
 	done
 
 CLEAN_PATH = .
