@@ -1,7 +1,7 @@
 
 include ../snitch/Makefile.rules
 
-.PHONY: clean, bla
+.PHONY: clean, clean_codegen, clean_results
 
 # Top-level result, pivots the flat results in kernels.csv
 
@@ -299,10 +299,14 @@ GEN_MAIN += $(SUM_POOL_16)
 $(foreach param,$(GEN_MAIN),$(eval $(call generate_main,$(param))))
 
 
+clean_codegen:
+	@for folder in $(GEN_MAIN); do \
+		find $$folder -mindepth 1 -type d -print0 | xargs -0 rm -rf; \
+	done
+
 CLEAN_PATH = .
 
-# Remove all csv files in this folder, recursively
-clean:
+clean_results:
 	find $(CLEAN_PATH) -type f -name "*.csv" -print0 | xargs -0 rm -f
 	find $(CLEAN_PATH) -type f -name "*.x" -print0 | xargs -0 rm -f
 	find $(CLEAN_PATH) -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
@@ -310,6 +314,6 @@ clean:
 	find $(CLEAN_PATH) -type f -name "*.bc" -print0 | xargs -0 rm -f
 	find $(CLEAN_PATH) -type f -name "*.ll" -print0 | xargs -0 rm -f
 	find $(CLEAN_PATH) -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
-	@for folder in $(GEN_MAIN); do \
-		find $$folder -mindepth 1 -type d -print0 | xargs -0 rm -rf; \
-	done
+
+clean: clean_codegen clean_results
+	echo "clean"
