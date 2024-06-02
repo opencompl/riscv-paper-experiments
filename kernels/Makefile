@@ -311,5 +311,5 @@ clean:
 	find $(CLEAN_PATH) -type f -name "*.ll" -print0 | xargs -0 rm -f
 	find $(CLEAN_PATH) -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
 	@for folder in $(GEN_MAIN); do \
-		find $$folder -type d -print0 | xargs -0 rm -rf; \
+		find $$folder -mindepth 1 -type d -print0 | xargs -0 rm -rf; \
 	done
