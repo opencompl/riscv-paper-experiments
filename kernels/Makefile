@@ -81,15 +81,17 @@ matmul/$(1)x$(2)x$(3)xf64/params.json: | matmul/$(1)x$(2)x$(3)xf64
 
 endef
 
-RANGE_4_4_8 := $(shell seq 4 4 8)
-
-$(foreach M,$(RANGE_4_4_8),\
-	$(foreach K,$(RANGE_4_4_8),\
-		$(foreach N,$(RANGE_4_4_8),\
-			$(eval $(call generate_folders_matmul,$(M),$(K),$(N)))\
-		)\
-	)\
+$(foreach M,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,$(M),16,16))\
 )
+$(foreach K,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,16,$(K),16))\
+)
+$(foreach N,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_matmul,16,16,$(N)))\
+)
+
+$(eval $(call generate_folders_matmul,16,16,16))
 
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 
@@ -204,12 +206,14 @@ dsum/$(1)x$(2)xf64/params.json: | dsum/$(1)x$(2)xf64
 
 endef
 
-RANGE_4_4_16 := $(shell seq 4 4 16)
+$(eval $(call generate_folders_dsum,32,32))
 
-$(foreach M,$(RANGE_4_4_16),\
-	$(foreach N,$(RANGE_4_4_16),\
-		$(eval $(call generate_folders_dsum,$(M),$(N)))\
-	)\
+$(foreach M,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_dsum,$(M),32))\
+)
+
+$(foreach N,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_dsum,32,$(N)))\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_DSUM)
@@ -233,12 +237,14 @@ fill/$(1)x$(2)xf64/params.json: | fill/$(1)x$(2)xf64
 
 endef
 
-RANGE_4_4_16 := $(shell seq 4 4 16)
+$(eval $(call generate_folders_fill,32,32))
 
-$(foreach M,$(RANGE_4_4_16),\
-	$(foreach N,$(RANGE_4_4_16),\
-		$(eval $(call generate_folders_fill,$(M),$(N)))\
-	)\
+$(foreach M,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_fill,$(M),32))\
+)
+
+$(foreach N,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_fill,32,$(N)))\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_FILL)
@@ -262,12 +268,14 @@ relu/$(1)x$(2)xf64/params.json: | relu/$(1)x$(2)xf64
 
 endef
 
-RANGE_4_4_16 := $(shell seq 4 4 16)
+$(eval $(call generate_folders_relu,32,32))
 
-$(foreach M,$(RANGE_4_4_16),\
-	$(foreach N,$(RANGE_4_4_16),\
-		$(eval $(call generate_folders_relu,$(M),$(N)))\
-	)\
+$(foreach M,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_relu,$(M),32))\
+)
+
+$(foreach N,$(shell seq 4 4 28),\
+	$(eval $(call generate_folders_relu,32,$(N)))\
 )
 
 GEN_PARAMS_LINALG += $(GEN_PARAMS_RELU)
