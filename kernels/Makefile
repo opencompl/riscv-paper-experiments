@@ -26,23 +26,6 @@ kernels.csv: $(addsuffix /params.csv, $(FOLDERS))
 
 # individual tests below
 
-CONV_8 = conv2d_d1_s1_3x3/1x1x8x8xf64
-
-CONV_8_TESTS =
-CONV_8_TESTS += $(CONV_8)/baseline.csv
-CONV_8_TESTS += $(CONV_8)/linalg.csv
-CONV_8_TESTS += $(CONV_8)/snitch_stream.csv
-CONV_8_TESTS += $(CONV_8)/snrt.csv
-# spill to j register...
-# CONV_8_TESTS += $(CONV_8)/scf_xdsl.csv
-
-$(CONV_8)/tests.csv: $(CONV_8_TESTS)
-	python3 generate_tests.py $@ $^
-
-conv2d_d1_s1_3x3/params.csv: $(CONV_8)/tests.csv
-	python3 generate_params.py "params" $@ $^
-
-
 DDOT_128 = ddot/128xf64
 
 DDOT_128_TESTS =
@@ -111,6 +94,36 @@ $(foreach M,$(RANGE_4_4_8),\
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 
 matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
+	python3 generate_params.py "params" $@ $^
+
+# Double for loop macro to generate conv kernel sizes
+define generate_folders_conv
+
+CONV_PARAMS += conv2d_d1_s1_3x3/$(1)x$(2)xf64
+
+# Rule to generate JSON file
+conv2d_d1_s1_3x3/$(1)x$(2)xf64/params.json: | conv2d_d1_s1_3x3/$(1)x$(2)xf64
+	@echo '{\n\
+	\t"H": $(1),\n\
+	\t"W": $(2),\n\
+	\t"rmin": -1000.0,\n\
+	\t"rmax": 1000.0,\n\
+	\t"precision": 64\n\
+	}' > $$@
+
+endef
+
+RANGE_6_4_10 := $(shell seq 6 4 10)
+
+$(foreach H,$(RANGE_6_4_10),\
+	$(foreach W,$(RANGE_6_4_10),\
+		$(eval $(call generate_folders_conv,$(H),$(W)))\
+	)\
+)
+
+GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
+
+conv2d_d1_s1_3x3/params.csv: $(patsubst %,%/tests.csv,$(CONV_PARAMS))
 	python3 generate_params.py "params" $@ $^
 
 # Double for loop macro to generate sum pool kernel sizes
@@ -317,12 +330,8 @@ endef
 
 
 GEN_MAIN = $(GEN_PARAMS)
-GEN_MAIN += $(CONV_8)
 GEN_MAIN += $(DDOT_128)
 GEN_MAIN += $(DENSE_8)
-GEN_MAIN += $(DSUM_8_16)
-GEN_MAIN += $(MAX_POOL_16)
-GEN_MAIN += $(SUM_POOL_16)
 
 $(foreach param,$(GEN_MAIN),$(eval $(call generate_main,$(param))))
 
