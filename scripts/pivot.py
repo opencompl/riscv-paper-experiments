@@ -19,8 +19,10 @@ def main(df: pd.DataFrame, outdir: str):
         "snitch_stream",
         "snrt",
         "linalg_xdsl",
-        "riscv_scf",
-        "scf",
+        "scf_xdsl",
+        # FIXME to be enabled when relative kernel implementations are in
+        # "riscv_scf",
+        # "scf",
     }
 
     df = df[df["impl"].isin(PIVOTED_COLS)]
