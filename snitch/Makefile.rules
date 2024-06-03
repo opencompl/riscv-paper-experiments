@@ -247,7 +247,7 @@ LOG_DIR = $<.logs
 	set -e ;\
 	TMP=$$(mktemp) ;\
 	python3 -c "import json,sys; data = json.load(open(sys.argv[1])); keys = sorted(data[1].keys()); print(','.join(keys)); print(','.join(str(data[1][k]) for k in keys))" $< > $@ ;\
-	/src/scripts/fpss_fpu_fmadd_issues.awk $(patsubst %.json, %.txt, $<) | sed -n '1p;3p' | /src/scripts/csv_append.py $@ > $$TMP ;\
+	/src/scripts/fpss_fpu_fmadd_issues.awk -v fmt="csv" $(patsubst %.json, %.txt, $<) | sed -n '1p;3p' | /src/scripts/csv_append.py $@ > $$TMP ;\
 	mv $$TMP $@ ;\
 
 
