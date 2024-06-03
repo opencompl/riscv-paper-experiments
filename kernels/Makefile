@@ -1,24 +1,12 @@
 
 include ../snitch/Makefile.rules
 
-.PHONY: clean
+.PHONY: clean, clean_codegen, clean_results
 
 # Top-level result, pivots the flat results in kernels.csv
 
 pivoted.csv pivoted_ipc.csv pivoted_fpu.csv: kernels.csv ../scripts/pivot.py
 	python3 ../scripts/pivot.py
-
-CLEAN_PATH = .
-
-# Remove all csv files in this folder, recursively
-clean:
-	find $(CLEAN_PATH) -type f -name "*.csv" -print0 | xargs -0 rm -f
-	find $(CLEAN_PATH) -type f -name "*.x" -print0 | xargs -0 rm -f
-	find $(CLEAN_PATH) -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
-	find $(CLEAN_PATH) -type f -name "*.S" -print0 | xargs -0 rm -f
-	find $(CLEAN_PATH) -type f -name "*.bc" -print0 | xargs -0 rm -f
-	find $(CLEAN_PATH) -type f -name "*.ll" -print0 | xargs -0 rm -f
-	find $(CLEAN_PATH) -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
 
 # kernels.csv is the aggregation of all kernels
 
@@ -346,3 +334,23 @@ GEN_MAIN += $(DDOT_128)
 GEN_MAIN += $(DENSE_8)
 
 $(foreach param,$(GEN_MAIN),$(eval $(call generate_main,$(param))))
+
+
+clean_codegen:
+	@for folder in $(GEN_PARAMS); do \
+		find $$folder -type d -print0 | xargs -0 rm -rf; \
+	done
+
+CLEAN_PATH = .
+
+clean_results:
+	find $(CLEAN_PATH) -type f -name "*.csv" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.x" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type d -name "*.x.logs" -print0 | xargs -0 rm -rf
+	find $(CLEAN_PATH) -type f -name "*.S" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.bc" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.ll" -print0 | xargs -0 rm -f
+	find $(CLEAN_PATH) -type f -name "*.ll.mlir" -print0 | xargs -0 rm -f
+
+clean: clean_codegen clean_results
+	echo "clean"

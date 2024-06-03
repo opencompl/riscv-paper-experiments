@@ -9,14 +9,31 @@ on:
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
-    container: ghcr.io/opencompl/snitch-toolchain:latest
+    container:
+      image: ghcr.io/opencompl/snitch-toolchain:latest
+      options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v3.5.0
         with:
           submodules: recursive
-      - name: Check pivoted is up to date
-        run: cd kernels
-          make -q pivoted.csv
+      - name: Install dependencies in venv
+        run: |
+          python3 -m venv venv
+          . venv/bin/activate
+          pip install --upgrade pip
+          pip install -e /src/xdsl
+          pip install -r /src/scripts/requirements.txt
+      - name: Clean and make pivoted
+        run: |
+          . venv/bin/activate
+          cd kernels
+          cp pivoted.csv pivoted_old.csv.txt
+          make clean
+          make pivoted.csv -j
+      - name: Check pivoted has not changed
+        run: |
+          cd /src/
+          ./scripts/nodiff.sh kernels/pivoted.csv kernels/pivoted_old.csv.txt
       - name: Read Cycles CSV
         id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
