@@ -115,12 +115,16 @@ conv2d_d1_s1_3x3/$(1)x$(2)xf64/params.json: | conv2d_d1_s1_3x3/$(1)x$(2)xf64
 
 endef
 
-RANGE_6_4_10 := $(shell seq 6 4 10)
+RANGE_6_4_10 :=
 
-$(foreach H,$(RANGE_6_4_10),\
-	$(foreach W,$(RANGE_6_4_10),\
-		$(eval $(call generate_folders_conv,$(H),$(W)))\
-	)\
+$(eval $(call generate_folders_conv,18,18))
+
+$(foreach H,$(shell seq 6 4 14),\
+	$(eval $(call generate_folders_conv,$(H),18))\
+)
+
+$(foreach W,$(shell seq 6 4 14),\
+	$(eval $(call generate_folders_conv,18,$(W)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
@@ -146,12 +150,14 @@ pooling_nchw_sum_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_sum_d1_s2_3
 endef
 
 # 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
-RANGE_10_8_18 := $(shell seq 10 8 18)
+$(eval $(call generate_folders_sum_pool,34,34))
 
-$(foreach H,$(RANGE_10_8_18),\
-	$(foreach W,$(RANGE_10_8_18),\
-		$(eval $(call generate_folders_sum_pool,$(H),$(W)))\
-	)\
+$(foreach H,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_sum_pool,$(H),34))\
+)
+
+$(foreach W,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_sum_pool,34,$(W)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_SUM_POOL)
@@ -177,12 +183,14 @@ pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_max_d1_s2_3
 endef
 
 # 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
-RANGE_10_8_18 := $(shell seq 10 8 18)
+$(eval $(call generate_folders_max_pool,34,34))
 
-$(foreach H,$(RANGE_10_8_18),\
-	$(foreach W,$(RANGE_10_8_18),\
-		$(eval $(call generate_folders_max_pool,$(H),$(W)))\
-	)\
+$(foreach H,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_max_pool,$(H),34))\
+)
+
+$(foreach W,$(shell seq 10 8 26),\
+	$(eval $(call generate_folders_max_pool,34,$(W)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_MAX_POOL)
