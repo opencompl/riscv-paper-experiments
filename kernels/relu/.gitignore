@@ -1,0 +1,4 @@
+# Ignores for parametric/templated kernels
+data.c
+data.h
+*.xdsl.mlir
