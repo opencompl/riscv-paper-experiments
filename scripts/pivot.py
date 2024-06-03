@@ -7,23 +7,7 @@ import os
 from os.path import join
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description="Produce pivot table CSV files given a global results CSV. "
-        "Read from stdin, write to predefined file names.",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-    )
-    parser.add_argument(
-        "-d",
-        "--outdir",
-        type=str,
-        default=os.getcwd(),
-        help="Output directory for the resulting CSVs",
-    )
-    args = parser.parse_args()
-
-    df = pd.read_csv(sys.stdin)
-
+def main(df: pd.DataFrame, outdir: str):
     df["kernels"] = df["test"].astype(str) + " " + df["params"]
 
     # Filter the DataFrame to keep only the necessary columns
@@ -51,16 +35,27 @@ def main():
     # TODO: uncomment when adding back xdsl flow
     # pivoted["speedup"] = pivoted["min_llvm_mlir"].div(pivoted["snitch_stream"]).map(lambda val: f"{val:.2f}x" if not math.isnan(val) else "?x")
 
-    pivoted.to_csv(
-        join(args.outdir, "pivoted.csv"), float_format=lambda val: str(int(val))
-    )
+    pivoted.to_csv(join(outdir, "pivoted.csv"), float_format=lambda val: str(int(val)))
     pivoted_fpu.to_csv(
-        join(args.outdir, "pivoted_fpu.csv"), float_format=lambda val: f"{val:.2f}"
+        join(outdir, "pivoted_fpu.csv"), float_format=lambda val: f"{val:.2f}"
     )
     pivoted_ipc.to_csv(
-        join(args.outdir, "pivoted_ipc.csv"), float_format=lambda val: f"{val:.2f}"
+        join(outdir, "pivoted_ipc.csv"), float_format=lambda val: f"{val:.2f}"
     )
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(
+        description="Produce pivot table CSV files given a global results CSV. "
+        "Read from stdin, write to predefined file names.",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "-d",
+        "--outdir",
+        type=str,
+        default=os.getcwd(),
+        help="Output directory for the resulting CSVs",
+    )
+    args = parser.parse_args()
+    main(pd.read_csv(sys.stdin), args.outdir)
