@@ -106,8 +106,8 @@ CONV_PARAMS += conv2d_d1_s1_3x3/$(1)x$(2)xf64
 # Rule to generate JSON file
 conv2d_d1_s1_3x3/$(1)x$(2)xf64/params.json: | conv2d_d1_s1_3x3/$(1)x$(2)xf64
 	@echo '{\n\
-	\t"H": $(1),\n\
-	\t"W": $(2),\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
 	\t"rmin": -1000.0,\n\
 	\t"rmax": 1000.0,\n\
 	\t"precision": 64\n\
@@ -115,16 +115,14 @@ conv2d_d1_s1_3x3/$(1)x$(2)xf64/params.json: | conv2d_d1_s1_3x3/$(1)x$(2)xf64
 
 endef
 
-RANGE_6_4_10 :=
+$(eval $(call generate_folders_conv,16,16))
 
-$(eval $(call generate_folders_conv,18,18))
-
-$(foreach H,$(shell seq 6 4 14),\
-	$(eval $(call generate_folders_conv,$(H),18))\
+$(foreach M,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_conv,$(M),16))\
 )
 
-$(foreach W,$(shell seq 6 4 14),\
-	$(eval $(call generate_folders_conv,18,$(W)))\
+$(foreach N,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_conv,16,$(N)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(CONV_PARAMS)
@@ -140,8 +138,8 @@ GEN_PARAMS_SUM_POOL += pooling_nchw_sum_d1_s2_3x3/$(1)x$(2)xf64
 # Rule to generate JSON file
 pooling_nchw_sum_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_sum_d1_s2_3x3/$(1)x$(2)xf64
 	@echo '{\n\
-	\t"H": $(1),\n\
-	\t"W": $(2),\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
 	\t"rmin": -1000.0,\n\
 	\t"rmax": 1000.0,\n\
 	\t"precision": 64\n\
@@ -149,15 +147,16 @@ pooling_nchw_sum_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_sum_d1_s2_3
 
 endef
 
-# 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
-$(eval $(call generate_folders_sum_pool,34,34))
 
-$(foreach H,$(shell seq 10 8 26),\
-	$(eval $(call generate_folders_sum_pool,$(H),34))\
+# 3x3 M and N correspond to NEW_H, and NEW_W
+$(eval $(call generate_folders_sum_pool,16,16))
+
+$(foreach M,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_sum_pool,$(M),16))\
 )
 
-$(foreach W,$(shell seq 10 8 26),\
-	$(eval $(call generate_folders_sum_pool,34,$(W)))\
+$(foreach N,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_sum_pool,16,$(N)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_SUM_POOL)
@@ -173,8 +172,8 @@ GEN_PARAMS_MAX_POOL += pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64
 # Rule to generate JSON file
 pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64
 	@echo '{\n\
-	\t"H": $(1),\n\
-	\t"W": $(2),\n\
+	\t"M": $(1),\n\
+	\t"N": $(2),\n\
 	\t"rmin": -1000.0,\n\
 	\t"rmax": 1000.0,\n\
 	\t"precision": 64\n\
@@ -182,15 +181,15 @@ pooling_nchw_max_d1_s2_3x3/$(1)x$(2)xf64/params.json: | pooling_nchw_max_d1_s2_3
 
 endef
 
-# 3x3 pool with stride 2 means that the dimensions we want to explore are (8k + 2)
-$(eval $(call generate_folders_max_pool,34,34))
+# 3x3 M and N correspond to NEW_H, and NEW_W
+$(eval $(call generate_folders_max_pool,16,16))
 
-$(foreach H,$(shell seq 10 8 26),\
-	$(eval $(call generate_folders_max_pool,$(H),34))\
+$(foreach M,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_max_pool,$(M),16))\
 )
 
-$(foreach W,$(shell seq 10 8 26),\
-	$(eval $(call generate_folders_max_pool,34,$(W)))\
+$(foreach N,$(shell seq 4 4 12),\
+	$(eval $(call generate_folders_max_pool,16,$(N)))\
 )
 
 GEN_PARAMS_SNITCH_STREAM += $(GEN_PARAMS_MAX_POOL)

@@ -9,7 +9,7 @@ from gendatautils import main, Define, Array, Scalar
 
 
 def conv_data(
-    H: int, W: int, rmin: float, rmax: float, precision: int
+    M: int, N: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array | Scalar]:
     n = 1  # n for number of elements in a batch
     c = 1  # c for channels
@@ -18,13 +18,16 @@ def conv_data(
     kernel_size = (3, 3)
     stride = 1
 
+    H = (M - 1) * stride + kernel_size[0]
+    W = (N - 1) * stride + kernel_size[1]
+
     np.random.seed(0)
     t = {64: np.float64, 32: np.float32}[precision]
     x = np.random.uniform(rmin, rmax, (n, c, H, W)).astype(t)
     y = np.random.uniform(rmin, rmax, (F, c, kernel_size[0], kernel_size[1])).astype(t)
 
-    new_h = (H - kernel_size[0]) // stride + 1
-    new_w = (W - kernel_size[1]) // stride + 1
+    new_h = M
+    new_w = N
 
     z_in = np.random.uniform(rmin, rmax, (n, F, new_h, new_w)).astype(t)
     z_out = np.zeros((n, F, new_h, new_w)).astype(t)
