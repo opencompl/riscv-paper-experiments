@@ -1,6 +1,7 @@
 # Ignores for parametric/templated kernels
 data.c
 data.h
+baseline.c
 *.xdsl.mlir
 params.json
 */*.csv
