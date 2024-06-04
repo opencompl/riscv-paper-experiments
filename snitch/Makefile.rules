@@ -235,7 +235,7 @@ LOG_DIR = $<.logs
 	set -e; \
 	rm -rf $(LOG_DIR) && mkdir -p $(LOG_DIR); \
 	cd $(LOG_DIR); \
-	$(VLTSIM) ../$(notdir $^); \
+	timeout --foreground -s SIGKILL 10m $(VLTSIM) ../$(notdir $^); \
 	$(DASM) < logs/trace_hart_00000000.dasm | $(GENTRACE) --permissive -d logs/trace_hart_00000000.trace.json > logs/trace_hart_00000000.trace.txt; \
 	cd --
 
