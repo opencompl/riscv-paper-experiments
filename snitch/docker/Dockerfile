@@ -82,13 +82,6 @@ deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt
  && apt-get -y update \
  && apt-get -y upgrade \
  && apt-get -y install mlir-16-tools \
-# plotting
- && apt-get -y install \
-      texlive \
-      texlive-latex-extra \
-      texlive-fonts-recommended \
-      dvipng \
-      cm-super \
  # misc stuff
  && apt-get -y install make \
  # make sure we have the latest git version,
