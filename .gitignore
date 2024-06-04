@@ -1,3 +1,6 @@
+# Snakemake logs
+.snakemake/
+
 # persistent virtualenv for docker image
 .venv-docker/
 

@@ -1,0 +1,106 @@
+# Paths
+root: /src # usual docker volume mount point for the repo
+xdsl-opt: xdsl-opt # from virtualenv
+mlir-opt: /usr/bin/mlir-opt-16
+mlir-translate: /usr/bin/mlir-translate-16
+cc: /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+spike: /opt/snitch-spike/bin/spike-dasm
+vltsim: /opt/snitch-rtl/bin/snitch_cluster.vlt
+gentrace: /opt/snitch_cluster/util/trace/gen_trace.py
+
+# Flags
+asflags:
+  - -menable-experimental-extensions
+  - -mcpu=snitch
+  - -mabi=ilp32d
+  - -mcmodel=medany
+  - -ftls-model=local-exec
+  - -ffast-math
+  - -fno-builtin-printf
+  - -fno-common
+  - -O3
+  - -D__DEFINED_uint64_t
+  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
+  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
+  - -I/opt/snitch_cluster/sw/snRuntime/api
+  - -I/opt/snitch_cluster/sw/snRuntime/src
+  - -I/opt/snitch_cluster/sw/snRuntime/src/omp/
+  - -I/opt/snitch_cluster/sw/snRuntime/api/omp/
+  - -I/opt/snitch_cluster/sw/math/arch/riscv64/bits/
+  - -I/opt/snitch_cluster/sw/math/arch/generic
+  - -I/opt/snitch_cluster/sw/math/src/include
+  - -I/opt/snitch_cluster/sw/math/src/internal
+  - -I/opt/snitch_cluster/sw/math/include/bits
+  - -I/opt/snitch_cluster/sw/math/include
+cflags:
+  - -Wno-unused-command-line-argument
+  - -menable-experimental-extensions
+  - -mcpu=snitch
+  - -mabi=ilp32d
+  - -mcmodel=medany
+  - -ftls-model=local-exec
+  - -ffast-math
+  - -fno-builtin-printf
+  - -fno-common
+  - -O3 
+  - -D__DEFINED_uint64_t
+  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
+  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
+  - -I/opt/snitch_cluster/sw/snRuntime/api
+  - -I/opt/snitch_cluster/sw/snRuntime/src
+  - -I/opt/snitch_cluster/sw/snRuntime/src/omp/
+  - -I/opt/snitch_cluster/sw/snRuntime/api/omp/
+  - -I/opt/snitch_cluster/sw/math/arch/riscv64/bits/
+  - -I/opt/snitch_cluster/sw/math/arch/generic
+  - -I/opt/snitch_cluster/sw/math/src/include
+  - -I/opt/snitch_cluster/sw/math/src/internal
+  - -I/opt/snitch_cluster/sw/math/include/bits
+  - -I/opt/snitch_cluster/sw/math/include
+ldflags:
+  - -fuse-ld=/opt/snitch-llvm/bin/ld.lld
+  - -nostartfiles
+  - -nostdlib
+  - -lclang_rt.builtins-riscv32
+  - -lc
+  - -lsnRuntime
+  - -L/opt/snitch-llvm/lib/clang/12.0.1/lib/
+  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
+  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
+  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
+xdsl-passes:
+  - convert-linalg-to-memref-stream
+  - memref-streamify
+  - convert-memref-stream-to-loops
+  - scf-for-loop-flatten
+  - arith-add-fastmath
+  - loop-hoist-memref
+  - lower-affine
+  - convert-memref-stream-to-snitch
+  - convert-func-to-riscv-func
+  - convert-memref-to-riscv
+  - convert-arith-to-riscv
+  - convert-scf-to-riscv-scf
+  - dce
+  - reconcile-unrealized-casts
+  - test-lower-snitch-stream-to-asm
+mlir-opt-flags-linalg:
+  - -opaque-pointers=0
+  - --linalg-generalize-named-ops
+  - --eliminate-empty-tensors
+  - -empty-tensor-to-alloc-tensor
+  - --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
+  - --canonicalize
+  - --convert-linalg-to-loops
+  - --lower-affine
+  - --canonicalize 
+mlir-opt-flags-scf:
+  - --convert-scf-to-cf
+  - --canonicalize
+  - --cse
+  - --convert-math-to-llvm
+  - --convert-memref-to-llvm='use-generic-functions index-bitwidth=32'
+  - --convert-func-to-llvm='use-bare-ptr-memref-call-conv index-bitwidth=32'
+  - --convert-index-to-llvm=index-bitwidth=32
+  - --convert-cf-to-llvm=index-bitwidth=32
+  - --convert-arith-to-llvm=index-bitwidth=32
+  - --reconcile-unrealized-casts
