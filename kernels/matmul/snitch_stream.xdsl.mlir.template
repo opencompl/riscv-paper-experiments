@@ -21,8 +21,6 @@ riscv.assembly_section ".text" {
     %frep_count_minus_one = riscv.li {{K - 1}} : () -> !riscv.reg<>
     %target_count = riscv.li {{M * N}} : () -> !riscv.reg<>
 
-    %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
-
     %G_begin = riscv.mv %G_moved : (!riscv.reg<>) -> !riscv.reg<>
     %G_end0 = riscv.addi %G_begin, {{min(M * N * 8, 2047)}} : (!riscv.reg<>) -> !riscv.reg<>
     %G_end1 = riscv.addi %G_end0, {{max(M * N * 8 - 2047, 0)}} : (!riscv.reg<>) -> !riscv.reg<>
@@ -36,10 +34,10 @@ riscv.assembly_section ".text" {
     }> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
       riscv_scf.for %g_i : !riscv.reg<> = %G_begin to %G_end1 step %c32 {
-        %init0 = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
-        %init1 = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
-        %init2 = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
-        %init3 = riscv.fmv.d %zero_float : (!riscv.freg<>) -> !riscv.freg<>
+        %init0 = riscv.fld %g_i, 0 : (!riscv.reg<>) -> !riscv.freg<>
+        %init1 = riscv.fld %g_i, 8 : (!riscv.reg<>) -> !riscv.freg<>
+        %init2 = riscv.fld %g_i, 16 : (!riscv.reg<>) -> !riscv.freg<>
+        %init3 = riscv.fld %g_i, 24 : (!riscv.reg<>) -> !riscv.freg<>
 
         %g00, %g01, %g02, %g03 = riscv_snitch.frep_outer %frep_count_minus_one iter_args(%acc0 = %init0, %acc1 = %init1, %acc2 = %init2, %acc3 = %init3) -> (!riscv.freg<>, !riscv.freg<>, !riscv.freg<>, !riscv.freg<>) {
           %x10 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
