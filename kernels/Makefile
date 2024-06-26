@@ -93,6 +93,9 @@ $(foreach N,$(shell seq 4 4 12),\
 
 $(eval $(call generate_folders_matmul,16,16,16))
 
+
+$(eval $(call generate_folders_matmul,1,400,4))
+
 GEN_PARAMS_SNITCH_STREAM += $(MATMUL_PARAMS)
 
 matmul/params.csv: $(patsubst %,%/tests.csv,$(MATMUL_PARAMS))
