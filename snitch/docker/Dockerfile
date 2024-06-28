@@ -43,7 +43,7 @@ FROM ubuntu:18.04 as toolchain
 ENV DEBIAN_FRONTEND=noninteractive
 # Runtime dependencies
 # COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
-COPY --from=ghcr.io/opencompl/Quidditch/toolchain:06e7a97db99efe477f4b46127500503f37f17ce9256d7a8f6ba5908b8b9eefa4 /opt/quidditch-toolchain/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
+COPY --from=ghcr.io/opencompl/quidditch/toolchain@sha256:06e7a97db99efe477f4b46127500503f37f17ce9256d7a8f6ba5908b8b9eefa4 /opt/quidditch-toolchain/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
 COPY --from=builder /opt/python3.11 /opt/python3.11
