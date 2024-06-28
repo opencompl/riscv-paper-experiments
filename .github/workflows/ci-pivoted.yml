@@ -18,6 +18,7 @@ jobs:
           submodules: recursive
       - name: Clean and make pivoted
         run: |
+          . /src/.venv-docker/bin/activate
           cd kernels
           cp pivoted.csv pivoted_old.csv.txt
           make clean
