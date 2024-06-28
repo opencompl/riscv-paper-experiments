@@ -20,8 +20,6 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install --upgrade pip
-          pip install -e /src/xdsl
           pip install -r /src/scripts/requirements.txt
       - name: Clean and make pivoted
         run: |
