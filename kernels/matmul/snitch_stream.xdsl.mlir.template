@@ -14,13 +14,9 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %G_moved = riscv.mv %G : (!riscv.reg<a2>) -> !riscv.reg
 
-    %c0 = riscv.get_register : () -> !riscv.reg<zero>
-    %c1 = riscv.li 1 : () -> !riscv.reg
-    %c4 = riscv.li 4 : () -> !riscv.reg
-    %frep_count_minus_one = riscv.li {{K - 1}} : () -> !riscv.reg
-    %target_count = riscv.li {{M * N}} : () -> !riscv.reg
-
-    %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg
+    %zero = riscv.get_register : () -> !riscv.reg<zero>
+    %zero_int = riscv.mv %zero : (!riscv.reg<zero>) -> !riscv.reg
+    %zero_float = riscv.fcvt.d.w %zero_int : (!riscv.reg) -> !riscv.freg
 
     "snitch_stream.streaming_region"(%X_moved, %Y_moved, %G_moved) <{
       "stride_patterns" = [
@@ -31,12 +27,17 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 2, 1>
     }> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>, %G_stream : !stream.writable<!riscv.freg<ft2>>):
-      riscv_scf.for %g_i : !riscv.reg = %c0 to %target_count step %c4 {
+      %c0 = riscv.mv %zero : (!riscv.reg<zero>) -> !riscv.reg
+      %c1 = riscv.li 1 : () -> !riscv.reg
+      %outer_count = riscv.li {{M * N // 4}} : () -> !riscv.reg
+      %frep_count = riscv.li {{K}} : () -> !riscv.reg
+      riscv_scf.for %g_i : !riscv.reg = %c0 to %outer_count step %c1 {
         %init0 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
         %init1 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
         %init2 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
         %init3 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
 
+        %frep_count_minus_one = riscv.addi %frep_count, -1 : (!riscv.reg) -> !riscv.reg
         %g00, %g01, %g02, %g03 = riscv_snitch.frep_outer %frep_count_minus_one iter_args(%acc0 = %init0, %acc1 = %init1, %acc2 = %init2, %acc3 = %init3) -> (!riscv.freg, !riscv.freg, !riscv.freg, !riscv.freg) {
           %x10 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
           %y10 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
