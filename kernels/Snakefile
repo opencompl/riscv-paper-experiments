@@ -355,7 +355,10 @@ rule cc_compile_shared_main:
         "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -o {output} {input.c}"
 
 
-# Sources/data generation rules restricted to templated kernels only
+###########################################################
+# Sources/data generation rules, restricted to templated
+# kernels only
+###########################################################
 
 
 rule kernel_generate_params:
