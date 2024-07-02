@@ -167,6 +167,13 @@ The core (a.k.a. *hart* in RISC-V terminology) no. 0 was the only one actually
 executing the kernel, while all of the other cores did none as they early-return
 from the `main` function.
 
+## Running the full test suite
+
+The root `Makefile` provides two different targets:
+
+* `fast` (default target), completes as quickly as possible by running only 1 shape for each kernel. The CI runs this test set;
+* `all`, runs everything that is needed for paper plots. **Warning: ~1300 Verilator simulations will be run**, so make sure to be on a beefy machine.
+
 ## Using Singularity instead of Docker
 
 On multi-user systems (e.g.: HPC clusters) where Docker is not available, [Singularity](https://docs.sylabs.io/guides/3.5/user-guide/introduction.html) is usually provided as an *almost* drop-in replacement.
