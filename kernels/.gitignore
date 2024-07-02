@@ -1,7 +1,12 @@
+# Profiling results
+*.json
+
 # Build byproducts, not really useful up to now
 *.ll.mlir
 *.ll
 *.S
 
-# Verilator traces directory
-logs/
+# Verilator traces
+*.dasm
+*.trace.txt
+*.trace.json

@@ -10,7 +10,7 @@ jobs:
   run-experiments:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/opencompl/snitch-toolchain:2.8
+      image: ghcr.io/opencompl/snitch-toolchain:2.9
       options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v3.5.0
@@ -20,14 +20,13 @@ jobs:
         run: |
           python3 -m venv venv
           . venv/bin/activate
-          pip install -r /src/scripts/requirements.txt
+          pip install -r /src/requirements.txt
       - name: Clean and make pivoted
         run: |
           . venv/bin/activate
-          cd kernels
-          cp pivoted.csv pivoted_old.csv.txt
+          cp kernels/pivoted.csv kernels/pivoted_old.csv.txt
           make clean
-          make pivoted.csv -j
+          make
       - name: Check pivoted has not changed
         run: |
           cd /src/

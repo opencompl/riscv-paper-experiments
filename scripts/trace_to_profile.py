@@ -66,7 +66,7 @@ def fpss_fpu_fmadd_issues(text_trace: str):
     return json.loads(stdout)
 
 
-def main(args):
+def main():
     parser = argparse.ArgumentParser(
         description="Process a Snitch Verilator trace (both text and JSON), "
         "add extra counters and write the resulting JSON to stdout.",

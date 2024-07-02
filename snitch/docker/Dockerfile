@@ -18,7 +18,7 @@ RUN git clone --recursive https://github.com/nazavode/snitch_cluster.git /src \
  && mkdir -p /opt/snitch-llvm \
  && wget -qO- https://github.com/pulp-platform/llvm-project/releases/download/0.12.0/riscv32-pulp-llvm-ubuntu1804-0.12.0.tar.gz | \
     tar xz --strip-components=1 -C /opt/snitch-llvm \
-# python 3.11
+ # python 3.11
  && apt update -y \
  && apt install -y \
       build-essential \
@@ -70,6 +70,7 @@ RUN apt-get -y update \
       libffi6 \
       libsqlite3-0 \
       bzip2 \
+      build-essential \
  # mlir
  && apt-get -y install wget lsb-release software-properties-common gnupg \
  && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \

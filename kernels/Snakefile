@@ -1,0 +1,340 @@
+
+configfile: "default.yaml"
+
+
+###########################################################
+# Templated kernels, sources and data need to be
+# generated on the fly
+###########################################################
+
+# Regular expressions to parse test shape (e.g.: 4x8xf64)
+# Make sure dimensions in code match capture group names below:
+SHAPE_2D = r"(?P<M>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
+SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
+
+# Shape regex for each kernel
+# Beware: the presence in the following dict makes the kernel
+# a templated kernel. Dict keys below are used to enable
+# source/data generation rules.
+KERNEL_SHAPE = {
+    "dsum": SHAPE_2D,
+    "relu": SHAPE_2D,
+    "fill": SHAPE_2D,
+    "conv2d_d1_s1_3x3": SHAPE_2D,
+    "pooling_nchw_sum_d1_s2_3x3": SHAPE_2D,
+    "pooling_nchw_max_d1_s2_3x3": SHAPE_2D,
+    "matmul": SHAPE_3D,
+}
+
+KERNEL_TEMPLATES = KERNEL_SHAPE.keys()
+
+# Common values to be added to params.json
+PARAMS = {
+    "rmin": -1000.0,
+    "rmax": 1000.0,
+}
+
+MATMUL = expand(
+    "matmul/{M}x{K}x{N}xf64/snitch_stream",
+    M=[4, 8],
+    # K=range(4, 65, 4),
+    K=[4, 8],
+    # N=range(4, 65, 4),
+    N=[4, 8],
+)
+
+RELU = expand(
+    "relu/{M}x{N}xf64/linalg_xdsl",
+    M=[4, 8, 12, 16],
+    N=[4, 8, 12, 16],
+)
+
+DSUM = expand(
+    "dsum/{M}x{N}xf64/linalg_xdsl",
+    M=[4, 8, 12, 16],
+    N=[4, 8, 12, 16],
+)
+
+FILL = expand(
+    "fill/{M}x{N}xf64/linalg_xdsl",
+    M=[4, 8, 12, 16],
+    N=[4, 8, 12, 16],
+)
+
+POOLING = expand(
+    "{kernel}/{M}x{N}xf64/snitch_stream",
+    kernel=["pooling_nchw_sum_d1_s2_3x3", "pooling_nchw_max_d1_s2_3x3"],
+    M=[4, 8, 12, 16],
+    N=[4, 8, 12, 16],
+)
+
+CONV2D = expand(
+    "conv2d_d1_s1_3x3/{M}x{N}xf64/snitch_stream",
+    M=[4, 8, 12, 16],
+    N=[4, 8, 12, 16],
+)
+
+###########################################################
+# Manual kernels, sources and data provided as inputs
+###########################################################
+
+SAXPY = expand(
+    "saxpy/64xf32/{variant}",
+    variant=["baseline", "snrt", "linalg"],
+)
+
+DDOT = expand(
+    "ddot/128xf64/{variant}",
+    variant=["baseline", "snrt", "snitch_stream", "linalg", "riscv_scf", "scf"],
+)
+
+DENSE = expand(
+    "dense/8x8xf64/{variant}",
+    variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
+)
+
+###########################################################
+# Rules
+###########################################################
+
+# All tests to be run by default
+TESTS = MATMUL + RELU + DSUM + FILL + POOLING + SAXPY + DDOT + CONV2D + DENSE
+
+
+rule csv_to_pivoted:
+    input:
+        "kernels.csv",
+    output:
+        "pivoted.csv",
+        "pivoted_fpu.csv",
+        "pivoted_ipc.csv",
+    params:
+        pivot=config["root"] + "/scripts/pivot.py",
+    shell:
+        "{params.pivot} --outdir . < {input}"
+
+
+rule profile_to_csv:
+    input:
+        expand("{test}.profile.json", test=TESTS),
+    output:
+        "kernels.csv",
+    params:
+        profile_to_csv=config["root"] + "/scripts/profile_to_csv.py",
+    shell:
+        "{params.profile_to_csv} {input} -o {output}"
+
+
+rule trace_to_profile:
+    input:
+        txt="{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.txt",
+        json="{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.json",
+    output:
+        "{kernel}/{shape}/{variant}.profile.json",
+    params:
+        trace_to_profile=config["root"] + "/scripts/trace_to_profile.py",
+    shell:
+        "{params.trace_to_profile} --section 1 "
+        "  --add section 1"
+        "  --add test {wildcards.kernel}"
+        "  --add params {wildcards.shape}"
+        "  --add impl {wildcards.variant}"
+        "  -o {output} {input.txt} {input.json}"
+
+
+rule dasm_to_trace:
+    input:
+        "{test}.logs/trace_hart_00000000.dasm",
+    output:
+        txt="{test}.logs/trace_hart_00000000.trace.txt",
+        json="{test}.logs/trace_hart_00000000.trace.json",
+    params:
+        spike=config["spike"],
+        gentrace=config["gentrace"],
+    shell:
+        "{params.spike} < {input} | {params.gentrace} --permissive -d {output.json} > {output.txt}"
+
+
+rule verilator:
+    input:
+        "{test}.x",
+    output:
+        expand("{{test}}.logs/trace_hart_0000000{hart}.dasm", hart=range(9)),
+    params:
+        workdir="{test}.logs",
+        vltsim=config["vltsim"],
+    shell:
+        """
+        mkdir -p {params.workdir}/logs
+        cd {params.workdir}
+        {params.vltsim} ../$(basename {input})
+        mv -f logs/* .
+        rm -fr logs
+        """
+
+
+# Build rules
+
+
+rule cc_link:
+    input:
+        "{kernel}/{shape}/{variant}.o",
+        "{kernel}/{shape}/data.o",
+        "{kernel}/{shape}/main.o",
+    output:
+        "{kernel}/{shape}/{variant}.x",
+    params:
+        cc=config["cc"],
+        ldflags=config["ldflags"],
+    shell:
+        "{params.cc} {params.ldflags} -o {output} {input}"
+
+
+rule cc_assemble:
+    input:
+        "{source}.S",
+    output:
+        "{source}.o",
+    params:
+        cc=config["cc"],
+        asflags=config["asflags"],
+    shell:
+        "{params.cc} {params.asflags} -c -o {output} {input}"
+
+
+rule cc_compile_c:
+    input:
+        "{source}.c",
+    output:
+        "{source}.S",
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input}"
+
+
+rule cc_compile_ll:
+    input:
+        "{source}.ll",
+    output:
+        "{source}.S",
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} {params.cflags} -S -o {output} {input}"
+
+
+rule xdsl_compile:
+    input:
+        "{source}.xdsl.mlir",
+    output:
+        "{source}.S",
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        passes=",".join(config["xdsl-passes"]),
+    shell:
+        "sed 's/arith.maxf/arith.maximumf/g' {input}"
+        "| {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}"
+
+
+rule mlir_linalg_compile:
+    input:
+        "{source}.mlir",
+    output:
+        "{source}.ll",
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_translate=config["mlir-translate"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+        mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
+        tollvm12=config["root"] + "/snitch/tollvm12.py",
+    shell:
+        "{params.mlir_opt} {params.mlir_opt_flags_linalg} {input}"
+        "| sed 's/arith.maxf/arith.maximumf/g'"
+        "| {params.xdsl_opt} -p arith-add-fastmath"
+        "| sed 's/arith.maximumf/arith.maxf/g'"
+        "| {params.mlir_opt} {params.mlir_opt_flags_scf}"
+        "| {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir"
+        "| {params.tollvm12} > {output}"
+
+
+# Specific rules for shared source files,
+# a.k.a. where the input source is in another directory WRT output
+
+
+rule cc_compile_shared_main:
+    input:
+        c="{kernel}/main.c",
+        h="{kernel}/{shape}/data.h",
+    output:
+        "{kernel}/{shape}/main.S",
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -o {output} {input.c}"
+
+
+# Sources/data generation rules restricted to templated kernels only
+
+
+rule kernel_generate_params:
+    output:
+        "{kernel}/{shape}/params.json",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+    run:
+        import re
+        import json
+
+        pattern = re.compile(KERNEL_SHAPE[wildcards.kernel])
+        match = pattern.fullmatch(wildcards.shape)
+        assert match
+        params = {k: int(v) for k, v in match.groupdict().items()}
+        params.update(PARAMS)
+        with open(output[0], "w") as out:
+            json.dump(params, out, indent=4)
+
+
+rule kernel_generate_data_h:
+    input:
+        json="{kernel}/{shape}/params.json",
+        template="{kernel}/data.h.template",
+    output:
+        "{kernel}/{shape}/data.h",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+    params:
+        format_template=config["root"] + "/scripts/format.py",
+    shell:
+        "python3 {params.format_template} {input.template} {input.json} > {output}"
+
+
+rule kernel_generate_data_c:
+    input:
+        json="{kernel}/{shape}/params.json",
+        h="{kernel}/{shape}/data.h",
+    output:
+        "{kernel}/{shape}/data.c",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+    shell:
+        "python3 -m {wildcards.kernel}.gendata -p {input.json} > {output}"
+
+
+rule kernel_generate_source:
+    input:
+        json="{kernel}/{shape}/params.json",
+        template="{kernel}/{variant}.{ext}.template",
+    output:
+        "{kernel}/{shape}/{variant}.{ext}",
+    wildcard_constraints:
+        ext="c|xdsl\.mlir|mlir",
+        kernel="|".join(KERNEL_TEMPLATES),
+    params:
+        format_template=config["root"] + "/scripts/format.py",
+    shell:
+        "python3 {params.format_template} {input.template} {input.json} > {output}"
