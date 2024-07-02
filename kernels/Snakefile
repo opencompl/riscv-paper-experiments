@@ -1,4 +1,3 @@
-
 configfile: "default.yaml"
 
 
@@ -34,91 +33,162 @@ PARAMS = {
     "rmax": 1000.0,
 }
 
-MATMUL = expand(
-    "matmul/{M}x{K}x{N}xf64/snitch_stream",
-    M=[4, 8],
-    # K=range(4, 65, 4),
-    K=[4, 8],
-    # N=range(4, 65, 4),
-    N=[4, 8],
-)
-
-RELU = expand(
-    "relu/{M}x{N}xf64/linalg_xdsl",
-    M=[4, 8, 12, 16],
-    N=[4, 8, 12, 16],
-)
-
-DSUM = expand(
-    "dsum/{M}x{N}xf64/linalg_xdsl",
-    M=[4, 8, 12, 16],
-    N=[4, 8, 12, 16],
-)
-
-FILL = expand(
-    "fill/{M}x{N}xf64/linalg_xdsl",
-    M=[4, 8, 12, 16],
-    N=[4, 8, 12, 16],
-)
-
-POOLING = expand(
-    "{kernel}/{M}x{N}xf64/snitch_stream",
-    kernel=["pooling_nchw_sum_d1_s2_3x3", "pooling_nchw_max_d1_s2_3x3"],
-    M=[4, 8, 12, 16],
-    N=[4, 8, 12, 16],
-)
-
-CONV2D = expand(
-    "conv2d_d1_s1_3x3/{M}x{N}xf64/snitch_stream",
-    M=[4, 8, 12, 16],
-    N=[4, 8, 12, 16],
-)
-
 ###########################################################
 # Manual kernels, sources and data provided as inputs
 ###########################################################
 
-SAXPY = expand(
-    "saxpy/64xf32/{variant}",
-    variant=["baseline", "snrt", "linalg"],
-)
+MANUAL_KERNELS = [
+    *expand("saxpy/64xf32/{variant}", variant=["baseline", "snrt", "linalg"]),
+    *expand(
+        "ddot/128xf64/{variant}",
+        variant=["baseline", "snrt", "snitch_stream", "linalg", "riscv_scf", "scf"],
+    ),
+    *expand(
+        "dense/8x8xf64/{variant}",
+        variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
+    ),
+]
 
-DDOT = expand(
-    "ddot/128xf64/{variant}",
-    variant=["baseline", "snrt", "snitch_stream", "linalg", "riscv_scf", "scf"],
-)
+###########################################################
+# Test sets
+###########################################################
 
-DENSE = expand(
-    "dense/8x8xf64/{variant}",
-    variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
-)
+# Minimum set of tests to be used as a meaningful smoke test,
+# runs as fast as possible to save CI time
+TESTSET_FAST = [
+    *MANUAL_KERNELS,
+    # 3d templated kernels: baseline + snitch_stream
+    *expand(
+        "matmul/4x4x4xf64/{variant}",
+        variant=["baseline", "snitch_stream"],
+    ),
+    # 2d templated kernels: baseline + linalg_xdsl
+    *expand(
+        "{kernel}/4x4xf64/{variant}",
+        kernel=["dsum", "fill"],
+        variant=["baseline", "linalg_xdsl"],
+    ),
+    # 2d templated kernels: baseline + snitch_stream
+    *expand(
+        "{kernel}/4x4xf64/{variant}",
+        kernel=[
+            "pooling_nchw_sum_d1_s2_3x3",
+            "pooling_nchw_max_d1_s2_3x3",
+            "conv2d_d1_s1_3x3",
+        ],
+        variant=["baseline", "snitch_stream"],
+    ),
+]
+
+# Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
+TESTSET_ALL = [
+    *MANUAL_KERNELS,
+    # 3d templated kernels: baseline + snitch_stream
+    *expand(
+        "matmul/{M}x{K}x{N}xf64/{variant}",
+        M=[4, 8],
+        K=range(4, 65, 4),
+        N=range(4, 65, 4),
+        variant=["baseline", "snitch_stream"],
+    ),
+    # 2d templated kernels: baseline + linalg_xdsl
+    *expand(
+        "{kernel}/{M}x{N}xf64/{variant}",
+        kernel=["dsum", "fill"],
+        M=[4, 8, 12, 16],
+        N=[4, 8, 12, 16],
+        variant=["baseline", "linalg_xdsl"],
+    ),
+    # 2d templated kernels: baseline + snitch_stream
+    *expand(
+        "{kernel}/{M}x{N}xf64/{variant}",
+        kernel=[
+            "pooling_nchw_sum_d1_s2_3x3",
+            "pooling_nchw_max_d1_s2_3x3",
+            "conv2d_d1_s1_3x3",
+        ],
+        M=[4, 8, 12, 16],
+        N=[4, 8, 12, 16],
+        variant=["baseline", "snitch_stream"],
+    ),
+]
+
+
+# Return the list of expected Verilator output files according to the
+# selected 'testset' output wildcard
+def select_test_set(wildcards) -> list[str]:
+    if wildcards.testset == "fast":
+        return expand("{test}.profile.json", test=TESTSET_FAST)
+    if wildcards.testset == "all":
+        return expand("{test}.profile.json", test=TESTSET_ALL)
+    raise ValueError(
+        f"unknown test set name '{wildcards.testset}', valid values are: fast, all"
+    )
+
+
+###########################################################
+# Target rules
+###########################################################
+
+
+rule fast:
+    input:
+        "kernels.fast.csv",
+        "pivoted.fast.csv",
+        "pivoted_fpu.fast.csv",
+        "pivoted_ipc.fast.csv",
+    # This is the default rule taking over former result
+    # file names:
+    output:
+        "kernels.csv",
+        "pivoted.csv",
+        "pivoted_fpu.csv",
+        "pivoted_ipc.csv",
+    shell:
+        """
+        cp -f kernels.fast.csv kernels.csv
+        cp -f pivoted.fast.csv pivoted.csv
+        cp -f pivoted_fpu.fast.csv pivoted_fpu.csv
+        cp -f pivoted_ipc.fast.csv pivoted_ipc.csv
+        """
+
+
+rule all:
+    input:
+        "kernels.all.csv",
+        "pivoted.all.csv",
+        "pivoted_fpu.all.csv",
+        "pivoted_ipc.all.csv",
+
 
 ###########################################################
 # Rules
 ###########################################################
 
-# All tests to be run by default
-TESTS = MATMUL + RELU + DSUM + FILL + POOLING + SAXPY + DDOT + CONV2D + DENSE
-
 
 rule csv_to_pivoted:
     input:
-        "kernels.csv",
+        "kernels.{testset}.csv",
     output:
-        "pivoted.csv",
-        "pivoted_fpu.csv",
-        "pivoted_ipc.csv",
+        "pivoted.{testset}.csv",
+        "pivoted_fpu.{testset}.csv",
+        "pivoted_ipc.{testset}.csv",
     params:
         pivot=config["root"] + "/scripts/pivot.py",
     shell:
-        "{params.pivot} --outdir . < {input}"
+        """
+        {params.pivot} --outdir {resources.tmpdir} < {input}
+        mv -f {resources.tmpdir}/pivoted.csv pivoted.{wildcards.testset}.csv
+        mv -f {resources.tmpdir}/pivoted_fpu.csv pivoted_fpu.{wildcards.testset}.csv
+        mv -f {resources.tmpdir}/pivoted_ipc.csv pivoted_ipc.{wildcards.testset}.csv
+        """
 
 
 rule profile_to_csv:
     input:
-        expand("{test}.profile.json", test=TESTS),
+        select_test_set,
     output:
-        "kernels.csv",
+        "kernels.{testset}.csv",
     params:
         profile_to_csv=config["root"] + "/scripts/profile_to_csv.py",
     shell:
@@ -134,12 +204,14 @@ rule trace_to_profile:
     params:
         trace_to_profile=config["root"] + "/scripts/trace_to_profile.py",
     shell:
-        "{params.trace_to_profile} --section 1 "
-        "  --add section 1"
-        "  --add test {wildcards.kernel}"
-        "  --add params {wildcards.shape}"
-        "  --add impl {wildcards.variant}"
-        "  -o {output} {input.txt} {input.json}"
+        """
+        {params.trace_to_profile} --section 1 \
+          --add section 1 \
+          --add test {wildcards.kernel} \
+          --add params {wildcards.shape} \
+          --add impl {wildcards.variant} \
+          -o {output} {input.txt} {input.json}
+        """
 
 
 rule dasm_to_trace:
@@ -190,6 +262,19 @@ rule cc_link:
         "{params.cc} {params.ldflags} -o {output} {input}"
 
 
+rule cc_compile_c:
+    input:
+        c="{kernel}/{shape}/{source}.c",
+        h="{kernel}/{shape}/data.h",
+    output:
+        "{kernel}/{shape}/{source}.S",
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
+
+
 rule cc_assemble:
     input:
         "{source}.S",
@@ -200,18 +285,6 @@ rule cc_assemble:
         asflags=config["asflags"],
     shell:
         "{params.cc} {params.asflags} -c -o {output} {input}"
-
-
-rule cc_compile_c:
-    input:
-        "{source}.c",
-    output:
-        "{source}.S",
-    params:
-        cc=config["cc"],
-        cflags=config["cflags"],
-    shell:
-        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input}"
 
 
 rule cc_compile_ll:
@@ -235,8 +308,10 @@ rule xdsl_compile:
         xdsl_opt=config["xdsl-opt"],
         passes=",".join(config["xdsl-passes"]),
     shell:
-        "sed 's/arith.maxf/arith.maximumf/g' {input}"
-        "| {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}"
+        """
+        sed 's/arith.maxf/arith.maximumf/g' {input} \
+        | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
+        """
 
 
 rule mlir_linalg_compile:
@@ -252,13 +327,15 @@ rule mlir_linalg_compile:
         mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
         tollvm12=config["root"] + "/snitch/tollvm12.py",
     shell:
-        "{params.mlir_opt} {params.mlir_opt_flags_linalg} {input}"
-        "| sed 's/arith.maxf/arith.maximumf/g'"
-        "| {params.xdsl_opt} -p arith-add-fastmath"
-        "| sed 's/arith.maximumf/arith.maxf/g'"
-        "| {params.mlir_opt} {params.mlir_opt_flags_scf}"
-        "| {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir"
-        "| {params.tollvm12} > {output}"
+        """
+        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' \
+        | {params.mlir_opt} {params.mlir_opt_flags_scf} \
+        | {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir \
+        | {params.tollvm12} > {output}
+        """
 
 
 # Specific rules for shared source files,
@@ -278,7 +355,10 @@ rule cc_compile_shared_main:
         "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -o {output} {input.c}"
 
 
-# Sources/data generation rules restricted to templated kernels only
+###########################################################
+# Sources/data generation rules, restricted to templated
+# kernels only
+###########################################################
 
 
 rule kernel_generate_params:
