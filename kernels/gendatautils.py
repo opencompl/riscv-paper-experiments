@@ -42,7 +42,7 @@ def array_to_c_initializer(array: np.array):
     return np.array2string(array.flatten(), separator=",\n").strip(" []")
 
 
-def fmt_float_to_c_literal(value: Any) -> str:
+def float_to_c_literal(value: Any) -> str:
     if isinstance(value, np.float32):
         return f"{value:+}f"
     return f"{value:+}"
@@ -53,7 +53,7 @@ class Printer(abc.ABC):
     BASE_PRINTOPTIONS = {"linewidth": None, "threshold": sys.maxsize}
     C_PRINTOPTIONS = {
         **BASE_PRINTOPTIONS,
-        "formatter": {"float_kind": fmt_float_to_c_literal},
+        "formatter": {"float_kind": float_to_c_literal},
     }
     MLIR_PRINTOPTIONS = {**BASE_PRINTOPTIONS, "sign": "+"}
 
