@@ -17,10 +17,10 @@ riscv.assembly_section ".text" {
     %B_moved = riscv.mv %B : (!riscv.reg<a2>) -> !riscv.reg
     %Y_moved = riscv.mv %Y : (!riscv.reg<a3>) -> !riscv.reg
 
-    %c0 = riscv.get_register : () -> !riscv.reg<zero>
-    %c1 = riscv.li 1 : () -> !riscv.reg
-    %c8 = riscv.li 8 : () -> !riscv.reg
-    %c512 = riscv.li 512 : () -> !riscv.reg
+    %c0 = riscv.get_register : !riscv.reg<zero>
+    %c1 = riscv.li 1 : !riscv.reg
+    %c8 = riscv.li 8 : !riscv.reg
+    %c512 = riscv.li 512 : !riscv.reg
 
     %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg
 
@@ -37,7 +37,7 @@ riscv.assembly_section ".text" {
         %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg, !riscv.reg) -> !riscv.reg
         %c = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
 
-        %c7 = riscv.li 7 : () -> !riscv.reg
+        %c7 = riscv.li 7 : !riscv.reg
         %dot = riscv_snitch.frep_outer %c7 iter_args(%acc = %c) -> (!riscv.freg) {
           %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
           %w = riscv_snitch.read from %W_stream : !riscv.freg<ft1>
@@ -45,7 +45,7 @@ riscv.assembly_section ".text" {
           riscv_snitch.frep_yield %res : !riscv.freg
         }
 
-        %b = riscv.get_float_register : () -> !riscv.freg<ft2>
+        %b = riscv.get_float_register : !riscv.freg<ft2>
         %y_0 = riscv.fadd.d %b, %dot : (!riscv.freg<ft2>, !riscv.freg) -> !riscv.freg
         %y_1 = riscv.fmax.d %y_0, %zero_float : (!riscv.freg, !riscv.freg) -> !riscv.freg
 

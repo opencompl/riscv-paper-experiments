@@ -14,7 +14,7 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %G_moved = riscv.mv %G : (!riscv.reg<a2>) -> !riscv.reg
 
-    %zero = riscv.get_register : () -> !riscv.reg<zero>
+    %zero = riscv.get_register : !riscv.reg<zero>
     %zero_int = riscv.mv %zero : (!riscv.reg<zero>) -> !riscv.reg
     %zero_float = riscv.fcvt.d.w %zero_int : (!riscv.reg) -> !riscv.freg
 
@@ -28,9 +28,9 @@ riscv.assembly_section ".text" {
     }> ({
     ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>, %G_stream : !stream.writable<!riscv.freg<ft2>>):
       %c0 = riscv.mv %zero : (!riscv.reg<zero>) -> !riscv.reg
-      %c1 = riscv.li 1 : () -> !riscv.reg
-      %outer_count = riscv.li {{M * N // 4}} : () -> !riscv.reg
-      %frep_count = riscv.li {{K}} : () -> !riscv.reg
+      %c1 = riscv.li 1 : !riscv.reg
+      %outer_count = riscv.li {{M * N // 4}} : !riscv.reg
+      %frep_count = riscv.li {{K}} : !riscv.reg
       riscv_scf.for %g_i : !riscv.reg = %c0 to %outer_count step %c1 {
         %init0 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
         %init1 = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
