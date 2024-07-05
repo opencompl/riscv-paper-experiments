@@ -42,7 +42,7 @@ cflags:
   - -ffast-math
   - -fno-builtin-printf
   - -fno-common
-  - -O3 
+  - -O3
   - -D__DEFINED_uint64_t
   - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
   - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
@@ -91,9 +91,9 @@ mlir-opt-flags-linalg:
   - --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
   - --canonicalize
   - --convert-linalg-to-loops
-  - --lower-affine
-  - --canonicalize 
 mlir-opt-flags-scf:
+  - --lower-affine
+  - --canonicalize
   - --convert-scf-to-cf
   - --canonicalize
   - --cse
