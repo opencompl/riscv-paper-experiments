@@ -90,8 +90,8 @@ mlir-opt-flags-linalg:
   - -empty-tensor-to-alloc-tensor
   - --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
   - --canonicalize
-  - --convert-linalg-to-loops
 mlir-opt-flags-scf:
+  - --convert-linalg-to-loops
   - --lower-affine
   - --canonicalize
   - --convert-scf-to-cf
