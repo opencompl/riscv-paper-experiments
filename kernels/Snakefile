@@ -65,7 +65,7 @@ TESTSET_FAST = [
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/4x4xf64/{variant}",
-        kernel=["dsum", "fill"],
+        kernel=["dsum", "fill", "relu"],
         variant=["baseline", "linalg_xdsl"],
     ),
     # 2d templated kernels: baseline + snitch_stream
@@ -313,6 +313,22 @@ rule xdsl_compile:
         | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
         """
 
+rule mlir_linalg_to_xdsl_compile:
+    input:
+        "{source}.mlir",
+    output:
+        "{source}_xdsl.xdsl.mlir",
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+    shell:
+        """
+        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
 
 rule mlir_linalg_compile:
     input:
