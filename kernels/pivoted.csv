@@ -1,0 +1,11 @@
+kernels,baseline,linalg,linalg_xdsl,snitch_stream,snrt,min_llvm_mlir
+conv2d_d1_s1_3x3 4x4xf64,667,,,325,,667
+ddot 128xf64,956,965,,206,577,956
+dense 8x8xf64,3206,3530,,2731,2723,3206
+dsum 4x4xf64,129,,73,,,129
+fill 4x4xf64,50,,59,,,50
+matmul 4x4x4xf64,371,,,237,,371
+pooling_nchw_max_d1_s2_3x3 4x4xf64,442,,,383,,442
+pooling_nchw_sum_d1_s2_3x3 4x4xf64,582,,,301,,582
+relu 4x4xf64,142,,81,,,142
+saxpy 64xf32,634,634,,,140,634
