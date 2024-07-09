@@ -1,0 +1,8 @@
+# Ignores for parametric/templated kernels
+data.c
+data.h
+baseline.c
+snrt.c
+*.xdsl.mlir
+params.json
+*/*.csv

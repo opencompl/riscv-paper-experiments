@@ -1,0 +1,12 @@
+#pragma once
+
+#define M {{M}}
+#define K {{K}}
+#define N {{N}}
+
+extern const float X[M * K];
+extern const float Y[N * K];
+extern const float G_IN[M * N];
+extern const float G_OUT[M * N];
+
+#define TEST_COUNT (M * N)

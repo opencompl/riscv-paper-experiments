@@ -1,0 +1,106 @@
+#include "data.h"
+
+#include <snrt.h>
+
+#include <stdint.h>
+
+typedef float v2f32 __attribute__((vector_size(8)));
+
+#define UNROLL 8
+#define LANES 2
+#define TRANSFER_SIZE 8
+
+#if (K % UNROLL) != 0
+#error K must be a multiple of the unroll factor
+#endif
+
+#if (N % (LANES * UNROLL)) != 0
+#error N must be a multiple of the number of elements processed at each execution of the k-loop
+#endif
+
+// A[ M x K ]
+// B[ K x N ]
+// C[ M x N ]
+void matmul_transb(const float* A, const float* B, float* C) {
+    snrt_ssr_loop_3d(SNRT_SSR_DM0,
+                     // Bounds
+                     K / 2, N / UNROLL, M,
+                     // Strides
+                     sizeof(float) * 2, 0, sizeof(float) * K);
+    snrt_ssr_repeat(SNRT_SSR_DM0, UNROLL);
+
+    snrt_ssr_loop_4d(SNRT_SSR_DM1,
+                     // Bounds
+                     UNROLL, K / 2, N / UNROLL, M,
+                     // Strides
+                     sizeof(float) * K, sizeof(float) * 2, sizeof(float) * UNROLL * K, 0);
+
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_4D, B);
+
+    const uint32_t n_frep = K / 2 - 1;
+    const float zero = 0.0;
+
+    snrt_ssr_enable();
+
+    for (uint32_t m = 0; m < M; m++) {
+        for (uint32_t n = 0; n < N / UNROLL; n++) {
+            uint32_t c_stride = n * UNROLL;
+            float* Cout = &C[m * N + c_stride];
+            v2f32 c[UNROLL], r[UNROLL];
+
+            asm volatile(
+                "vfcpka.s.s %[r0], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r1], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r2], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r3], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r4], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r5], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r6], %[zero], %[zero]\n"
+                "vfcpka.s.s %[r7], %[zero], %[zero]\n"
+                "vfmul.s %[c0], ft1, ft0 \n"
+                "vfmul.s %[c1], ft1, ft0 \n"
+                "vfmul.s %[c2], ft1, ft0 \n"
+                "vfmul.s %[c3], ft1, ft0 \n"
+                "vfmul.s %[c4], ft1, ft0 \n"
+                "vfmul.s %[c5], ft1, ft0 \n"
+                "vfmul.s %[c6], ft1, ft0 \n"
+                "vfmul.s %[c7], ft1, ft0 \n"
+                "frep.o  %[n_frep], %[unroll], 0, 0 \n"
+                "vfmac.s %[c0], ft1, ft0 \n"
+                "vfmac.s %[c1], ft1, ft0 \n"
+                "vfmac.s %[c2], ft1, ft0 \n"
+                "vfmac.s %[c3], ft1, ft0 \n"
+                "vfmac.s %[c4], ft1, ft0 \n"
+                "vfmac.s %[c5], ft1, ft0 \n"
+                "vfmac.s %[c6], ft1, ft0 \n"
+                "vfmac.s %[c7], ft1, ft0 \n"
+                "vfsum.s %[r0], %[c0] \n"
+                "vfsum.s %[r1], %[c1] \n"
+                "vfsum.s %[r2], %[c2] \n"
+                "vfsum.s %[r3], %[c3] \n"
+                "vfsum.s %[r4], %[c4] \n"
+                "vfsum.s %[r5], %[c5] \n"
+                "vfsum.s %[r6], %[c6] \n"
+                "vfsum.s %[r7], %[c7] \n"
+                "vfcpka.s.s %[c0], %[r0], %[r1] \n"
+                "vfcpka.s.s %[c1], %[r2], %[r3] \n"
+                "vfcpka.s.s %[c2], %[r4], %[r5] \n"
+                "vfcpka.s.s %[c3], %[r6], %[r7] \n"
+                : [c0] "+f"(c[0]), [c1] "+f"(c[1]), [c2] "+f"(c[2]), [c3] "+f"(c[3]),
+                  [c4] "+f"(c[4]), [c5] "+f"(c[5]), [c6] "+f"(c[6]), [c7] "+f"(c[7]),
+                  [r0] "+f"(r[0]), [r1] "+f"(r[1]), [r2] "+f"(r[2]), [r3] "+f"(r[3]),
+                  [r4] "+f"(r[4]), [r5] "+f"(r[5]), [r6] "+f"(r[6]), [r7] "+f"(r[7])
+                : [C] "r"(Cout), [zero] "f"(zero), [n_frep] "r"(n_frep - 1),
+                  [unroll] "i"(UNROLL)
+                : "ft0", "ft1", "ft2");
+
+            ((v2f32*)Cout)[0] = c[0];
+            ((v2f32*)Cout)[1] = c[1];
+            ((v2f32*)Cout)[2] = c[2];
+            ((v2f32*)Cout)[3] = c[3];
+        }
+    }
+
+    snrt_ssr_disable();
+}

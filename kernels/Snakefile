@@ -23,6 +23,7 @@ KERNEL_SHAPE = {
     "pooling_nchw_sum_d1_s2_3x3": SHAPE_2D,
     "pooling_nchw_max_d1_s2_3x3": SHAPE_2D,
     "matmul": SHAPE_3D,
+    "matmul_transb": SHAPE_3D,
 }
 
 KERNEL_TEMPLATES = KERNEL_SHAPE.keys()
@@ -57,7 +58,8 @@ MANUAL_KERNELS = [
 # runs as fast as possible to save CI time
 TESTSET_FAST = [
     *MANUAL_KERNELS,
-    # 3d templated kernels: baseline + snitch_stream
+    # 3d templated kernels
+    *expand("matmul_transb/4x16x16xf32/{variant}", variant=["baseline", "snrt"]),
     *expand(
         "matmul/4x4x4xf64/{variant}",
         variant=["baseline", "snitch_stream"],
