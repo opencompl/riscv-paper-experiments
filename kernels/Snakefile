@@ -65,7 +65,7 @@ TESTSET_FAST = [
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/4x4xf64/{variant}",
-        kernel=["dsum", "fill"],
+        kernel=["dsum", "fill", "relu"],
         variant=["baseline", "linalg_xdsl"],
     ),
     # 2d templated kernels: baseline + snitch_stream

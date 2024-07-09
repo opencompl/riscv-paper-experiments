@@ -7,4 +7,5 @@ fill 4x4xf64,0.02,,0.31,,
 matmul 4x4x4xf64,0.18,,,0.41,
 pooling_nchw_max_d1_s2_3x3 4x4xf64,0.33,,,0.59,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,0.22,,,0.59,
+relu 4x4xf64,0.13,,0.22,,
 saxpy 64xf32,0.10,0.10,,,0.46
