@@ -22,20 +22,19 @@ typedef float v2f32 __attribute__((vector_size(8)));
 // B[ K x N ]
 // C[ M x N ]
 void matmul_transb(const float* A, const float* B, float* C) {
-        snrt_ssr_loop_3d(SNRT_SSR_DM0,
-                         // Bounds
-                         K / 2, N / UNROLL, M,
-                         // Strides
-                         sizeof(float) * 2, 0, sizeof(float) * K);
-        snrt_ssr_repeat(SNRT_SSR_DM0, UNROLL);
+    snrt_ssr_loop_3d(SNRT_SSR_DM0,
+                     // Bounds
+                     K / 2, N / UNROLL, M,
+                     // Strides
+                     sizeof(float) * 2, 0, sizeof(float) * K);
+    snrt_ssr_repeat(SNRT_SSR_DM0, UNROLL);
 
-        snrt_ssr_loop_4d(SNRT_SSR_DM1,
-                         // Bounds
-                         UNROLL, K / 2, N / UNROLL, M,
-                         // Strides
-                         sizeof(float) * K, sizeof(float) * 2, sizeof(float) * UNROLL * K,
-                         0);
-    
+    snrt_ssr_loop_4d(SNRT_SSR_DM1,
+                     // Bounds
+                     UNROLL, K / 2, N / UNROLL, M,
+                     // Strides
+                     sizeof(float) * K, sizeof(float) * 2, sizeof(float) * UNROLL * K, 0);
+
     snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
     snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_4D, B);
 
@@ -45,9 +44,9 @@ void matmul_transb(const float* A, const float* B, float* C) {
     snrt_ssr_enable();
 
     for (uint32_t m = 0; m < M; m++) {
-        uint32_t n = 0;
-        for (uint32_t n0 = 0; n0 < N / UNROLL; n0++) {
-            float* _C = &C[m * N + n / 2];
+        for (uint32_t n = 0; n < N / UNROLL; n++) {
+            uint32_t c_stride = n * UNROLL;
+            float* Cout = &C[m * N + c_stride];
             v2f32 c[UNROLL], r[UNROLL];
 
             asm volatile(
@@ -90,20 +89,16 @@ void matmul_transb(const float* A, const float* B, float* C) {
                 "vfcpka.s.s %[c3], %[r6], %[r7] \n"
                 : [c0] "+f"(c[0]), [c1] "+f"(c[1]), [c2] "+f"(c[2]), [c3] "+f"(c[3]),
                   [c4] "+f"(c[4]), [c5] "+f"(c[5]), [c6] "+f"(c[6]), [c7] "+f"(c[7]),
-                  [r0] "+f"(r[0]), [r1] "+f"(r[1]),
-                  [r2] "+f"(r[2]), [r3] "+f"(r[3]),
-                  [r4] "+f"(r[4]), [r5] "+f"(r[5]),
-                  [r6] "+f"(r[6]), [r7] "+f"(r[7])
-                : [C] "r"(_C), [zero] "f"(zero), [n_frep] "r"(n_frep - 1),
+                  [r0] "+f"(r[0]), [r1] "+f"(r[1]), [r2] "+f"(r[2]), [r3] "+f"(r[3]),
+                  [r4] "+f"(r[4]), [r5] "+f"(r[5]), [r6] "+f"(r[6]), [r7] "+f"(r[7])
+                : [C] "r"(Cout), [zero] "f"(zero), [n_frep] "r"(n_frep - 1),
                   [unroll] "i"(UNROLL)
                 : "ft0", "ft1", "ft2");
 
-            ((v2f32*)_C)[0] = c[0];
-            ((v2f32*)_C)[1] = c[1];
-            ((v2f32*)_C)[2] = c[2];
-            ((v2f32*)_C)[3] = c[3];
-
-            n += UNROLL * 2;
+            ((v2f32*)Cout)[0] = c[0];
+            ((v2f32*)Cout)[1] = c[1];
+            ((v2f32*)Cout)[2] = c[2];
+            ((v2f32*)Cout)[3] = c[3];
         }
     }
 
