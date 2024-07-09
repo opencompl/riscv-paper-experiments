@@ -19,7 +19,7 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 0, 1>
     }> ({
     ^bb0(%Y_stream : !stream.writable<!riscv.freg<ft0>>):
-      %c255 = riscv.li 255 : () -> !riscv.reg<>
+      %c255 = riscv.li 255 : !riscv.reg<>
       riscv_snitch.frep_outer %c255 {
         %y = riscv.fmv.d %x : (!riscv.freg<>) -> !riscv.freg<ft0>
         riscv_snitch.write %y to %Y_stream : !riscv.freg<ft0>

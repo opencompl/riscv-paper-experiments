@@ -5,7 +5,7 @@
       %0 = riscv.mv %arg0 : (!riscv.reg<a0>) -> !riscv.reg<>
       %1 = riscv.mv %arg1 : (!riscv.reg<a1>) -> !riscv.reg<>
       %2 = riscv.mv %arg2 : (!riscv.reg<a2>) -> !riscv.reg<>
-      %4 = riscv.li 128 : () -> !riscv.reg<>
+      %4 = riscv.li 128 : !riscv.reg<>
 
     "snitch_stream.streaming_region"(%0, %1, %2) <{
       "stride_patterns" = [
