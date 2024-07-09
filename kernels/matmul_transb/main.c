@@ -19,7 +19,7 @@ int main() {
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
         snrt_dma_start_1d(local_x, X, M * K * sizeof(float));
-        snrt_dma_start_1d(local_y, Y, K * N * sizeof(float));
+        snrt_dma_start_1d(local_y, Y, N * K * sizeof(float));
         snrt_dma_start_1d(local_z, G_IN, M * N * sizeof(float));
         snrt_dma_wait_all();
     }
