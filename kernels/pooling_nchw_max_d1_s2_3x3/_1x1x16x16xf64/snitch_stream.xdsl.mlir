@@ -12,10 +12,10 @@ riscv_func.func public @pooling_nchw_max_d1_s2_3x3(
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg<>
 
     %c0 = riscv.get_register : () -> !riscv.reg<zero>
-    %c1 = riscv.li 1 : () -> !riscv.reg<>
-    %c7 = riscv.li 7 : () -> !riscv.reg<>
-    %c8 = riscv.li 8 : () -> !riscv.reg<>
-    %c512 = riscv.li 512 : () -> !riscv.reg<>
+    %c1 = riscv.li 1 : !riscv.reg<>
+    %c7 = riscv.li 7 : !riscv.reg<>
+    %c8 = riscv.li 8 : !riscv.reg<>
+    %c512 = riscv.li 512 : !riscv.reg<>
 
     %min_val_int = riscv.li -10000 : () -> !riscv.reg<>
     %min_val = fcvt.d.w %min_val_int : (!riscv.reg<>) -> !riscv.freg<>

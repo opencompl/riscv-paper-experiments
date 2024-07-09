@@ -14,9 +14,9 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     %Z_moved = riscv.mv %Z : (!riscv.reg<a2>) -> !riscv.reg<>
 
     %c0 = riscv.get_register : () -> !riscv.reg<zero>
-    %c1 = riscv.li 1 : () -> !riscv.reg<>
-    %c6 = riscv.li 6 : () -> !riscv.reg<>
-    %c8 = riscv.li 8 : () -> !riscv.reg<>
+    %c1 = riscv.li 1 : !riscv.reg<>
+    %c6 = riscv.li 6 : !riscv.reg<>
+    %c8 = riscv.li 8 : !riscv.reg<>
 
     %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg<>
 

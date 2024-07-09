@@ -15,7 +15,7 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 1, 1>
     }> ({
     ^0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.writable<!riscv.freg<ft1>>):
-      %c255 = riscv.li 255 : () -> !riscv.reg<>
+      %c255 = riscv.li 255 : !riscv.reg<>
       riscv_snitch.frep_outer %c255 {
         %x = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
         %y = riscv.fmax.d %x, %zero_float : (!riscv.freg<ft0>, !riscv.freg<>) -> !riscv.freg<ft1>

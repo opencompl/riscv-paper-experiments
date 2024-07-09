@@ -42,7 +42,7 @@ cflags:
   - -ffast-math
   - -fno-builtin-printf
   - -fno-common
-  - -O3 
+  - -O3
   - -D__DEFINED_uint64_t
   - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
   - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
@@ -75,7 +75,7 @@ xdsl-passes:
   - arith-add-fastmath
   - loop-hoist-memref
   - lower-affine
-  - convert-memref-stream-to-snitch
+  - convert-memref-stream-to-snitch-stream
   - convert-func-to-riscv-func
   - convert-memref-to-riscv
   - convert-arith-to-riscv
@@ -92,7 +92,7 @@ mlir-opt-flags-linalg:
   - --canonicalize
   - --convert-linalg-to-loops
   - --lower-affine
-  - --canonicalize 
+  - --canonicalize
 mlir-opt-flags-scf:
   - --convert-scf-to-cf
   - --canonicalize

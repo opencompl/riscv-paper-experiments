@@ -14,9 +14,9 @@ riscv.assembly_section ".text" {
         %init = riscv.fld %Z_moved, 0 : (!riscv.reg) -> !riscv.freg
 
         // loop lower bound, upper bound and step as address offsets
-        %lb = riscv.li 0 : () -> !riscv.reg
-        %ub = riscv.li 1024 : () -> !riscv.reg
-        %c8 = riscv.li 8 : () -> !riscv.reg
+        %lb = riscv.li 0 : !riscv.reg
+        %ub = riscv.li 1024 : !riscv.reg
+        %c8 = riscv.li 8 : !riscv.reg
 
         // for loop incrementing induction variable %iv by a step %s in interval [%lb, %ub)
         %res = riscv_scf.for %i : !riscv.reg = %lb to %ub step %c8 iter_args(%acc_in = %init) -> (!riscv.freg) {

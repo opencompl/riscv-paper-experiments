@@ -13,25 +13,25 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %Z_moved = riscv.mv %Z : (!riscv.reg<a2>) -> !riscv.reg
 
-    %c0 = riscv.get_register : () -> !riscv.reg<zero>
-    %c1 = riscv.li 1 : () -> !riscv.reg
-    %c8 = riscv.li 8 : () -> !riscv.reg
-    %c16 = riscv.li 16 : () -> !riscv.reg
+    %c0 = riscv.get_register : !riscv.reg<zero>
+    %c1 = riscv.li 1 : !riscv.reg
+    %c8 = riscv.li 8 : !riscv.reg
+    %c16 = riscv.li 16 : !riscv.reg
 
-    %h = riscv.li {{M + 2}} : () -> !riscv.reg
-    %w = riscv.li {{N + 2}} : () -> !riscv.reg
-    %new_h = riscv.li {{M}} : () -> !riscv.reg
-    %new_w = riscv.li {{N}} : () -> !riscv.reg
+    %h = riscv.li {{M + 2}} : !riscv.reg
+    %w = riscv.li {{N + 2}} : !riscv.reg
+    %new_h = riscv.li {{M}} : !riscv.reg
+    %new_w = riscv.li {{N}} : !riscv.reg
     %x_stride = riscv.mul %w, %c8 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %z_stride = riscv.mul %new_w, %c8 : (!riscv.reg, !riscv.reg) -> !riscv.reg
-    %tile_count = riscv.li {{N // 4}} : () -> !riscv.reg
+    %tile_count = riscv.li {{N // 4}} : !riscv.reg
 
     %zero_float = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg
 
-    %0 = riscv.li 4 : () -> !riscv.reg
-    %1 = riscv.li 3 : () -> !riscv.reg
-    %2 = riscv.li 3 : () -> !riscv.reg
-    %3 = riscv.li {{N // 4}} : () -> !riscv.reg
+    %0 = riscv.li 4 : !riscv.reg
+    %1 = riscv.li 3 : !riscv.reg
+    %2 = riscv.li 3 : !riscv.reg
+    %3 = riscv.li {{N // 4}} : !riscv.reg
     %4 = riscv.addi %0, -1 : (!riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_bound"(%4) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
     %5 = riscv.addi %1, -1 : (!riscv.reg) -> !riscv.reg
@@ -40,12 +40,12 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     "snitch.ssr_set_dimension_bound"(%6) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<2>} : (!riscv.reg) -> ()
     %7 = riscv.addi %3, -1 : (!riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_bound"(%7) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<3>} : (!riscv.reg) -> ()
-    %8 = riscv.li 8 : () -> !riscv.reg
-    %9 = riscv.li 8 : () -> !riscv.reg
-    %10 = riscv.li {{(N + 2) * 8}} : () -> !riscv.reg
-    %11 = riscv.li 32 : () -> !riscv.reg
+    %8 = riscv.li 8 : !riscv.reg
+    %9 = riscv.li 8 : !riscv.reg
+    %10 = riscv.li {{(N + 2) * 8}} : !riscv.reg
+    %11 = riscv.li 32 : !riscv.reg
     "snitch.ssr_set_dimension_stride"(%8) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
-    %12 = riscv.li 0 : () -> !riscv.reg
+    %12 = riscv.li 0 : !riscv.reg
     %13 = riscv.mul %4, %8 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %14 = riscv.add %12, %13 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %15 = riscv.sub %9, %14 : (!riscv.reg, !riscv.reg) -> !riscv.reg
@@ -58,10 +58,10 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     %20 = riscv.add %17, %19 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %21 = riscv.sub %11, %20 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_stride"(%21) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<3>} : (!riscv.reg) -> ()
-    %22 = riscv.li 4 : () -> !riscv.reg
-    %23 = riscv.li 3 : () -> !riscv.reg
-    %24 = riscv.li 3 : () -> !riscv.reg
-    %25 = riscv.li {{N // 4}} : () -> !riscv.reg
+    %22 = riscv.li 4 : !riscv.reg
+    %23 = riscv.li 3 : !riscv.reg
+    %24 = riscv.li 3 : !riscv.reg
+    %25 = riscv.li {{N // 4}} : !riscv.reg
     %26 = riscv.addi %22, -1 : (!riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_bound"(%26) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
     %27 = riscv.addi %23, -1 : (!riscv.reg) -> !riscv.reg
@@ -70,12 +70,12 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     "snitch.ssr_set_dimension_bound"(%28) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<2>} : (!riscv.reg) -> ()
     %29 = riscv.addi %25, -1 : (!riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_bound"(%29) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<3>} : (!riscv.reg) -> ()
-    %30 = riscv.li 0 : () -> !riscv.reg
-    %31 = riscv.li 8 : () -> !riscv.reg
-    %32 = riscv.li 24 : () -> !riscv.reg
-    %33 = riscv.li 0 : () -> !riscv.reg
+    %30 = riscv.li 0 : !riscv.reg
+    %31 = riscv.li 8 : !riscv.reg
+    %32 = riscv.li 24 : !riscv.reg
+    %33 = riscv.li 0 : !riscv.reg
     "snitch.ssr_set_dimension_stride"(%30) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
-    %34 = riscv.li 0 : () -> !riscv.reg
+    %34 = riscv.li 0 : !riscv.reg
     %35 = riscv.mul %26, %30 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %36 = riscv.add %34, %35 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %37 = riscv.sub %31, %36 : (!riscv.reg, !riscv.reg) -> !riscv.reg
@@ -88,12 +88,12 @@ riscv_func.func public @conv_2d_nchw_fchw_d1_s1_3x3(
     %42 = riscv.add %39, %41 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     %43 = riscv.sub %33, %42 : (!riscv.reg, !riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_stride"(%43) {"dm" = #builtin.int<1>, "dimension" = #builtin.int<3>} : (!riscv.reg) -> ()
-    %44 = riscv.li {{N}} : () -> !riscv.reg
+    %44 = riscv.li {{N}} : !riscv.reg
     %45 = riscv.addi %44, -1 : (!riscv.reg) -> !riscv.reg
     "snitch.ssr_set_dimension_bound"(%45) {"dm" = #builtin.int<2>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
-    %46 = riscv.li 8 : () -> !riscv.reg
+    %46 = riscv.li 8 : !riscv.reg
     "snitch.ssr_set_dimension_stride"(%46) {"dm" = #builtin.int<2>, "dimension" = #builtin.int<0>} : (!riscv.reg) -> ()
-    %47 = riscv.li 0 : () -> !riscv.reg
+    %47 = riscv.li 0 : !riscv.reg
 
     %last_x, %last_z = riscv_scf.for %row : !riscv.reg = %c0 to %new_h step %c1 iter_args(%x_row = %X_moved, %z_row = %Z_moved) -> (!riscv.reg, !riscv.reg) {
       "snitch.ssr_set_dimension_source"(%x_row) {"dm" = #builtin.int<0>, "dimension" = #builtin.int<3>} : (!riscv.reg) -> ()
