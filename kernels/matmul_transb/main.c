@@ -14,7 +14,7 @@ int main() {
     // essentially providing the same memory regions to all the cores in this cluster.
     float *local_x = (float *)snrt_l1_next();
     float *local_y = local_x + M * K;
-    float *local_z = local_y + K * N;
+    float *local_z = local_y + N * K;
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
