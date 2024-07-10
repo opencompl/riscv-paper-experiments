@@ -1,0 +1,8 @@
+func.func public @matmul(%X: tensor<{{M}}x{{N}}xf64> {"llvm.noalias"},
+                         %Y: tensor<{{M}}x{{N}}xf64> {"llvm.noalias"},
+                         %Z: tensor<{{M}}x{{N}}xf64> {"llvm.noalias"}) -> tensor<{{M}}x{{N}}xf64> {
+  %zero = arith.constant 0.0 : f64
+  %zeros = linalg.fill ins(%zero : f64) outs(%Z : tensor<{{M}}x{{N}}xf64>) -> tensor<{{M}}x{{N}}xf64>
+  %res = linalg.matmul ins(%X, %Y : tensor<{{M}}x{{N}}xf64>, tensor<{{M}}x{{N}}xf64>) outs(%zeros : tensor<{{M}}x{{N}}xf64>) -> tensor<{{M}}x{{N}}xf64>
+  func.return %res : tensor<{{M}}x{{N}}xf64>
+}

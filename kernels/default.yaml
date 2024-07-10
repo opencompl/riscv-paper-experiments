@@ -69,19 +69,8 @@ ldflags:
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
 xdsl-passes:
   - convert-linalg-to-memref-stream
-  - memref-streamify
-  - convert-memref-stream-to-loops
-  - scf-for-loop-flatten
-  - arith-add-fastmath
-  - loop-hoist-memref
-  - lower-affine
-  - convert-memref-stream-to-snitch-stream
-  - convert-func-to-riscv-func
-  - convert-memref-to-riscv
-  - convert-arith-to-riscv
-  - convert-scf-to-riscv-scf
-  - dce
-  - reconcile-unrealized-casts
+  - test-optimise-memref-stream
+  - test-lower-memref-stream-to-snitch-stream
   - test-lower-snitch-stream-to-asm
 mlir-opt-flags-linalg:
   - -opaque-pointers=0
@@ -90,10 +79,10 @@ mlir-opt-flags-linalg:
   - -empty-tensor-to-alloc-tensor
   - --one-shot-bufferize='bufferize-function-boundaries function-boundary-type-conversion=identity-layout-map'
   - --canonicalize
+mlir-opt-flags-scf:
   - --convert-linalg-to-loops
   - --lower-affine
   - --canonicalize
-mlir-opt-flags-scf:
   - --convert-scf-to-cf
   - --canonicalize
   - --cse
