@@ -62,56 +62,48 @@ TESTSET_FAST = [
     *expand("matmul_transb/4x16x16xf32/{variant}", variant=["baseline", "snrt"]),
     *expand(
         "matmul/4x4x4xf64/{variant}",
-        variant=["baseline", "snitch_stream"],
+        variant=["baseline", "linalg_xdsl"],
     ),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/4x4xf64/{variant}",
-        kernel=["dsum", "fill", "relu"],
-        variant=["baseline", "linalg_xdsl"],
-    ),
-    # 2d templated kernels: baseline + snitch_stream
-    *expand(
-        "{kernel}/4x4xf64/{variant}",
         kernel=[
+            "dsum",
+            "fill",
+            "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3",
+            "conv2d_d1_s1_3x3"
         ],
-        variant=["baseline", "snitch_stream"],
+        variant=["baseline", "linalg_xdsl"],
     ),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
     *MANUAL_KERNELS,
-    # 3d templated kernels: baseline + snitch_stream
+    # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
         M=[4, 8],
         K=range(4, 65, 4),
         N=range(4, 65, 4),
-        variant=["baseline", "snitch_stream"],
+        variant=["baseline", "linalg_xdsl"],
     ),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
-        kernel=["dsum", "fill"],
-        M=[4, 8, 12, 16],
-        N=[4, 8, 12, 16],
-        variant=["baseline", "linalg_xdsl"],
-    ),
-    # 2d templated kernels: baseline + snitch_stream
-    *expand(
-        "{kernel}/{M}x{N}xf64/{variant}",
         kernel=[
+            "dsum",
+            "fill",
+            "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3",
+            "conv2d_d1_s1_3x3"
         ],
         M=[4, 8, 12, 16],
         N=[4, 8, 12, 16],
-        variant=["baseline", "snitch_stream"],
+        variant=["baseline", "linalg_xdsl"],
     ),
 ]
 
@@ -315,6 +307,22 @@ rule xdsl_compile:
         | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
         """
 
+rule mlir_linalg_to_xdsl_compile:
+    input:
+        "{source}.mlir",
+    output:
+        "{source}_xdsl.xdsl.mlir",
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+    shell:
+        """
+        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
 
 rule mlir_linalg_compile:
     input:
