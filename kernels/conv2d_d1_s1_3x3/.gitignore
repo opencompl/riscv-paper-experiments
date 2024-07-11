@@ -1,7 +1,8 @@
 # Ignores for parametric/templated kernels
+linalg.mlir
 data.c
 data.h
 baseline.c
 *.xdsl.mlir
-params.json
+*.json
 */*.csv
