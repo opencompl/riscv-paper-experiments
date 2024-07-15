@@ -77,7 +77,7 @@ xdsl-passes:
   - memref-stream-generalize-fill
   - memref-stream-interleave
   - memref-stream-tile-outer-loops{target-rank=4}
-  - memref-streamify
+  - memref-streamify{streams=3}
   - convert-memref-stream-to-loops
   - canonicalize
   - scf-for-loop-flatten
