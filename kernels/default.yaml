@@ -69,9 +69,40 @@ ldflags:
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
 xdsl-passes:
   - convert-linalg-to-memref-stream
-  - test-optimise-memref-stream
-  - test-lower-memref-stream-to-snitch-stream
-  - test-lower-snitch-stream-to-asm
+  # test-optimise-memref-stream
+  - canonicalize
+  - memref-stream-infer-fill
+  - memref-stream-unnest-out-parameters
+  - memref-stream-fold-fill
+  - memref-stream-generalize-fill
+  - memref-stream-interleave
+  - memref-stream-tile-outer-loops{target-rank=4}
+  - memref-streamify
+  - convert-memref-stream-to-loops
+  - canonicalize
+  - scf-for-loop-flatten
+  # test-lower-memref-stream-to-snitch-stream
+  - canonicalize
+  - convert-memref-to-riscv
+  - lower-affine
+  - convert-scf-to-riscv-scf
+  - convert-arith-to-riscv
+  - convert-func-to-riscv-func
+  - convert-memref-stream-to-snitch-stream
+  - reconcile-unrealized-casts
+  # test-lower-snitch-stream-to-asm
+  - canonicalize
+  - convert-riscv-scf-for-to-frep
+  - snitch-allocate-registers
+  - convert-snitch-stream-to-snitch
+  - lower-snitch
+  - canonicalize
+  - riscv-scf-loop-range-folding
+  - canonicalize
+  - riscv-allocate-registers
+  - canonicalize
+  - convert-riscv-scf-to-riscv-cf
+  - canonicalize
 mlir-opt-flags-linalg:
   - -opaque-pointers=0
   - --linalg-generalize-named-ops

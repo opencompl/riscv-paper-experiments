@@ -73,7 +73,7 @@ TESTSET_FAST = [
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3"
+            "conv2d_d1_s1_3x3",
         ],
         variant=["baseline", "linalg_xdsl"],
     ),
@@ -99,7 +99,7 @@ TESTSET_ALL = [
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3"
+            "conv2d_d1_s1_3x3",
         ],
         M=[4, 8, 12, 16],
         N=[4, 8, 12, 16],
@@ -307,6 +307,7 @@ rule xdsl_compile:
         | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
         """
 
+
 rule mlir_linalg_to_xdsl_compile:
     input:
         "{source}.mlir",
@@ -323,6 +324,7 @@ rule mlir_linalg_to_xdsl_compile:
         | {params.xdsl_opt} -p arith-add-fastmath \
         | sed 's/arith.maximumf/arith.maxf/g' > {output}
         """
+
 
 rule mlir_linalg_compile:
     input:
