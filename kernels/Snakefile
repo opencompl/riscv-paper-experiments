@@ -305,7 +305,11 @@ def filter_xdsl_pipeline_passes(wildcards, input):
     elif "pipeline3_xdsl" in wildcards.source:
         to_be_removed.append("memref-stream-unnest-out-parameters")
     elif "pipeline4_xdsl" in wildcards.source:
-        to_be_removed.append("convert-linalg-to-memref-stream")
+        to_be_removed.append("memref-stream-tile-outer-loops{target-rank=4}")
+    # FIXME cannot reconcile unrealized casts
+    # elif "pipeline5_xdsl" in wildcards.source:
+    #     to_be_removed.append("convert-linalg-to-memref-stream")
+
     passes = [p for p in config["xdsl-passes"] if p not in set(to_be_removed)]
     return ",".join(passes)
 
