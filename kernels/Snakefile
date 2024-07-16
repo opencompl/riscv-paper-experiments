@@ -298,23 +298,29 @@ rule cc_compile_ll:
 
 
 def filter_xdsl_pipeline_passes(wildcards, input):
-    to_be_removed = []
-    if "pipeline0_xdsl" in wildcards.source:
-        to_be_removed.append("convert-riscv-scf-for-to-frep")
-    elif "pipeline1_xdsl" in wildcards.source:
-        to_be_removed.append("memref-streamify{streams=3}")
-    elif "pipeline2_xdsl" in wildcards.source:
-        to_be_removed.append("memref-stream-interleave")
-    elif "pipeline3_xdsl" in wildcards.source:
-        to_be_removed.append("memref-stream-unnest-out-parameters")
-    elif "pipeline4_xdsl" in wildcards.source:
-        to_be_removed.append("memref-stream-tile-outer-loops{target-rank=4}")
-    # FIXME cannot reconcile unrealized casts
-    # elif "pipeline5_xdsl" in wildcards.source:
-    #     to_be_removed.append("convert-linalg-to-memref-stream")
+    import re
 
-    passes = [p for p in config["xdsl-passes"] if p not in set(to_be_removed)]
-    return ",".join(passes)
+    match = re.search(r"pipeline(\d)_xdsl", wildcards.source)
+    if not match:
+        return ",".join(config["xdsl-passes"])
+
+    passes = [
+        "memref-stream-tile-outer-loops",
+        "memref-stream-unnest-out-parameters",
+        "memref-stream-interleave",
+        "memref-streamify",
+        "convert-riscv-scf-for-to-frep",
+        # FIXME cannot reconcile unrealized casts
+        # "convert-linalg-to-memref-stream",
+    ]
+
+    level = int(match.group(1))
+    keep = set(passes[:level])
+    to_be_removed = [p for p in passes if p not in keep]
+    print(f"{match.group(0)}: removing xdsl passes: {to_be_removed}")
+    pattern = re.compile("|".join(to_be_removed))
+    pipeline = [p for p in config["xdsl-passes"] if not pattern.search(p)]
+    return ",".join(pipeline)
 
 
 rule xdsl_compile:
