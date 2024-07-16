@@ -1,4 +1,5 @@
 # Ignores for parametric/templated kernels
+pipeline?.mlir
 linalg.mlir
 data.c
 data.h
