@@ -297,7 +297,7 @@ rule cc_compile_ll:
         "{params.cc} {params.cflags} -S -o {output} {input}"
 
 
-def filter_xdsl_pipeline_passes(wildcards, input):
+def filter_xdsl_pipeline_passes(wildcards):
     import re
 
     match = re.search(r"pipeline(\d)_xdsl", wildcards.source)
