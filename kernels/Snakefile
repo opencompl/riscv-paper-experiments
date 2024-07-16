@@ -64,6 +64,7 @@ TESTSET_FAST = [
         "matmul/4x16x8xf64/{variant}",
         variant=["baseline", "linalg_xdsl"],
     ),
+    *expand("matmul/1x400x25xf64/pipeline{phase}_xdsl", phase=range(0, 5)),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/4x4xf64/{variant}",
@@ -293,6 +294,22 @@ rule cc_compile_ll:
         "{params.cc} {params.cflags} -S -o {output} {input}"
 
 
+def filter_xdsl_pipeline_passes(wildcards, input):
+    to_be_removed = []
+    if "pipeline0_xdsl" in wildcards.source:
+        to_be_removed.append("convert-riscv-scf-for-to-frep")
+    elif "pipeline1_xdsl" in wildcards.source:
+        to_be_removed.append("memref-streamify{streams=3}")
+    elif "pipeline2_xdsl" in wildcards.source:
+        to_be_removed.append("memref-stream-interleave")
+    elif "pipeline3_xdsl" in wildcards.source:
+        to_be_removed.append("memref-stream-unnest-out-parameters")
+    elif "pipeline4_xdsl" in wildcards.source:
+        to_be_removed.append("convert-linalg-to-memref-stream")
+    passes = [p for p in config["xdsl-passes"] if p not in set(to_be_removed)]
+    return ",".join(passes)
+
+
 rule xdsl_compile:
     input:
         "{source}.xdsl.mlir",
@@ -300,7 +317,7 @@ rule xdsl_compile:
         "{source}.S",
     params:
         xdsl_opt=config["xdsl-opt"],
-        passes=",".join(config["xdsl-passes"]),
+        passes=filter_xdsl_pipeline_passes,
     shell:
         """
         sed 's/arith.maxf/arith.maximumf/g' {input} \
