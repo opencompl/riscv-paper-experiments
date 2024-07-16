@@ -64,7 +64,10 @@ TESTSET_FAST = [
         "matmul/4x16x8xf64/{variant}",
         variant=["baseline", "linalg_xdsl"],
     ),
+    # Passes contributions
+    "matmul/1x400x25xf64/linalg_xdsl",
     *expand("matmul/1x400x25xf64/pipeline{phase}_xdsl", phase=range(0, 5)),
+    #
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/4x4xf64/{variant}",
