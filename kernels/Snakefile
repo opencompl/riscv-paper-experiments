@@ -1,6 +1,28 @@
 configfile: "default.yaml"
 
 
+C_VARIANTS = [
+    "baseline",  # naive c
+    "snrt",  # optimized c + inline asm for snitch festures
+    "fused",  # optimized c + inline asm for snitch festures with manual fusion of reduction/elementwise loop nests
+]
+
+XDSL_VARIANTS = [
+    "linalg_xdsl",
+    "snitch_stream",
+    "riscv_scf",
+    "pipeline0_xdsl",  # incremental insertion of xDSL passes
+    "pipeline1_xdsl",  # incremental insertion of xDSL passes
+    "pipeline2_xdsl",  # incremental insertion of xDSL passes
+    "pipeline3_xdsl",  # incremental insertion of xDSL passes
+    "pipeline4_xdsl",  # incremental insertion of xDSL passes
+]
+
+MLIR_VARIANTS = [
+    "linalg",  # naive mlir lowering from linalg on tensors
+    "scf",  # naive mlir lowering from scf on memrefs
+]
+
 ###########################################################
 # Templated kernels, sources and data need to be
 # generated on the fly
@@ -259,19 +281,6 @@ rule cc_link:
         "{params.cc} {params.ldflags} -o {output} {input}"
 
 
-rule cc_compile_c:
-    input:
-        c="{kernel}/{shape}/{source}.c",
-        h="{kernel}/{shape}/data.h",
-    output:
-        "{kernel}/{shape}/{source}.S",
-    params:
-        cc=config["cc"],
-        cflags=config["cflags"],
-    shell:
-        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
-
-
 rule cc_assemble:
     input:
         "{source}.S",
@@ -284,11 +293,60 @@ rule cc_assemble:
         "{params.cc} {params.asflags} -c -o {output} {input}"
 
 
+rule mlir_linalg_compile:
+    input:
+        "{kernel}/{shape}/{variant}.mlir",
+    output:
+        "{kernel}/{shape}/{variant}.ll",
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_translate=config["mlir-translate"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+        mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
+        tollvm12=config["root"] + "/snitch/tollvm12.py",
+    shell:
+        """
+        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' \
+        | {params.mlir_opt} {params.mlir_opt_flags_scf} \
+        | {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir \
+        | {params.tollvm12} > {output}
+        """
+
+
+###########################################################
+# Assembly rules
+# Beware: all of the following rules are potentially
+# ambiguous since they are all producing a .S file.
+# To discriminate, we constrain the kernel variant.
+###########################################################
+
+
+rule cc_compile_c:
+    input:
+        c="{kernel}/{shape}/{variant}.c",
+        h="{kernel}/{shape}/data.h",
+    output:
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(["data", "main"] + C_VARIANTS),
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
+
+
 rule cc_compile_ll:
     input:
-        "{source}.ll",
+        "{kernel}/{shape}/{variant}.ll",
     output:
-        "{source}.S",
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(MLIR_VARIANTS),
     params:
         cc=config["cc"],
         cflags=config["cflags"],
@@ -299,7 +357,7 @@ rule cc_compile_ll:
 def filter_xdsl_pipeline_passes(wildcards):
     import re
 
-    match = re.search(r"pipeline(\d)_xdsl", wildcards.source)
+    match = re.search(r"pipeline(\d)_xdsl", wildcards.variant)
     if not match:
         return ",".join(config["xdsl-passes"])
 
@@ -324,9 +382,11 @@ def filter_xdsl_pipeline_passes(wildcards):
 
 rule xdsl_compile:
     input:
-        "{source}.xdsl.mlir",
+        "{kernel}/{shape}/{variant}.xdsl.mlir",
     output:
-        "{source}.S",
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(XDSL_VARIANTS),
     params:
         xdsl_opt=config["xdsl-opt"],
         passes=filter_xdsl_pipeline_passes,
@@ -334,48 +394,6 @@ rule xdsl_compile:
         """
         sed 's/arith.maxf/arith.maximumf/g' {input} \
         | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
-        """
-
-
-rule mlir_linalg_to_xdsl_compile:
-    input:
-        "{source}.mlir",
-    output:
-        "{source}_xdsl.xdsl.mlir",
-    params:
-        xdsl_opt=config["xdsl-opt"],
-        mlir_opt=config["mlir-opt"],
-        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
-    shell:
-        """
-        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
-        | sed 's/arith.maxf/arith.maximumf/g' \
-        | {params.xdsl_opt} -p arith-add-fastmath \
-        | sed 's/arith.maximumf/arith.maxf/g' > {output}
-        """
-
-
-rule mlir_linalg_compile:
-    input:
-        "{source}.mlir",
-    output:
-        "{source}.ll",
-    params:
-        xdsl_opt=config["xdsl-opt"],
-        mlir_opt=config["mlir-opt"],
-        mlir_translate=config["mlir-translate"],
-        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
-        mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
-        tollvm12=config["root"] + "/snitch/tollvm12.py",
-    shell:
-        """
-        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
-        | sed 's/arith.maxf/arith.maximumf/g' \
-        | {params.xdsl_opt} -p arith-add-fastmath \
-        | sed 's/arith.maximumf/arith.maxf/g' \
-        | {params.mlir_opt} {params.mlir_opt_flags_scf} \
-        | {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir \
-        | {params.tollvm12} > {output}
         """
 
 
@@ -453,9 +471,32 @@ rule kernel_generate_source:
     output:
         "{kernel}/{shape}/{variant}.{ext}",
     wildcard_constraints:
-        ext="c|xdsl\.mlir|mlir",
+        ext="c|mlir",
         kernel="|".join(KERNEL_TEMPLATES),
     params:
         format_template=config["root"] + "/scripts/format.py",
     shell:
         "python3 {params.format_template} {input.template} {input.json} > {output}"
+
+
+rule xdsl_kernel_generate_source:
+    input:
+        json="{kernel}/{shape}/params.json",
+        template="{kernel}/linalg.mlir.template",
+    output:
+        "{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+    params:
+        format_template=config["root"] + "/scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
