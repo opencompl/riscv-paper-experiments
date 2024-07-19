@@ -4,11 +4,6 @@
 
 #include <math.h>
 
-static inline void __rt_fpu_fence_full() {
-    uint32_t register tmp;
-    asm volatile("fmv.x.w %0, fa0\n\t" : "=&r"(tmp) : :);
-}
-
 // Kernel provided via external definition
 void sum(DTYPE *x, DTYPE *y, DTYPE *z);
 
@@ -34,10 +29,10 @@ int main() {
     int thiscore = snrt_cluster_core_idx();
     if (thiscore != 0) return 0;
 
-    __rt_fpu_fence_full();
+    snrt_fpu_fence();
     (void)snrt_mcycle();
     sum(local_x, local_y, local_z);
-    __rt_fpu_fence_full();
+    snrt_fpu_fence();
     (void)snrt_mcycle();
 
     // Correctness check
