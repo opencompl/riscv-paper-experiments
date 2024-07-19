@@ -103,6 +103,11 @@ xdsl-passes:
   - canonicalize
   - convert-riscv-scf-to-riscv-cf
   - canonicalize
+xdsl-test-passes:
+  - convert-linalg-to-memref-stream
+  - test-optimise-memref-stream
+  - test-lower-memref-stream-to-snitch-stream
+  - test-lower-snitch-stream-to-asm
 mlir-opt-flags-linalg:
   - -opaque-pointers=0
   - --linalg-generalize-named-ops

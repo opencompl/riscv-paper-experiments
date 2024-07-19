@@ -11,11 +11,12 @@ XDSL_VARIANTS = [
     "linalg_xdsl",
     "snitch_stream",
     "riscv_scf",
-    "pipeline0_xdsl",  # incremental insertion of xDSL passes
-    "pipeline1_xdsl",  # incremental insertion of xDSL passes
-    "pipeline2_xdsl",  # incremental insertion of xDSL passes
-    "pipeline3_xdsl",  # incremental insertion of xDSL passes
-    "pipeline4_xdsl",  # incremental insertion of xDSL passes
+    "linalg_full_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
+    "linalg_0_xdsl",  # incremental insertion of xDSL passes
+    "linalg_1_xdsl",  # incremental insertion of xDSL passes
+    "linalg_2_xdsl",  # incremental insertion of xDSL passes
+    "linalg_3_xdsl",  # incremental insertion of xDSL passes
+    "linalg_4_xdsl",  # incremental insertion of xDSL passes
 ]
 
 MLIR_VARIANTS = [
@@ -114,7 +115,8 @@ TESTSET_ALL = [
     ),
     # Passes contributions
     "matmul/1x400x25xf64/linalg_xdsl",
-    *expand("matmul/1x400x25xf64/pipeline{phase}_xdsl", phase=range(0, 5)),
+    "matmul/1x400x25xf64/linalg_full_xdsl",
+    *expand("matmul/1x400x25xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
@@ -357,9 +359,12 @@ rule cc_compile_ll:
 def filter_xdsl_pipeline_passes(wildcards):
     import re
 
-    match = re.search(r"pipeline(\d)_xdsl", wildcards.variant)
-    if not match:
+    if wildcards.variant == "linalg_full_xdsl":
         return ",".join(config["xdsl-passes"])
+
+    match = re.search(r"linalg_(\d)_xdsl", wildcards.variant)
+    if not match:
+        return ",".join(config["xdsl-test-passes"])
 
     passes = [
         "memref-stream-tile-outer-loops",
@@ -372,6 +377,10 @@ def filter_xdsl_pipeline_passes(wildcards):
     ]
 
     level = int(match.group(1))
+    if level < 0 or level >= len(passes):
+        raise ValueError(
+            f"xDSL linalg incremental pipeline level must be in range [0, {len(passes)})"
+        )
     keep = set(passes[:level])
     to_be_removed = [p for p in passes if p not in keep]
     print(f"{match.group(0)}: removing xdsl passes: {to_be_removed}")
