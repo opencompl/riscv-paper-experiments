@@ -297,9 +297,9 @@ rule cc_assemble:
 
 rule mlir_linalg_compile:
     input:
-        "{kernel}/{shape}/{variant}.mlir",
+        "{source}.mlir",
     output:
-        "{kernel}/{shape}/{variant}.ll",
+        "{source}.ll",
     params:
         xdsl_opt=config["xdsl-opt"],
         mlir_opt=config["mlir-opt"],
@@ -322,7 +322,7 @@ rule mlir_linalg_compile:
 ###########################################################
 # Assembly rules
 # Beware: all of the following rules are potentially
-# ambiguous since they are all producing a .S file.
+# ambiguous since they all produce a .S file.
 # To discriminate, we constrain the kernel variant.
 ###########################################################
 
