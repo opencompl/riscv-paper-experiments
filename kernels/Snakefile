@@ -100,6 +100,8 @@ TESTSET_FAST = [
         ],
         variant=["baseline", "linalg_xdsl"],
     ),
+    # WIP f32 sum
+    *expand("sum/4x4xf32/{variant}", variant=["baseline", "snrt", "linalg"]),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
