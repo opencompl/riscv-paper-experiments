@@ -8,9 +8,9 @@ C_VARIANTS = [
 ]
 
 XDSL_VARIANTS = [
-    "linalg_xdsl",
-    "snitch_stream",
-    "riscv_scf",
+    "linalg_xdsl",  # xDSL lowering from linalg on tensors
+    "snitch_stream",  # xDSL lowering from snitch_stream dialect
+    "riscv_scf",  # xDSL lowering from riscv_scf dialect
     "linalg_full_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
     "linalg_0_xdsl",  # incremental insertion of xDSL passes
     "linalg_1_xdsl",  # incremental insertion of xDSL passes
