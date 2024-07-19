@@ -1,0 +1,19 @@
+#pragma once
+
+#define PRECISION {{precision}}
+#if PRECISION == 32
+#define DTYPE float
+#elif PRECISION == 64
+#define DTYPE double
+#else
+#error UNKNOWN PRECISION
+#endif
+
+#define M {{M}}
+#define N {{N}}
+
+extern const DTYPE X[N * M];
+extern const DTYPE Y[N * M];
+extern const DTYPE G[N * M];
+
+#define TEST_COUNT (N * M)
