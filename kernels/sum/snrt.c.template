@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #if PRECISION != 32
-#error ONLY F32 SUPPORTED
+#error This snrt implementation only supports f32, PRs welcome
 #endif
 
 void sum(float* x, float* y, float* z) {
