@@ -2,6 +2,8 @@
 data.c
 data.h
 baseline.c
+snrt.c
+linalg.mlir
 *.xdsl.mlir
 params.json
 */*.csv

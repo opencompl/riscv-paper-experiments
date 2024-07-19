@@ -1,0 +1,19 @@
+module {
+  func.func public @sum(
+        %arg0: memref<{{N}}x{{M}}xf{{precision}}> {llvm.noalias},
+        %arg1: memref<{{N}}x{{M}}xf{{precision}}> {llvm.noalias},
+        %arg2: memref<{{N}}x{{M}}xf{{precision}}> {llvm.noalias}) -> memref<{{N}}x{{M}}xf{{precision}}> {
+    linalg.generic {
+      indexing_maps = [
+        affine_map<(d0, d1) -> (d0, d1)>,
+        affine_map<(d0, d1) -> (d0, d1)>,
+        affine_map<(d0, d1) -> (d0, d1)>],
+        iterator_types = ["parallel", "parallel"]
+    } ins(%arg0, %arg1 : memref<{{N}}x{{M}}xf{{precision}}>, memref<{{N}}x{{M}}xf{{precision}}>) outs(%arg2 : memref<{{N}}x{{M}}xf{{precision}}>) {
+    ^bb0(%in: f{{precision}}, %in_0: f{{precision}}, %out: f{{precision}}):
+      %0 = arith.addf %in, %in_0 : f{{precision}}
+      linalg.yield %0 : f{{precision}}
+    }
+    return %arg2 : memref<{{N}}x{{M}}xf{{precision}}>
+  }
+}

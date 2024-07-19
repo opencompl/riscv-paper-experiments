@@ -39,7 +39,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 # a templated kernel. Dict keys below are used to enable
 # source/data generation rules.
 KERNEL_SHAPE = {
-    "dsum": SHAPE_2D,
+    "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
     "conv2d_d1_s1_3x3": SHAPE_2D,
@@ -91,7 +91,7 @@ TESTSET_FAST = [
     *expand(
         "{kernel}/4x4xf64/{variant}",
         kernel=[
-            "dsum",
+            "sum",
             "fill",
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
@@ -100,6 +100,8 @@ TESTSET_FAST = [
         ],
         variant=["baseline", "linalg_xdsl"],
     ),
+    # WIP f32 sum
+    *expand("sum/4x4xf32/{variant}", variant=["baseline", "snrt", "linalg"]),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
@@ -121,7 +123,7 @@ TESTSET_ALL = [
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
         kernel=[
-            "dsum",
+            "sum",
             "fill",
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
