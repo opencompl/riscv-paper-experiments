@@ -9,4 +9,5 @@ pooling_nchw_max_d1_s2_3x3 4x4xf64,0.33,,0.68,,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,0.22,,0.62,,
 relu 4x4xf64,0.13,,0.22,,
 saxpy 64xf32,0.10,0.10,,,0.46
+sum 4x4xf32,0.13,0.10,,,0.12
 sum 4x4xf64,0.13,,0.23,,
