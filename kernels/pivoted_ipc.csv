@@ -2,7 +2,6 @@ kernels,baseline,linalg,linalg_xdsl,snitch_stream,snrt
 conv2d_d1_s1_3x3 4x4xf64,0.40,,0.81,,
 ddot 128xf64,0.95,0.94,,0.76,0.25
 dense 8x8xf64,0.51,0.55,,0.39,0.33
-dsum 4x4xf64,0.57,,0.53,,
 fill 4x4xf64,0.46,,0.58,,
 matmul 4x16x8xf64,0.56,,0.92,,
 matmul_transb 4x16x16xf32,0.95,,,,0.88
@@ -10,3 +9,5 @@ pooling_nchw_max_d1_s2_3x3 4x4xf64,0.68,,0.87,,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,0.45,,0.78,,
 relu 4x4xf64,0.40,,0.46,,
 saxpy 64xf32,0.93,0.93,,,0.65
+sum 4x4xf32,0.51,0.53,,,0.34
+sum 4x4xf64,0.51,,0.46,,
