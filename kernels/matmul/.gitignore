@@ -1,4 +1,6 @@
 # Ignores for parametric/templated kernels
+linalg_?_xdsl.mlir
+linalg_full_xdsl.mlir
 linalg.mlir
 data.c
 data.h

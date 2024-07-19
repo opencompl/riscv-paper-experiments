@@ -1,6 +1,29 @@
 configfile: "default.yaml"
 
 
+C_VARIANTS = [
+    "baseline",  # naive c
+    "snrt",  # optimized c + inline asm for snitch festures
+    "fused",  # optimized c + inline asm for snitch festures with manual fusion of reduction/elementwise loop nests
+]
+
+XDSL_VARIANTS = [
+    "linalg_xdsl",  # xDSL lowering from linalg on tensors
+    "snitch_stream",  # xDSL lowering from snitch_stream dialect
+    "riscv_scf",  # xDSL lowering from riscv_scf dialect
+    "linalg_full_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
+    "linalg_0_xdsl",  # incremental insertion of xDSL passes
+    "linalg_1_xdsl",  # incremental insertion of xDSL passes
+    "linalg_2_xdsl",  # incremental insertion of xDSL passes
+    "linalg_3_xdsl",  # incremental insertion of xDSL passes
+    "linalg_4_xdsl",  # incremental insertion of xDSL passes
+]
+
+MLIR_VARIANTS = [
+    "linalg",  # naive mlir lowering from linalg on tensors
+    "scf",  # naive mlir lowering from scf on memrefs
+]
+
 ###########################################################
 # Templated kernels, sources and data need to be
 # generated on the fly
@@ -73,7 +96,7 @@ TESTSET_FAST = [
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3"
+            "conv2d_d1_s1_3x3",
         ],
         variant=["baseline", "linalg_xdsl"],
     ),
@@ -90,6 +113,10 @@ TESTSET_ALL = [
         N=range(4, 65, 4),
         variant=["baseline", "linalg_xdsl"],
     ),
+    # Passes contributions
+    "matmul/1x400x25xf64/linalg_xdsl",
+    "matmul/1x400x25xf64/linalg_full_xdsl",
+    *expand("matmul/1x400x25xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
@@ -99,7 +126,7 @@ TESTSET_ALL = [
             "relu",
             "pooling_nchw_sum_d1_s2_3x3",
             "pooling_nchw_max_d1_s2_3x3",
-            "conv2d_d1_s1_3x3"
+            "conv2d_d1_s1_3x3",
         ],
         M=[4, 8, 12, 16],
         N=[4, 8, 12, 16],
@@ -256,19 +283,6 @@ rule cc_link:
         "{params.cc} {params.ldflags} -o {output} {input}"
 
 
-rule cc_compile_c:
-    input:
-        c="{kernel}/{shape}/{source}.c",
-        h="{kernel}/{shape}/data.h",
-    output:
-        "{kernel}/{shape}/{source}.S",
-    params:
-        cc=config["cc"],
-        cflags=config["cflags"],
-    shell:
-        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
-
-
 rule cc_assemble:
     input:
         "{source}.S",
@@ -280,49 +294,6 @@ rule cc_assemble:
     shell:
         "{params.cc} {params.asflags} -c -o {output} {input}"
 
-
-rule cc_compile_ll:
-    input:
-        "{source}.ll",
-    output:
-        "{source}.S",
-    params:
-        cc=config["cc"],
-        cflags=config["cflags"],
-    shell:
-        "{params.cc} {params.cflags} -S -o {output} {input}"
-
-
-rule xdsl_compile:
-    input:
-        "{source}.xdsl.mlir",
-    output:
-        "{source}.S",
-    params:
-        xdsl_opt=config["xdsl-opt"],
-        passes=",".join(config["xdsl-passes"]),
-    shell:
-        """
-        sed 's/arith.maxf/arith.maximumf/g' {input} \
-        | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
-        """
-
-rule mlir_linalg_to_xdsl_compile:
-    input:
-        "{source}.mlir",
-    output:
-        "{source}_xdsl.xdsl.mlir",
-    params:
-        xdsl_opt=config["xdsl-opt"],
-        mlir_opt=config["mlir-opt"],
-        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
-    shell:
-        """
-        {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
-        | sed 's/arith.maxf/arith.maximumf/g' \
-        | {params.xdsl_opt} -p arith-add-fastmath \
-        | sed 's/arith.maximumf/arith.maxf/g' > {output}
-        """
 
 rule mlir_linalg_compile:
     input:
@@ -345,6 +316,93 @@ rule mlir_linalg_compile:
         | {params.mlir_opt} {params.mlir_opt_flags_scf} \
         | {params.mlir_translate} -opaque-pointers=0 --mlir-to-llvmir \
         | {params.tollvm12} > {output}
+        """
+
+
+###########################################################
+# Assembly rules
+# Beware: all of the following rules are potentially
+# ambiguous since they all produce a .S file.
+# To discriminate, we constrain the kernel variant.
+###########################################################
+
+
+rule cc_compile_c:
+    input:
+        c="{kernel}/{shape}/{variant}.c",
+        h="{kernel}/{shape}/data.h",
+    output:
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(["data", "main"] + C_VARIANTS),
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
+
+
+rule cc_compile_ll:
+    input:
+        "{kernel}/{shape}/{variant}.ll",
+    output:
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(MLIR_VARIANTS),
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} {params.cflags} -S -o {output} {input}"
+
+
+def filter_xdsl_pipeline_passes(wildcards):
+    import re
+
+    if wildcards.variant == "linalg_full_xdsl":
+        return ",".join(config["xdsl-passes"])
+
+    match = re.search(r"linalg_(\d)_xdsl", wildcards.variant)
+    if not match:
+        return ",".join(config["xdsl-test-passes"])
+
+    passes = [
+        "memref-stream-tile-outer-loops",
+        "memref-stream-unnest-out-parameters",
+        "memref-stream-interleave",
+        "memref-streamify",
+        "convert-riscv-scf-for-to-frep",
+        # FIXME cannot reconcile unrealized casts
+        # "convert-linalg-to-memref-stream",
+    ]
+
+    level = int(match.group(1))
+    if level < 0 or level >= len(passes):
+        raise ValueError(
+            f"xDSL linalg incremental pipeline level must be in range [0, {len(passes)})"
+        )
+    keep = set(passes[:level])
+    to_be_removed = [p for p in passes if p not in keep]
+    print(f"{match.group(0)}: removing xdsl passes: {to_be_removed}")
+    pattern = re.compile("|".join(to_be_removed))
+    pipeline = [p for p in config["xdsl-passes"] if not pattern.search(p)]
+    return ",".join(pipeline)
+
+
+rule xdsl_compile:
+    input:
+        "{kernel}/{shape}/{variant}.xdsl.mlir",
+    output:
+        "{kernel}/{shape}/{variant}.S",
+    wildcard_constraints:
+        variant="|".join(XDSL_VARIANTS),
+    params:
+        xdsl_opt=config["xdsl-opt"],
+        passes=filter_xdsl_pipeline_passes,
+    shell:
+        """
+        sed 's/arith.maxf/arith.maximumf/g' {input} \
+        | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
         """
 
 
@@ -422,9 +480,32 @@ rule kernel_generate_source:
     output:
         "{kernel}/{shape}/{variant}.{ext}",
     wildcard_constraints:
-        ext="c|xdsl\.mlir|mlir",
+        ext="c|mlir",
         kernel="|".join(KERNEL_TEMPLATES),
     params:
         format_template=config["root"] + "/scripts/format.py",
     shell:
         "python3 {params.format_template} {input.template} {input.json} > {output}"
+
+
+rule xdsl_kernel_generate_source:
+    input:
+        json="{kernel}/{shape}/params.json",
+        template="{kernel}/linalg.mlir.template",
+    output:
+        "{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+    params:
+        format_template=config["root"] + "/scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
