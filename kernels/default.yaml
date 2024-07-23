@@ -69,6 +69,7 @@ ldflags:
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
 xdsl-passes:
   - convert-linalg-to-memref-stream
+  - memref-stream-legalize
   # test-optimise-memref-stream
   - canonicalize
   - memref-stream-infer-fill
@@ -105,6 +106,7 @@ xdsl-passes:
   - canonicalize
 xdsl-test-passes:
   - convert-linalg-to-memref-stream
+  - memref-stream-legalize
   - test-optimise-memref-stream
   - test-lower-memref-stream-to-snitch-stream
   - test-lower-snitch-stream-to-asm
