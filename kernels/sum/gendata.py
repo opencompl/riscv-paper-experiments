@@ -14,7 +14,7 @@ def matrix_data(
     yield Define("M", M)
     yield Define("N", N)
 
-    t = {64: np.float64, 32: np.float32}[precision]
+    t = {64: np.float64, 32: np.float32, 16: np.float16}[precision]
 
     m = M
     n = N
