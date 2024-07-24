@@ -134,12 +134,10 @@ TESTSET_ALL = [
         N=[4, 8, 12, 16],
         variant=["baseline", "linalg_xdsl"],
     ),
-    *expand(
-        "sum/{M}x{N}xf32/{variant}",
-        variant=["baseline", "snrt", "linalg", "linalg_xdsl"],
-        M=[4, 8],
-        N=range(4, 65, 4),
-    ),
+    # WIP f32 sum
+    *expand("sum/{M}x{N}xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"], M=[4, 8], N=range(4, 65, 4)),
+    # WIP f16 sum
+    *expand("sum/{M}x{N}xf16/{variant}", variant=["baseline", "linalg_xdsl"], M=[4, 8], N=range(4, 65, 4)),
 ]
 
 
