@@ -29,6 +29,7 @@ class Array(NamedTuple):
 
 def array_precision(array: Array) -> int:
     return {
+        np.dtype("float16"): 16,
         np.dtype("float32"): 32,
         np.dtype("float64"): 64,
     }[array.data.dtype]
@@ -43,7 +44,7 @@ def array_to_c_initializer(array: np.array):
 
 
 def float_to_c_literal(value: Any) -> str:
-    if isinstance(value, np.float32):
+    if isinstance(value, np.float32 | np.float16):
         return f"{value:+}f"
     return f"{value:+}"
 
@@ -151,16 +152,19 @@ def get_printer(format: Literal["c", "mlir"]):
 
 
 C_TYPES = {
+    "16": "__fp16",
     "32": "float",
     "64": "double",
 }
 
 NUMPY_TYPES = {
+    "16": np.half,
     "32": np.single,
     "64": np.double,
 }
 
 MLIR_TYPES = {
+    "16": "f16",
     "32": "f32",
     "64": "f64",
 }
