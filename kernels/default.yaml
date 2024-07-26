@@ -71,6 +71,7 @@ xdsl-passes:
   - convert-linalg-to-memref-stream
   # test-optimise-memref-stream
   - canonicalize
+  - memref-stream-legalize
   - memref-stream-infer-fill
   - memref-stream-unnest-out-parameters
   - memref-stream-fold-fill
