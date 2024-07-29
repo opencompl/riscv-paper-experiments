@@ -104,6 +104,7 @@ TESTSET_FAST = [
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
+    *expand("matmul/1x20x5xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
@@ -380,29 +381,11 @@ def filter_xdsl_pipeline_passes(wildcards):
 
     match = re.search(r"linalg_(\d)_xdsl", wildcards.variant)
     if not match:
-        return ",".join(config["xdsl-test-passes"])
+        return ",".join(config["xdsl-passes"])
 
-    passes = [
-        "memref-stream-tile-outer-loops",
-        "memref-stream-unnest-out-parameters",
-        "memref-stream-interleave",
-        "memref-streamify",
-        "convert-riscv-scf-for-to-frep",
-        # FIXME cannot reconcile unrealized casts
-        # "convert-linalg-to-memref-stream",
-    ]
+    opt_level = match.group(1)
 
-    level = int(match.group(1))
-    if level < 0 or level >= len(passes):
-        raise ValueError(
-            f"xDSL linalg incremental pipeline level must be in range [0, {len(passes)})"
-        )
-    keep = set(passes[:level])
-    to_be_removed = [p for p in passes if p not in keep]
-    print(f"{match.group(0)}: removing xdsl passes: {to_be_removed}")
-    pattern = re.compile("|".join(to_be_removed))
-    pipeline = [p for p in config["xdsl-passes"] if not pattern.search(p)]
-    return ",".join(pipeline)
+    return "test-lower-linalg-to-snitch{optimization-level=" + f"{opt_level}" + "}"
 
 
 rule xdsl_compile:
