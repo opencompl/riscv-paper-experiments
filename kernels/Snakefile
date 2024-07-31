@@ -310,7 +310,7 @@ rule pipeline:
     input:
         kernels = "kernels.fast.csv",
         regalloc = "regalloc.fast.jsonl",
-        pipeline_py=config["root"] + "/scripts/pipeline.py",
+        pipeline_py = config["root"] + "/scripts/pipeline.py",
     output:
         "pipeline.fast.csv"
     shell:
