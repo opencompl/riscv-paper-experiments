@@ -431,6 +431,7 @@ rule xdsl_compile:
     params:
         xdsl_opt=config["xdsl-opt"],
         passes=filter_xdsl_pipeline_passes,
+        xdsl_commit=config["xdsl_commit"],
     shell:
         """
         sed 's/arith.maxf/arith.maximumf/g' {input} \

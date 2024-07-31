@@ -1,3 +1,5 @@
+include ./Makefile.xdsl
+
 JOBS ?= all
 
 THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -6,10 +8,10 @@ THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
 default: fast
 
-fast:
+fast: maybe_update_xdsl_commit
 	snakemake -d $(THIS)/kernels -s $(THIS)/kernels/Snakefile --cores $(JOBS) --rerun-incomplete fast
 
-all:
+all: maybe_update_xdsl_commit
 	snakemake -d $(THIS)/kernels -s $(THIS)/kernels/Snakefile --cores $(JOBS) --rerun-incomplete all
 
 clean:
