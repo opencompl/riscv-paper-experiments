@@ -15,10 +15,10 @@ def merge_stats(
 
     row_names = {
         "linalg_0_xdsl": "Baseline",
-        "linalg_1_xdsl": "+ FRep",
-        "linalg_2_xdsl": "+ Streams",
-        "linalg_3_xdsl": "+ Unroll and Jam",
-        "linalg_4_xdsl": "+ Scalar Replacement",
+        "linalg_1_xdsl": "+ Streams",
+        "linalg_2_xdsl": "+ Scalar Replacement",
+        "linalg_3_xdsl": "+ FRep",
+        "linalg_4_xdsl": "+ Unroll and Jam",
     }
     col_names = {
         "allocated_float": "F Registers",

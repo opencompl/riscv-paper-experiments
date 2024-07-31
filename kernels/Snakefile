@@ -310,12 +310,11 @@ rule pipeline:
     input:
         kernels = "kernels.fast.csv",
         regalloc = "regalloc.fast.jsonl",
+        pipeline_py=config["root"] + "/scripts/pipeline.py",
     output:
         "pipeline.fast.csv"
-    params:
-        pipeline_py=config["root"] + "/scripts/pipeline.py",
     shell:
-        "python {params.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
+        "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
 # Build rules
 
