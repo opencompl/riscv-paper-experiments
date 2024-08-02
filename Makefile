@@ -1,5 +1,3 @@
-include ./Makefile.xdsl
-
 JOBS ?= all
 
 THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
@@ -16,3 +14,5 @@ all: maybe_update_xdsl_commit
 
 clean:
 	snakemake -d $(THIS)/kernels -s $(THIS)/kernels/Snakefile --delete-all-output --rerun-incomplete fast all
+
+include ./Makefile.xdsl
