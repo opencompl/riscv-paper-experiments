@@ -284,37 +284,43 @@ rule verilator:
         rm -fr logs
         """
 
+
 rule assembly_to_regalloc_stats:
     input:
-        "{test}.S"
+        "{test}.S",
     output:
-        "{test}.regalloc.json"
+        "{test}.regalloc.json",
     params:
-        format_template=config["root"] + "/scripts/regalloc_stats.awk"
+        format_template=config["root"] + "/scripts/regalloc_stats.awk",
     shell:
         """
         awk -f {params.format_template} {input} > {output}
         """
 
+
 rule combine_regalloc_stats_fast:
     input:
-        *expand("matmul/1x20x5xf64/linalg_{phase}_xdsl.regalloc.json", phase=range(0, 5))
+        *expand(
+            "matmul/1x20x5xf64/linalg_{phase}_xdsl.regalloc.json", phase=range(0, 5)
+        ),
     output:
-        "regalloc.fast.jsonl"
+        "regalloc.fast.jsonl",
     shell:
         """
         cat {input} > {output}
         """
 
+
 rule pipeline:
     input:
-        kernels = "kernels.fast.csv",
-        regalloc = "regalloc.fast.jsonl",
-        pipeline_py = config["root"] + "/scripts/pipeline.py",
+        kernels="kernels.fast.csv",
+        regalloc="regalloc.fast.jsonl",
+        pipeline_py=config["root"] + "/scripts/pipeline.py",
     output:
-        "pipeline.fast.csv"
+        "pipeline.fast.csv",
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
+
 
 # Build rules
 
@@ -423,8 +429,8 @@ def filter_xdsl_pipeline_passes(wildcards):
 
 rule xdsl_compile:
     input:
-        xdsl_input = "{kernel}/{shape}/{variant}.xdsl.mlir",
-        xdsl_commit = config["xdsl_commit"],
+        xdsl_input="{kernel}/{shape}/{variant}.xdsl.mlir",
+        xdsl_commit=config["xdsl_commit"],
     output:
         "{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
