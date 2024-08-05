@@ -423,7 +423,8 @@ def filter_xdsl_pipeline_passes(wildcards):
 
 rule xdsl_compile:
     input:
-        "{kernel}/{shape}/{variant}.xdsl.mlir",
+        xdsl_input = "{kernel}/{shape}/{variant}.xdsl.mlir",
+        xdsl_commit = config["xdsl_commit"],
     output:
         "{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
@@ -433,7 +434,7 @@ rule xdsl_compile:
         passes=filter_xdsl_pipeline_passes,
     shell:
         """
-        sed 's/arith.maxf/arith.maximumf/g' {input} \
+        sed 's/arith.maxf/arith.maximumf/g' {input.xdsl_input} \
         | {params.xdsl_opt} -p {params.passes} -t riscv-asm -o {output}
         """
 
