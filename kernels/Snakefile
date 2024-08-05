@@ -176,6 +176,7 @@ rule fast:
         "pivoted_fpu.fast.csv",
         "pivoted_ipc.fast.csv",
         "regalloc.fast.jsonl",
+        "pipeline.fast.csv",
     # This is the default rule taking over former result
     # file names:
     output:
@@ -304,6 +305,16 @@ rule combine_regalloc_stats_fast:
         """
         cat {input} > {output}
         """
+
+rule pipeline:
+    input:
+        kernels = "kernels.fast.csv",
+        regalloc = "regalloc.fast.jsonl",
+        pipeline_py = config["root"] + "/scripts/pipeline.py",
+    output:
+        "pipeline.fast.csv"
+    shell:
+        "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
 # Build rules
 
