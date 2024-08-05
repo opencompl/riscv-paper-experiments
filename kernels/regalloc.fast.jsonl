@@ -1,5 +1,17 @@
-{"preallocated_float": 0, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 14, "test": "linalg_0_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 12, "test": "linalg_1_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 8, "test": "linalg_2_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 9, "test": "linalg_3_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 8, "allocated_int": 8, "test": "linalg_4_xdsl"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 6, "allocated_int": 8, "variant": "snitch_stream", "params": "128xf64", "impl": "ddot"}
+{"preallocated_float": 1, "preallocated_int": 4, "allocated_float": 4, "allocated_int": 11, "variant": "riscv_scf", "params": "128xf64", "impl": "ddot"}
+{"preallocated_float": 3, "preallocated_int": 5, "allocated_float": 5, "allocated_int": 12, "variant": "snitch_stream", "params": "8x8xf64", "impl": "dense"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 8, "allocated_int": 9, "variant": "linalg_xdsl", "params": "4x16x8xf64", "impl": "matmul"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 8, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "sum"}
+{"preallocated_float": 4, "preallocated_int": 2, "allocated_float": 3, "allocated_int": 4, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "fill"}
+{"preallocated_float": 3, "preallocated_int": 3, "allocated_float": 3, "allocated_int": 6, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "relu"}
+{"preallocated_float": 3, "preallocated_int": 3, "allocated_float": 7, "allocated_int": 7, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "pooling_nchw_sum_d1_s2_3x3"}
+{"preallocated_float": 3, "preallocated_int": 3, "allocated_float": 7, "allocated_int": 7, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "pooling_nchw_max_d1_s2_3x3"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 8, "allocated_int": 9, "variant": "linalg_xdsl", "params": "4x4xf64", "impl": "conv2d_d1_s1_3x3"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 8, "variant": "linalg_xdsl", "params": "4x8xf32", "impl": "sum"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 8, "variant": "linalg_xdsl", "params": "8x8xf16", "impl": "sum"}
+{"preallocated_float": 0, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 14, "variant": "linalg_0_xdsl", "params": "1x20x5xf64", "impl": "matmul"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 12, "variant": "linalg_1_xdsl", "params": "1x20x5xf64", "impl": "matmul"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 8, "variant": "linalg_2_xdsl", "params": "1x20x5xf64", "impl": "matmul"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 9, "variant": "linalg_3_xdsl", "params": "1x20x5xf64", "impl": "matmul"}
+{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 8, "allocated_int": 8, "variant": "linalg_4_xdsl", "params": "1x20x5xf64", "impl": "matmul"}

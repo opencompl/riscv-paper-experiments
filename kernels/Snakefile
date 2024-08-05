@@ -175,7 +175,7 @@ rule fast:
         "pivoted.fast.csv",
         "pivoted_fpu.fast.csv",
         "pivoted_ipc.fast.csv",
-        "regalloc.fast.jsonl",
+        "regalloc.fast.csv",
         "pipeline.fast.csv",
     # This is the default rule taking over former result
     # file names:
@@ -287,28 +287,42 @@ rule verilator:
 
 rule assembly_to_regalloc_stats:
     input:
-        "{test}.S",
+        asm="{test}.S",
+        format_template=config["root"] + "/scripts/regalloc_stats.awk",
     output:
         "{test}.regalloc.json",
-    params:
-        format_template=config["root"] + "/scripts/regalloc_stats.awk",
     shell:
         """
-        awk -f {params.format_template} {input} > {output}
+        awk -f {input.format_template} {input.asm} > {output}
         """
 
 
 rule combine_regalloc_stats_fast:
     input:
-        *expand(
-            "matmul/1x20x5xf64/linalg_{phase}_xdsl.regalloc.json", phase=range(0, 5)
-        ),
+        *expand("{test}.regalloc.json", test=TESTSET_FAST),
     output:
         "regalloc.fast.jsonl",
     shell:
         """
         cat {input} > {output}
         """
+
+
+rule regalloc_stats_csv:
+    input:
+        "regalloc.fast.jsonl",
+    output:
+        "regalloc.fast.csv",
+    run:
+        import pandas as pd
+
+        df = pd.read_json(input[0], lines=True)
+        df = df[df.variant == "linalg_xdsl"]
+        del df["preallocated_int"]
+        del df["preallocated_float"]
+        del df["variant"]
+        df.set_index(["impl", "params"], inplace=True)
+        df.to_csv(output[0], index=True)
 
 
 rule pipeline:
