@@ -1,5 +1,0 @@
-{"preallocated_float": 0, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 14, "test": "linalg_0_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 3, "allocated_int": 12, "test": "linalg_1_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 8, "test": "linalg_2_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 5, "allocated_int": 9, "test": "linalg_3_xdsl"}
-{"preallocated_float": 3, "preallocated_int": 4, "allocated_float": 8, "allocated_int": 8, "test": "linalg_4_xdsl"}

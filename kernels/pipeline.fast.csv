@@ -1,4 +1,4 @@
-test,F Registers,X Registers,FPU Occupancy [%]
+variant,F Registers,X Registers,FPU Occupancy [%]
 Baseline,3,14,2.47
 + Streams,3,12,5.22
 + Scalar Replacement,5,8,22.54
