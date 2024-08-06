@@ -1,8 +1,0 @@
-# Ignores for parametric/templated kernels
-linalg.mlir
-data.c
-data.h
-baseline.c
-*.xdsl.mlir
-*.json
-*/*.csv
