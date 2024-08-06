@@ -32,11 +32,6 @@ def main(df: pd.DataFrame, outdir: str):
     pivoted_fpu = pivoted_all["fpss_fpu_occupancy"]
     pivoted_ipc = pivoted_all["total_ipc"]
 
-    pivoted["min_llvm_mlir"] = pivoted[["baseline", "linalg"]].min(axis=1)
-    # TODO: linalg_xdsl when that's ready
-    # TODO: uncomment when adding back xdsl flow
-    # pivoted["speedup"] = pivoted["min_llvm_mlir"].div(pivoted["snitch_stream"]).map(lambda val: f"{val:.2f}x" if not math.isnan(val) else "?x")
-
     pivoted.to_csv(join(outdir, "pivoted.csv"), float_format=lambda val: str(int(val)))
     pivoted_fpu.to_csv(
         join(outdir, "pivoted_fpu.csv"), float_format=lambda val: f"{val:.2f}"
