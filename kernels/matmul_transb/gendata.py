@@ -7,6 +7,7 @@ from typing import Iterator
 
 from gendatautils import main, Define, Array
 
+
 def matrix_data(
     M: int, K: int, N: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array]:
@@ -20,8 +21,8 @@ def matrix_data(
     # especially due to the repeated (quite a bit) flaky SIMD reductions.
     # If we want to keep the same absolute tolerance for correctness checks,
     # we need to clamp our random distribution range to +-10^2:
-    rmin = max(rmin, 100.)
-    rmax = min(rmax, 100.)
+    rmin = max(rmin, -100.0)
+    rmax = min(rmax, 100.0)
 
     m = M
     n = N
@@ -34,7 +35,7 @@ def matrix_data(
     g_out = x @ y
 
     yield Array("X", ("M", "K"), x)
-    yield Array("Y", ("N", "K"), y.transpose()) # beware: B is laid out transposed
+    yield Array("Y", ("N", "K"), y.transpose())  # beware: B is laid out transposed
     yield Array("G_IN", ("M", "N"), g_in)
     yield Array("G_OUT", ("M", "N"), g_out)
 

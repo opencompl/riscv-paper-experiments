@@ -4,7 +4,7 @@ ddot 128xf64,956,965,,213,577
 dense 8x8xf64,3206,3530,,2741,2723
 fill 4x4xf64,50,,63,,
 matmul 4x16x8xf64,2495,,708,,
-matmul_transb 4x16x16xf32,3386,,,,849
+matmul_transb 4x16x16xf32,3386,,,871,849
 pooling_nchw_max_d1_s2_3x3 4x4xf64,442,,275,,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,582,,271,,
 relu 4x4xf64,142,,72,,
