@@ -1,3 +1,9 @@
+# Instantiated templates for a specific kernel shape
+*/*/*.c
+*/*/*.h
+*/*/*.mlir
+*/*/*.xdsl.mlir
+
 # Profiling results
 *.json
 *.jsonl
