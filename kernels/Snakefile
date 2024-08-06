@@ -287,12 +287,12 @@ rule verilator:
 rule assembly_to_regalloc_stats:
     input:
         asm="{test}.S",
-        format_template=config["root"] + "/scripts/regalloc_stats.awk",
+        stats_script=config["root"] + "/scripts/regalloc_stats.awk",
     output:
         "{test}.regalloc.json",
     shell:
         """
-        awk -f {input.format_template} {input.asm} > {output}
+        awk -f {input.stats_script} {input.asm} > {output}
         """
 
 
