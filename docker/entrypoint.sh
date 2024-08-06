@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-SETUP=/src/snitch/docker/venv.sh
+SETUP=/src/docker/venv.sh
 
 if [ -f "${SETUP}" ]; then
   source "${SETUP}"
