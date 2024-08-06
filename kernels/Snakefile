@@ -133,8 +133,8 @@ TESTSET_ALL = [
             "pooling_nchw_max_d1_s2_3x3",
             "conv2d_d1_s1_3x3",
         ],
-        M=[4, 8, 12, 16],
-        N=[4, 8, 12, 16],
+        M=[4, 8, 12, 16, 20],
+        N=[4, 8, 12, 16, 20],
         variant=["baseline", "linalg_xdsl"],
     ),
     *expand(
