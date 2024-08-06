@@ -375,7 +375,7 @@ rule mlir_linalg_compile:
         mlir_translate=config["mlir-translate"],
         mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
         mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
-        tollvm12=config["root"] + "/snitch/tollvm12.py",
+        tollvm12=config["root"] + "/scripts/tollvm12.py",
     shell:
         """
         {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
