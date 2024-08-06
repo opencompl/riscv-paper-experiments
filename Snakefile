@@ -177,6 +177,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         )
     ]
 
+
 # Return the list of expected regalloc stats output files according to the
 # selected 'testset' output wildcard
 def select_test_set_regalloc_stats(wildcards) -> list[str]:
@@ -332,22 +333,22 @@ rule assembly_to_regalloc_stats:
         """
 
 
-rule combine_regalloc_stats_fast:
+rule combine_regalloc_stats:
     input:
-        select_test_set_regalloc_stats
+        select_test_set_regalloc_stats,
     output:
-        "kernels/regalloc.fast.jsonl",
+        "kernels/regalloc.{testset}.jsonl",
     shell:
         """
         cat {input} > {output}
         """
 
 
-rule regalloc_stats_csv:
+rule regalloc_stats_to_csv:
     input:
-        "kernels/regalloc.fast.jsonl",
+        "kernels/regalloc.{testset}.jsonl",
     output:
-        "results/regalloc.fast.csv",
+        "results/regalloc.{testset}.csv",
     run:
         import pandas as pd
 
@@ -362,11 +363,11 @@ rule regalloc_stats_csv:
 
 rule pipeline:
     input:
-        kernels="results/kernels.fast.csv",
-        regalloc="kernels/regalloc.fast.jsonl",
+        kernels="results/kernels.{testset}.csv",
+        regalloc="kernels/regalloc.{testset}.jsonl",
         pipeline_py="scripts/pipeline.py",
     output:
-        "results/pipeline.fast.csv",
+        "results/pipeline.{testset}.csv",
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
