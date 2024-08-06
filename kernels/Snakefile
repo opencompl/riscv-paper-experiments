@@ -208,16 +208,15 @@ rule all:
 
 rule csv_to_pivoted:
     input:
-        "kernels.{testset}.csv",
+        kernels="kernels.{testset}.csv",
+        pivot=config["root"] + "/scripts/pivot.py",
     output:
         "pivoted.{testset}.csv",
         "pivoted_fpu.{testset}.csv",
         "pivoted_ipc.{testset}.csv",
-    params:
-        pivot=config["root"] + "/scripts/pivot.py",
     shell:
         """
-        {params.pivot} --outdir {resources.tmpdir} < {input}
+        {input.pivot} --outdir {resources.tmpdir} < {input.kernels}
         mv -f {resources.tmpdir}/pivoted.csv pivoted.{wildcards.testset}.csv
         mv -f {resources.tmpdir}/pivoted_fpu.csv pivoted_fpu.{wildcards.testset}.csv
         mv -f {resources.tmpdir}/pivoted_ipc.csv pivoted_ipc.{wildcards.testset}.csv
