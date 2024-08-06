@@ -52,9 +52,9 @@ def main():
     regalloc_df = regalloc_df[regalloc_df.params == "1x20x5xf64"]
     del regalloc_df["params"]
 
-    bla = regalloc_df.set_index("variant")
+    regalloc_df = regalloc_df.set_index("variant")
 
-    merge_stats(kernels_df, bla, output)
+    merge_stats(kernels_df, regalloc_df, output)
 
 
 if __name__ == "__main__":
