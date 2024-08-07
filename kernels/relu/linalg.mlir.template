@@ -1,0 +1,17 @@
+module {
+  func.func public @relu(%arg0: memref<{{M}}x{{N}}xf{{precision}}> {llvm.noalias}, %arg1: memref<{{M}}x{{N}}xf{{precision}}> {llvm.noalias}) -> memref<{{M}}x{{N}}xf{{precision}}> {
+    %cst = arith.constant 0.000000e+00 : f{{precision}}
+    linalg.generic {
+      indexing_maps = [
+        affine_map<(d0, d1) -> (d0, d1)>,
+        affine_map<(d0, d1) -> (d0, d1)>
+      ],
+      iterator_types = ["parallel", "parallel"]
+    } ins(%arg0 : memref<{{M}}x{{N}}xf{{precision}}>) outs(%arg1 : memref<{{M}}x{{N}}xf{{precision}}>) {
+    ^bb0(%in: f{{precision}}, %out: f{{precision}}):
+      %0 = arith.maxf %in, %cst : f{{precision}}
+      linalg.yield %0 : f{{precision}}
+    }
+    return %arg1 : memref<{{M}}x{{N}}xf{{precision}}>
+  }
+}
