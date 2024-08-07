@@ -4,14 +4,23 @@
 
 #include <stdint.h>
 
+#if PRECISION == 32
+// Copied from math.h
+double fmax(double __x, double __y) { return __builtin_fmaxf(__x, __y); }
+#define MY_ZERO 0.0f
+#elif PRECISION == 64
 // Copied from math.h
 double fmax(double __x, double __y) { return __builtin_fmax(__x, __y); }
+#define MY_ZERO 0.0
+#else
+#error Unsupported precision
+#endif
 
-void relu(const double* restrict x, double* restrict y) {
+void relu(const DTYPE* restrict x, DTYPE* restrict y) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             // row-major accesses
-            y[i * N + j] = fmax(0.0, x[i * N + j]);
+            y[i * N + j] = fmax(MY_ZERO, x[i * N + j]);
         }
     }
 }
