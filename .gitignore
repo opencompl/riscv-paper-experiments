@@ -214,3 +214,6 @@ cython_debug/
 
 # Ignore .DS_Store on macs
 .DS_Store
+
+# VSCode
+.vscode
