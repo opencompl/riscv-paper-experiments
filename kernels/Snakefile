@@ -101,7 +101,7 @@ TESTSET_FAST = [
         variant=["baseline", "linalg_xdsl"],
     ),
     *expand(
-        "relu/4x8xf32/{variant}", variant=["baseline"]
+        "relu/4x8xf32/{variant}", variant=["baseline", "snrt"]
     ),
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
