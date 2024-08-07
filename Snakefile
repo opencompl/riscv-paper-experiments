@@ -114,13 +114,20 @@ TESTSET_FAST = [
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
     *MANUAL_KERNELS,
-    # 3d templated kernels: baseline + linalg_xdsl
+    # 3d templated kernels: baseline + linalg_xdsl/snitch_stream
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
-        M=[4, 8],
+        M=[1, 4, 8],
         K=range(4, 65, 4),
         N=range(4, 65, 4),
         variant=["baseline", "linalg_xdsl"],
+    ),
+    *expand(
+        "matmul_transb/{M}x{K}x{N}xf32/{variant}",
+        M=[1, 4, 8],
+        K=range(4, 65, 4),
+        N=range(4, 65, 4),
+        variant=["baseline", "snitch_stream"],
     ),
     # Passes contributions
     "matmul/1x400x25xf64/linalg_xdsl",
