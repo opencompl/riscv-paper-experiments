@@ -8,7 +8,7 @@ matmul_transb 4x16x16xf32,0.95,,,0.92,0.88
 pooling_nchw_max_d1_s2_3x3 4x4xf64,0.68,,0.84,,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,0.45,,0.84,,
 relu 4x4xf64,0.40,,0.53,,
-relu 4x8xf32,0.57,,,,
+relu 4x8xf32,0.57,,,,0.40
 saxpy 64xf32,0.93,0.93,,,0.65
 sum 4x4xf64,0.57,,0.46,,
 sum 4x8xf32,0.58,0.56,0.46,,0.47
