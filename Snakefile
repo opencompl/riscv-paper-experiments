@@ -82,7 +82,10 @@ MANUAL_KERNELS = [
 TESTSET_FAST = [
     *MANUAL_KERNELS,
     # 3d templated kernels
-    *expand("matmul_transb/4x16x16xf32/{variant}", variant=["baseline", "snrt", "snitch_stream"]),
+    *expand(
+        "matmul_transb/4x16x16xf32/{variant}",
+        variant=["baseline", "snrt", "snitch_stream"],
+    ),
     *expand(
         "matmul/4x16x8xf64/{variant}",
         variant=["baseline", "linalg_xdsl"],
@@ -155,38 +158,19 @@ TESTSET_ALL = [
 ]
 
 
-def select_test_set(name: str) -> list[str]:
+# Return the list of expected execution profile files according to the
+# selected 'testset' output wildcard
+def select_test_set_profiles(wildcards) -> list[str]:
     sets = {
         "fast": TESTSET_FAST,
         "all": TESTSET_ALL,
     }
+    name = wildcards.testset
     if name not in sets:
         raise ValueError(
             f"unknown test set name '{name}', valid values are: {sets.keys()}"
         )
-    return sets[name]
-
-
-# Return the list of expected execution profile output files according to the
-# selected 'testset' output wildcard
-def select_test_set_profiles(wildcards) -> list[str]:
-    return [
-        "kernels/" + test
-        for test in expand(
-            "{test}.profile.json", test=select_test_set(wildcards.testset)
-        )
-    ]
-
-
-# Return the list of expected regalloc stats output files according to the
-# selected 'testset' output wildcard
-def select_test_set_regalloc_stats(wildcards) -> list[str]:
-    return [
-        "kernels/" + test
-        for test in expand(
-            "{test}.regalloc.json", test=select_test_set(wildcards.testset)
-        )
-    ]
+    return expand("kernels/{test}.profile.json", test=sets[name])
 
 
 ###########################################################
@@ -303,6 +287,7 @@ rule dasm_to_trace_debug:
     shell:
         "{params.spike} < {input} | {params.gentrace} --permissive > {output.txt}"
 
+
 rule verilator:
     input:
         "{test}.x",
@@ -335,20 +320,18 @@ rule assembly_to_regalloc_stats:
 
 rule combine_regalloc_stats:
     input:
-        select_test_set_regalloc_stats,
+        *expand("kernels/{test}.regalloc.json", test=TESTSET_FAST),
     output:
-        "kernels/regalloc.{testset}.jsonl",
+        "kernels/regalloc.fast.jsonl",
     shell:
-        """
-        cat {input} > {output}
-        """
+        "cat {input} > {output}"
 
 
 rule regalloc_stats_to_csv:
     input:
-        "kernels/regalloc.{testset}.jsonl",
+        "kernels/regalloc.fast.jsonl",
     output:
-        "results/regalloc.{testset}.csv",
+        "results/regalloc.fast.csv",
     run:
         import pandas as pd
 
@@ -363,11 +346,11 @@ rule regalloc_stats_to_csv:
 
 rule pipeline:
     input:
-        kernels="results/kernels.{testset}.csv",
-        regalloc="kernels/regalloc.{testset}.jsonl",
+        kernels="results/kernels.fast.csv",
+        regalloc="kernels/regalloc.fast.jsonl",
         pipeline_py="scripts/pipeline.py",
     output:
-        "results/pipeline.{testset}.csv",
+        "results/pipeline.fast.csv",
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
