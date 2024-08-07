@@ -565,6 +565,7 @@ rule xdsl_kernel_generate_source:
         json="kernels/{kernel}/{shape}/params.json",
         template="kernels/{kernel}/linalg.mlir.template",
     output:
+        # Restrict this rule to variant=linalg_xdsl to avoid ambiguous matches
         "kernels/{kernel}/{shape}/linalg_xdsl.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
