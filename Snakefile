@@ -82,7 +82,10 @@ MANUAL_KERNELS = [
 TESTSET_FAST = [
     *MANUAL_KERNELS,
     # 3d templated kernels
-    *expand("matmul_transb/4x16x16xf32/{variant}", variant=["baseline", "snrt", "snitch_stream"]),
+    *expand(
+        "matmul_transb/4x16x16xf32/{variant}",
+        variant=["baseline", "snrt", "snitch_stream"],
+    ),
     *expand(
         "matmul/4x16x8xf64/{variant}",
         variant=["baseline", "linalg_xdsl"],
@@ -155,16 +158,19 @@ TESTSET_ALL = [
 ]
 
 
-# Return the list of expected Verilator output files according to the
+# Return the list of expected execution profile files according to the
 # selected 'testset' output wildcard
-def select_test_set(wildcards) -> list[str]:
-    if wildcards.testset == "fast":
-        return expand("{test}.profile.json", test=TESTSET_FAST)
-    if wildcards.testset == "all":
-        return expand("{test}.profile.json", test=TESTSET_ALL)
-    raise ValueError(
-        f"unknown test set name '{wildcards.testset}', valid values are: fast, all"
-    )
+def select_test_set_profiles(wildcards) -> list[str]:
+    sets = {
+        "fast": TESTSET_FAST,
+        "all": TESTSET_ALL,
+    }
+    name = wildcards.testset
+    if name not in sets:
+        raise ValueError(
+            f"unknown test set name '{name}', valid values are: {sets.keys()}"
+        )
+    return expand("kernels/{test}.profile.json", test=sets[name])
 
 
 ###########################################################
@@ -174,34 +180,34 @@ def select_test_set(wildcards) -> list[str]:
 
 rule fast:
     input:
-        "kernels.fast.csv",
-        "pivoted.fast.csv",
-        "pivoted_fpu.fast.csv",
-        "pivoted_ipc.fast.csv",
-        "regalloc.fast.csv",
-        "pipeline.fast.csv",
+        "results/kernels.fast.csv",
+        "results/pivoted.fast.csv",
+        "results/pivoted_fpu.fast.csv",
+        "results/pivoted_ipc.fast.csv",
+        "results/regalloc.fast.csv",
+        "results/pipeline.fast.csv",
     # This is the default rule taking over former result
     # file names:
     output:
-        "kernels.csv",
-        "pivoted.csv",
-        "pivoted_fpu.csv",
-        "pivoted_ipc.csv",
+        "results/kernels.csv",
+        "results/pivoted.csv",
+        "results/pivoted_fpu.csv",
+        "results/pivoted_ipc.csv",
     shell:
         """
-        cp -f kernels.fast.csv kernels.csv
-        cp -f pivoted.fast.csv pivoted.csv
-        cp -f pivoted_fpu.fast.csv pivoted_fpu.csv
-        cp -f pivoted_ipc.fast.csv pivoted_ipc.csv
+        cp -f results/kernels.fast.csv results/kernels.csv
+        cp -f results/pivoted.fast.csv results/pivoted.csv
+        cp -f results/pivoted_fpu.fast.csv results/pivoted_fpu.csv
+        cp -f results/pivoted_ipc.fast.csv results/pivoted_ipc.csv
         """
 
 
 rule all:
     input:
-        "kernels.all.csv",
-        "pivoted.all.csv",
-        "pivoted_fpu.all.csv",
-        "pivoted_ipc.all.csv",
+        "results/kernels.all.csv",
+        "results/pivoted.all.csv",
+        "results/pivoted_fpu.all.csv",
+        "results/pivoted_ipc.all.csv",
 
 
 ###########################################################
@@ -211,40 +217,40 @@ rule all:
 
 rule csv_to_pivoted:
     input:
-        kernels="kernels.{testset}.csv",
-        pivot=config["root"] + "/scripts/pivot.py",
+        kernels="results/kernels.{testset}.csv",
+        pivot="scripts/pivot.py",
     output:
-        "pivoted.{testset}.csv",
-        "pivoted_fpu.{testset}.csv",
-        "pivoted_ipc.{testset}.csv",
+        "results/pivoted.{testset}.csv",
+        "results/pivoted_fpu.{testset}.csv",
+        "results/pivoted_ipc.{testset}.csv",
     shell:
         """
         {input.pivot} --outdir {resources.tmpdir} < {input.kernels}
-        mv -f {resources.tmpdir}/pivoted.csv pivoted.{wildcards.testset}.csv
-        mv -f {resources.tmpdir}/pivoted_fpu.csv pivoted_fpu.{wildcards.testset}.csv
-        mv -f {resources.tmpdir}/pivoted_ipc.csv pivoted_ipc.{wildcards.testset}.csv
+        mv -f {resources.tmpdir}/pivoted.csv results/pivoted.{wildcards.testset}.csv
+        mv -f {resources.tmpdir}/pivoted_fpu.csv results/pivoted_fpu.{wildcards.testset}.csv
+        mv -f {resources.tmpdir}/pivoted_ipc.csv results/pivoted_ipc.{wildcards.testset}.csv
         """
 
 
 rule profile_to_csv:
     input:
-        select_test_set,
+        select_test_set_profiles,
     output:
-        "kernels.{testset}.csv",
+        "results/kernels.{testset}.csv",
     params:
-        profile_to_csv=config["root"] + "/scripts/profile_to_csv.py",
+        profile_to_csv="scripts/profile_to_csv.py",
     shell:
         "{params.profile_to_csv} {input} -o {output}"
 
 
 rule trace_to_profile:
     input:
-        txt="{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.txt",
-        json="{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.json",
+        txt="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.txt",
+        json="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.json",
     output:
-        "{kernel}/{shape}/{variant}.profile.json",
+        "kernels/{kernel}/{shape}/{variant}.profile.json",
     params:
-        trace_to_profile=config["root"] + "/scripts/trace_to_profile.py",
+        trace_to_profile="scripts/trace_to_profile.py",
     shell:
         """
         {params.trace_to_profile} --section 1 \
@@ -281,6 +287,7 @@ rule dasm_to_trace_debug:
     shell:
         "{params.spike} < {input} | {params.gentrace} --permissive > {output.txt}"
 
+
 rule verilator:
     input:
         "{test}.x",
@@ -302,7 +309,7 @@ rule verilator:
 rule assembly_to_regalloc_stats:
     input:
         asm="{test}.S",
-        stats_script=config["root"] + "/scripts/regalloc_stats.awk",
+        stats_script="scripts/regalloc_stats.awk",
     output:
         "{test}.regalloc.json",
     shell:
@@ -311,22 +318,20 @@ rule assembly_to_regalloc_stats:
         """
 
 
-rule combine_regalloc_stats_fast:
+rule combine_regalloc_stats:
     input:
-        *expand("{test}.regalloc.json", test=TESTSET_FAST),
+        *expand("kernels/{test}.regalloc.json", test=TESTSET_FAST),
     output:
-        "regalloc.fast.jsonl",
+        "kernels/regalloc.fast.jsonl",
     shell:
-        """
-        cat {input} > {output}
-        """
+        "cat {input} > {output}"
 
 
-rule regalloc_stats_csv:
+rule regalloc_stats_to_csv:
     input:
-        "regalloc.fast.jsonl",
+        "kernels/regalloc.fast.jsonl",
     output:
-        "regalloc.fast.csv",
+        "results/regalloc.fast.csv",
     run:
         import pandas as pd
 
@@ -341,11 +346,11 @@ rule regalloc_stats_csv:
 
 rule pipeline:
     input:
-        kernels="kernels.fast.csv",
-        regalloc="regalloc.fast.jsonl",
-        pipeline_py=config["root"] + "/scripts/pipeline.py",
+        kernels="results/kernels.fast.csv",
+        regalloc="kernels/regalloc.fast.jsonl",
+        pipeline_py="scripts/pipeline.py",
     output:
-        "pipeline.fast.csv",
+        "results/pipeline.fast.csv",
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
@@ -355,11 +360,11 @@ rule pipeline:
 
 rule cc_link:
     input:
-        "{kernel}/{shape}/{variant}.o",
-        "{kernel}/{shape}/data.o",
-        "{kernel}/{shape}/main.o",
+        "kernels/{kernel}/{shape}/{variant}.o",
+        "kernels/{kernel}/{shape}/data.o",
+        "kernels/{kernel}/{shape}/main.o",
     output:
-        "{kernel}/{shape}/{variant}.x",
+        "kernels/{kernel}/{shape}/{variant}.x",
     params:
         cc=config["cc"],
         ldflags=config["ldflags"],
@@ -390,7 +395,7 @@ rule mlir_linalg_compile:
         mlir_translate=config["mlir-translate"],
         mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
         mlir_opt_flags_scf=config["mlir-opt-flags-scf"],
-        tollvm12=config["root"] + "/scripts/tollvm12.py",
+        tollvm12="scripts/tollvm12.py",
     shell:
         """
         {params.mlir_opt} {params.mlir_opt_flags_linalg} {input} \
@@ -413,10 +418,10 @@ rule mlir_linalg_compile:
 
 rule cc_compile_c:
     input:
-        c="{kernel}/{shape}/{variant}.c",
-        h="{kernel}/{shape}/data.h",
+        c="kernels/{kernel}/{shape}/{variant}.c",
+        h="kernels/{kernel}/{shape}/data.h",
     output:
-        "{kernel}/{shape}/{variant}.S",
+        "kernels/{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
         variant="|".join(["data", "main"] + C_VARIANTS),
     params:
@@ -428,9 +433,9 @@ rule cc_compile_c:
 
 rule cc_compile_ll:
     input:
-        "{kernel}/{shape}/{variant}.ll",
+        "kernels/{kernel}/{shape}/{variant}.ll",
     output:
-        "{kernel}/{shape}/{variant}.S",
+        "kernels/{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
         variant="|".join(MLIR_VARIANTS),
     params:
@@ -457,10 +462,10 @@ def filter_xdsl_pipeline_passes(wildcards):
 
 rule xdsl_compile:
     input:
-        xdsl_input="{kernel}/{shape}/{variant}.xdsl.mlir",
+        xdsl_input="kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
         xdsl_commit=config["xdsl_commit"],
     output:
-        "{kernel}/{shape}/{variant}.S",
+        "kernels/{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
         variant="|".join(XDSL_VARIANTS),
     params:
@@ -479,10 +484,10 @@ rule xdsl_compile:
 
 rule cc_compile_shared_main:
     input:
-        c="{kernel}/main.c",
-        h="{kernel}/{shape}/data.h",
+        c="kernels/{kernel}/main.c",
+        h="kernels/{kernel}/{shape}/data.h",
     output:
-        "{kernel}/{shape}/main.S",
+        "kernels/{kernel}/{shape}/main.S",
     params:
         cc=config["cc"],
         cflags=config["cflags"],
@@ -498,7 +503,7 @@ rule cc_compile_shared_main:
 
 rule kernel_generate_params:
     output:
-        "{kernel}/{shape}/params.json",
+        "kernels/{kernel}/{shape}/params.json",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
     run:
@@ -516,55 +521,55 @@ rule kernel_generate_params:
 
 rule kernel_generate_data_h:
     input:
-        json="{kernel}/{shape}/params.json",
-        template="{kernel}/data.h.template",
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/data.h.template",
     output:
-        "{kernel}/{shape}/data.h",
+        "kernels/{kernel}/{shape}/data.h",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
     params:
-        format_template=config["root"] + "/scripts/format.py",
+        format_template="scripts/format.py",
     shell:
         "python3 {params.format_template} {input.template} {input.json} > {output}"
 
 
 rule kernel_generate_data_c:
     input:
-        json="{kernel}/{shape}/params.json",
-        h="{kernel}/{shape}/data.h",
+        json="kernels/{kernel}/{shape}/params.json",
+        h="kernels/{kernel}/{shape}/data.h",
     output:
-        "{kernel}/{shape}/data.c",
+        "kernels/{kernel}/{shape}/data.c",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
     shell:
-        "python3 -m {wildcards.kernel}.gendata -p {input.json} > {output}"
+        "PYTHONPATH=kernels python3 -m kernels.{wildcards.kernel}.gendata -p {input.json} > {output}"
 
 
 rule kernel_generate_source:
     input:
-        json="{kernel}/{shape}/params.json",
-        template="{kernel}/{variant}.{ext}.template",
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/{variant}.{ext}.template",
     output:
-        "{kernel}/{shape}/{variant}.{ext}",
+        "kernels/{kernel}/{shape}/{variant}.{ext}",
     wildcard_constraints:
         ext="c|mlir",
         kernel="|".join(KERNEL_TEMPLATES),
     params:
-        format_template=config["root"] + "/scripts/format.py",
+        format_template="scripts/format.py",
     shell:
         "python3 {params.format_template} {input.template} {input.json} > {output}"
 
 
 rule xdsl_kernel_generate_source:
     input:
-        json="{kernel}/{shape}/params.json",
-        template="{kernel}/linalg.mlir.template",
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/linalg.mlir.template",
     output:
-        "{kernel}/{shape}/linalg_xdsl.xdsl.mlir",
+        "kernels/{kernel}/{shape}/linalg_xdsl.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
     params:
-        format_template=config["root"] + "/scripts/format.py",
+        format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
         mlir_opt=config["mlir-opt"],
         mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],

@@ -33,18 +33,18 @@ jobs:
       - name: Clean and make pivoted
         run: |
           . venv/bin/activate
-          cp kernels/pivoted.csv kernels/pivoted_old.csv.txt
+          cp results/pivoted.csv results/pivoted_old.csv.txt
           make clean
           make
       - name: Check pivoted has not changed
         run: |
           cd /src/
-          ./scripts/nodiff.sh kernels/pivoted.csv kernels/pivoted_old.csv.txt
+          ./scripts/nodiff.sh results/pivoted.csv results/pivoted_old.csv.txt
       - name: Read Cycles CSV
         id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path: kernels/pivoted.csv
+          path: results/pivoted.csv
       # - name: Create MD
       #   uses: petems/csv-to-md-table-action@master
       #   id: cycles-csv-table-output
@@ -61,7 +61,7 @@ jobs:
         id: fpu-csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path: kernels/pivoted_fpu.csv
+          path: results/pivoted_fpu.csv
       # - name: Create MD
       #   uses: petems/csv-to-md-table-action@master
       #   id: fpu-csv-table-output
