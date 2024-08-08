@@ -103,7 +103,9 @@ TESTSET_FAST = [
         ],
         variant=["baseline", "linalg_xdsl"],
     ),
-    *expand("relu/4x8xf32/{variant}", variant=["baseline", "snrt"]),
+    *expand(
+        "relu/4x8xf32/{variant}", variant=["baseline", "linalg", "snrt", "snitch_stream"]
+    ),
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
@@ -563,7 +565,8 @@ rule xdsl_kernel_generate_source:
         json="kernels/{kernel}/{shape}/params.json",
         template="kernels/{kernel}/linalg.mlir.template",
     output:
-        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
+        # Restrict this rule to variant=linalg_xdsl to avoid ambiguous matches
+        "kernels/{kernel}/{shape}/linalg_xdsl.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
     params:

@@ -19,7 +19,7 @@ riscv.assembly_section ".text" {
 
     snitch_stream.streaming_region {
       stride_patterns = [
-        #snitch_stream.stride_pattern<ub = [{{M}}, {{N // 8}}, {{K // 2}}], strides = [{{K * 4}}, 0, 8], 8>,
+        #snitch_stream.stride_pattern<ub = [{{M}}, {{N // 8}}, {{K // 2}}], strides = [{{K * 4}}, 0, 8], repeat = 8>,
         #snitch_stream.stride_pattern<ub = [{{M}}, {{N // 8}}, {{K // 2}}, {{8}}], strides = [0, {{4 * 8 * K}}, {{4 * 2}}, {{4 * K}}]>
       ]
     } ins(%X_moved, %Y_moved : !riscv.reg, !riscv.reg) {
