@@ -162,8 +162,8 @@ TESTSET_ALL = [
 # selected 'testset' output wildcard
 def select_test_set_profiles(wildcards) -> list[str]:
     sets = {
-        "fast": TESTSET_FAST,
-        "all": TESTSET_ALL,
+        "fast": sorted(set(TESTSET_FAST)),
+        "all": sorted(set(TESTSET_ALL)),
     }
     name = wildcards.testset
     if name not in sets:
