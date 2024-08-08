@@ -113,9 +113,29 @@ TESTSET_FAST = [
     *expand("matmul/1x20x5xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
 ]
 
+TESTSET_LOW_LEVEL_REPRESENTATION = [
+    *expand(
+        "{kernel}/20x{N}xf32/{variant}",
+        kernel=[
+            "relu",
+        ],
+        N=[4, 8, 12, 16, 20],
+        variant=["snitch_stream"],
+    ),
+    *expand(
+        "{kernel}/{M}x20xf32/{variant}",
+        kernel=[
+            "relu",
+        ],
+        M=[4, 8, 12, 16, 20],
+        variant=["snitch_stream"],
+    ),
+]
+
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
     *MANUAL_KERNELS,
+    *TESTSET_LOW_LEVEL_REPRESENTATION,
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
@@ -164,6 +184,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
     sets = {
         "fast": sorted(set(TESTSET_FAST)),
         "all": sorted(set(TESTSET_ALL)),
+        "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION))
     }
     name = wildcards.testset
     if name not in sets:
@@ -201,6 +222,9 @@ rule fast:
         cp -f results/pivoted_ipc.fast.csv results/pivoted_ipc.csv
         """
 
+rule low_level_representation:
+    input:
+        "results/kernels.low_level_representation.csv"
 
 rule all:
     input:
