@@ -130,6 +130,22 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         M=[4, 8, 12, 16, 20],
         variant=["snitch_stream"],
     ),
+    *expand(
+        "{kernel}/20x{N}xf32/{variant}",
+        kernel=[
+            "sum",
+        ],
+        N=[4, 8, 12, 16, 20],
+        variant=["linalg_xdsl"],
+    ),
+    *expand(
+        "{kernel}/{M}x20xf32/{variant}",
+        kernel=[
+            "sum",
+        ],
+        M=[4, 8, 12, 16, 20],
+        variant=["linalg_xdsl"],
+    ),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
