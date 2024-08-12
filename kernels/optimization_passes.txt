@@ -1,4 +1,5 @@
 memref-streamify
 memref-stream-unnest-out-parameters
 convert-riscv-scf-for-to-frep
+memref-stream-fold-fill
 memref-stream-interleave

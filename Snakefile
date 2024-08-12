@@ -12,7 +12,8 @@ XDSL_LINALG_OPT_VARIANTS = [
     "linalg_1_xdsl",  # incremental insertion of xDSL passes
     "linalg_2_xdsl",  # incremental insertion of xDSL passes
     "linalg_3_xdsl",  # incremental insertion of xDSL passes
-    "linalg_4_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
+    "linalg_4_xdsl",  # incremental insertion of xDSL passes
+    "linalg_5_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
 ]
 
 XDSL_LINALG_VARIANTS = [
@@ -117,7 +118,7 @@ TESTSET_FAST = [
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
-    *expand("matmul/1x20x5xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
+    *expand("matmul/1x20x5xf64/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -170,7 +171,7 @@ TESTSET_ALL = [
     # Passes contributions
     "matmul/1x400x25xf64/linalg_xdsl",
     "matmul/1x400x25xf64/linalg_full_xdsl",
-    *expand("matmul/1x400x25xf64/linalg_{phase}_xdsl", phase=range(0, 5)),
+    *expand("matmul/1x400x25xf64/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
