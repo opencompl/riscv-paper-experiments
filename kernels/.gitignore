@@ -17,3 +17,5 @@
 *.dasm
 *.trace.txt
 *.trace.json
+
+optimization_pipeline.txt

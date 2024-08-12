@@ -7,14 +7,17 @@ C_VARIANTS = [
     "fused",  # optimized c + inline asm for snitch festures with manual fusion of reduction/elementwise loop nests
 ]
 
-XDSL_LINALG_VARIANTS = [
-    "linalg_xdsl",  # xDSL lowering from linalg on tensors
-    "linalg_full_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
+XDSL_LINALG_OPT_VARIANTS = [
     "linalg_0_xdsl",  # incremental insertion of xDSL passes
     "linalg_1_xdsl",  # incremental insertion of xDSL passes
     "linalg_2_xdsl",  # incremental insertion of xDSL passes
     "linalg_3_xdsl",  # incremental insertion of xDSL passes
-    "linalg_4_xdsl",  # incremental insertion of xDSL passes
+    "linalg_4_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
+]
+
+XDSL_LINALG_VARIANTS = [
+    "linalg_xdsl",  # xDSL lowering from linalg on tensors
+    *XDSL_LINALG_OPT_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -399,6 +402,15 @@ rule pipeline:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
 
 
+rule optimization_pipelines:
+    input:
+        passes = "kernels/optimization_passes.txt",
+        get_pipeline = "scripts/get_pipeline.py",
+    output:
+        "kernels/optimization_pipeline.txt",
+    shell:
+        "python {input.get_pipeline} {input.passes} > {output}"
+
 # Build rules
 
 
@@ -500,14 +512,17 @@ def filter_xdsl_pipeline_passes(wildcards):
         return ",".join(config["xdsl-passes"])
 
     opt_level = match.group(1)
+    opt_level = int(opt_level)
 
-    return "test-lower-linalg-to-snitch{optimization-level=" + f"{opt_level}" + "}"
+    with open("kernels/optimization_pipeline.txt") as f:
+        return f.read().splitlines()[opt_level]
 
 
 rule xdsl_compile:
     input:
         xdsl_input="kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
         xdsl_commit=config["xdsl_commit"],
+        optimization_pipelines="kernels/optimization_pipeline.txt"
     output:
         "kernels/{kernel}/{shape}/{variant}.S",
     wildcard_constraints:
