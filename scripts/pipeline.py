@@ -6,7 +6,7 @@ def merge_stats(
     kernels_df: pd.DataFrame, regalloc_df: pd.DataFrame, output: Path | None
 ):
     kernels_df = kernels_df[kernels_df["test"] == "matmul"].set_index("impl")
-    df = regalloc_df.join(kernels_df[["fpss_fpu_occupancy", "fpss_loads", "fpss_stores"]])
+    df = regalloc_df.join(kernels_df[["fpss_fpu_occupancy", "fpss_loads", "fpss_stores", "fpss_fpu_fmadd_issues"]])
 
     df["fpss_fpu_occupancy"] *= 100
 
@@ -27,6 +27,7 @@ def merge_stats(
         "fpss_fpu_occupancy": "FPU Occupancy [%]",
         "fpss_loads": "F Loads",
         "fpss_stores": "F Stores",
+        "fpss_fpu_fmadd_issues": "FMAdd Issues"
     }
 
     df = df.rename(columns=col_names, index=row_names)

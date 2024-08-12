@@ -1,7 +1,7 @@
-variant,F Registers,X Registers,FPU Occupancy [%],F Loads,F Stores
-Baseline,3,14,2.47,300,105
-+ Streams,3,12,5.22,100,100
-+ Scalar Replacement,3,11,19.78,5,5
-+ FRep,3,10,21.10,5,5
-+ Fuse Fill,5,9,22.09,0,0
-+ Unroll and Jam,8,8,58.12,0,0
+variant,F Registers,X Registers,FPU Occupancy [%],F Loads,F Stores,FMAdd Issues
+Baseline,3,14,2.47,300,105,100
++ Streams,3,12,5.22,100,100,100
++ Scalar Replacement,3,11,19.78,5,5,100
++ FRep,3,10,21.10,5,5,100
++ Fuse Fill,5,9,22.09,0,0,100
++ Unroll and Jam,8,8,58.12,0,0,100
