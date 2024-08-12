@@ -3,10 +3,11 @@ import pandas as pd
 
 
 def merge_stats(
-    kernels_df: pd.DataFrame, regalloc_df: pd.DataFrame, output: Path | None
+    kernels_df: pd.DataFrame, regalloc_df: pd.DataFrame, frep_count_df: pd.DataFrame, output: Path | None
 ):
     kernels_df = kernels_df[kernels_df["test"] == "matmul"].set_index("impl")
     df = regalloc_df.join(kernels_df[["cycles", "fpss_fpu_occupancy", "fpss_loads", "fpss_stores", "fpss_fpu_fmadd_issues"]])
+    df = df.join(frep_count_df["frep_count"])
 
     df["fpss_fpu_occupancy"] *= 100
 
@@ -28,7 +29,8 @@ def merge_stats(
         "cycles": "Cycles",
         "fpss_loads": "F Loads",
         "fpss_stores": "F Stores",
-        "fpss_fpu_fmadd_issues": "FMAdd Issues"
+        "fpss_fpu_fmadd_issues": "FMAdd Issues",
+        "frep_count": "FRep Count",
     }
 
     df = df.rename(columns=col_names, index=row_names)
@@ -43,11 +45,13 @@ def main():
 
     arg_parser.add_argument("kernels", type=Path)
     arg_parser.add_argument("regalloc_stats", type=Path)
+    arg_parser.add_argument("frep_count", type=Path)
     arg_parser.add_argument("--output", "-o", type=Path, default=None)
 
     args = arg_parser.parse_args()
     kernels = args.kernels
     regalloc_stats = args.regalloc_stats
+    frep_count = args.frep_count
     output = args.output
 
     kernels_df = pd.read_csv(kernels)
@@ -59,7 +63,10 @@ def main():
 
     regalloc_df = regalloc_df.set_index("variant")
 
-    merge_stats(kernels_df, regalloc_df, output)
+    frep_count_df = pd.read_csv(frep_count)
+    frep_count_df = frep_count_df.set_index("variant")
+
+    merge_stats(kernels_df, regalloc_df, frep_count_df, output)
 
 
 if __name__ == "__main__":

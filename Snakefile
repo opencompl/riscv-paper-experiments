@@ -375,6 +375,22 @@ rule combine_regalloc_stats:
         "cat {input} > {output}"
 
 
+rule count_frep_instructions:
+    input:
+        expand("kernels/matmul/1x20x5xf64/{test}.S", test=XDSL_LINALG_OPT_VARIANTS)
+    output:
+        "results/frep_count.fast.csv"
+    shell:
+        """
+        echo "variant,frep_count" > {output}
+        for file in {input}; do
+            variant=$(basename $file .S)
+            count=$(grep -c "frep.o" $file || true)
+            echo "$variant,$count" >> {output}
+        done
+        """
+
+
 rule regalloc_stats_to_csv:
     input:
         "kernels/regalloc.fast.jsonl",
@@ -396,11 +412,12 @@ rule pipeline:
     input:
         kernels="results/kernels.fast.csv",
         regalloc="kernels/regalloc.fast.jsonl",
+        frep_count="results/frep_count.fast.csv",
         pipeline_py="scripts/pipeline.py",
     output:
         "results/pipeline.fast.csv",
     shell:
-        "python {input.pipeline_py} {input.kernels} {input.regalloc} -o {output}"
+        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
 
 rule optimization_pipelines:
