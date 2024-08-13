@@ -155,7 +155,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         variant=["linalg_xdsl"],
     ),
     *expand(
-        "{kernel}/1x{K}x4xf32/{variant}",
+        "{kernel}/1x{K}x40xf32/{variant}",
         kernel=[
             "matmul_transb",
         ],
@@ -163,7 +163,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         variant=["snitch_stream"],
     ),
     *expand(
-        "{kernel}/1x4x{N}xf32/{variant}",
+        "{kernel}/1x20x{N}xf32/{variant}",
         kernel=[
             "matmul_transb",
         ],
