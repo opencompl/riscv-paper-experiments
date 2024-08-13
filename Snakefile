@@ -270,7 +270,6 @@ rule fast:
         "results/pivoted_fpu.fast.csv",
         "results/pivoted_ipc.fast.csv",
         "results/regalloc.fast.csv",
-        "results/pipeline.fast.csv",
     # This is the default rule taking over former result
     # file names:
     output:
@@ -289,6 +288,17 @@ rule fast:
 rule low_level_representation:
     input:
         "results/kernels.low_level_representation.csv"
+
+rule pipeline:
+    input:
+        kernels="results/kernels.pipeline.csv",
+        regalloc="kernels/regalloc.pipeline.jsonl",
+        frep_count="results/frep_count.csv",
+        pipeline_py="scripts/pipeline.py",
+    output:
+        "results/pipeline.csv",
+    shell:
+        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
 rule all:
     input:
@@ -446,18 +456,6 @@ rule regalloc_stats_to_csv:
         del df["variant"]
         df.set_index(["impl", "params"], inplace=True)
         df.to_csv(output[0], index=True)
-
-
-rule pipeline:
-    input:
-        kernels="results/kernels.pipeline.csv",
-        regalloc="kernels/regalloc.pipeline.jsonl",
-        frep_count="results/frep_count.csv",
-        pipeline_py="scripts/pipeline.py",
-    output:
-        "results/pipeline.csv",
-    shell:
-        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
 
 rule optimization_pipelines:

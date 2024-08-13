@@ -19,6 +19,6 @@ pipeline: maybe_update_xdsl_commit
 	snakemake --cores $(JOBS) --rerun-incomplete pipeline
 
 clean:
-	snakemake --delete-all-output --rerun-incomplete fast all
+	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation
 
 include ./Makefile.xdsl
