@@ -458,18 +458,6 @@ rule regalloc_stats_to_csv:
         df.to_csv(output[0], index=True)
 
 
-rule pipeline:
-    input:
-        kernels="results/kernels.pipeline.csv",
-        regalloc="kernels/regalloc.pipeline.jsonl",
-        frep_count="results/frep_count.csv",
-        pipeline_py="scripts/pipeline.py",
-    output:
-        "results/pipeline.csv",
-    shell:
-        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
-
-
 rule optimization_pipelines:
     input:
         passes = "kernels/optimization_passes.txt",
