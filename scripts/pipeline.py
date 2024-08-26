@@ -58,8 +58,6 @@ def main():
     regalloc_df = pd.read_json(regalloc_stats, lines=True)
     regalloc_df = regalloc_df[regalloc_df.impl == "matmul"]
     del regalloc_df["impl"]
-    regalloc_df = regalloc_df[regalloc_df.params == "1x20x5xf64"]
-    del regalloc_df["params"]
 
     regalloc_df = regalloc_df.set_index("variant")
 
