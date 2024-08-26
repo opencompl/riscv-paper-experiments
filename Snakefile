@@ -450,11 +450,9 @@ rule regalloc_stats_to_csv:
         import pandas as pd
 
         df = pd.read_json(input[0], lines=True)
-        df = df[df.variant == "linalg_xdsl"]
-        del df["preallocated_int"]
-        del df["preallocated_float"]
-        del df["variant"]
-        df.set_index(["impl", "params"], inplace=True)
+        df = df[df['variant'].isin(["linalg_xdsl", "snitch_stream"])]
+        df = df.drop(columns=["preallocated_int", "preallocated_float", "variant"])
+        df = df.set_index(["impl", "params"])
         df.to_csv(output[0], index=True)
 
 
