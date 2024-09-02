@@ -16,7 +16,7 @@ def sum_pool_data(
 
     # Define the pooling parameters
     pool_size = (3, 3)
-    stride = 2
+    stride = 1
 
     new_h = M
     new_w = N
