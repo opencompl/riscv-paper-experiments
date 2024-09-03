@@ -1,6 +1,6 @@
 
 func.func public @fill(%X: f64,
-                       %Y: memref<{{M}}x{{N}}xf64>) -> () {
+                       %Y: memref<{{M}}x{{N}}xf64> {llvm.noalias}) -> () {
   linalg.fill ins(%X : f64) outs(%Y : memref<{{M}}x{{N}}xf64>) -> ()
   return
 }
