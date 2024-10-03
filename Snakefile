@@ -653,6 +653,7 @@ rule kernel_generate_data_c:
     input:
         json="kernels/{kernel}/{shape}/params.json",
         h="kernels/{kernel}/{shape}/data.h",
+        gendata="kernels/{kernel}/gendata.py"
     output:
         "kernels/{kernel}/{shape}/data.c",
     wildcard_constraints:
