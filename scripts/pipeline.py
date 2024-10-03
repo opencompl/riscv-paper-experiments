@@ -3,10 +3,23 @@ import pandas as pd
 
 
 def merge_stats(
-    kernels_df: pd.DataFrame, regalloc_df: pd.DataFrame, frep_count_df: pd.DataFrame, output: Path | None
+    kernels_df: pd.DataFrame,
+    regalloc_df: pd.DataFrame,
+    frep_count_df: pd.DataFrame,
+    output: Path | None,
 ):
     kernels_df = kernels_df[kernels_df["test"] == "matmul"].set_index("impl")
-    df = regalloc_df.join(kernels_df[["cycles", "fpss_fpu_occupancy", "fpss_loads", "fpss_stores", "fpss_fpu_fmadd_issues"]])
+    df = regalloc_df.join(
+        kernels_df[
+            [
+                "cycles",
+                "fpss_fpu_occupancy",
+                "fpss_loads",
+                "fpss_stores",
+                "fpss_fpu_fmadd_issues",
+            ]
+        ]
+    )
     df = df.join(frep_count_df["frep_count"])
 
     df["fpss_fpu_occupancy"] *= 100
@@ -58,6 +71,12 @@ def main():
     regalloc_df = pd.read_json(regalloc_stats, lines=True)
     regalloc_df = regalloc_df[regalloc_df.impl == "matmul"]
     del regalloc_df["impl"]
+    regalloc_df["allocated_int"] = regalloc_df["allocated_int"].apply(
+        lambda x: sum(1 for reg in x if reg != "zero")
+    )
+    regalloc_df["allocated_float"] = regalloc_df["allocated_float"].apply(
+        lambda x: sum(1 for reg in x)
+    )
 
     regalloc_df = regalloc_df.set_index("variant")
 

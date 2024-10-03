@@ -452,6 +452,9 @@ rule regalloc_stats_to_csv:
         df = pd.read_json(input[0], lines=True)
         df = df[df['variant'].isin(["linalg_xdsl", "snitch_stream"])]
         df = df.drop(columns=["preallocated_int", "preallocated_float", "variant"])
+        df["allocated_int"] = df["allocated_int"].apply(lambda x: sum(1 for reg in x if reg != "zero"))
+        df["allocated_float"] = df["allocated_float"].apply(lambda x: sum(1 for reg in x))
+
         df = df.set_index(["impl", "params"])
         df.to_csv(output[0], index=True)
 
