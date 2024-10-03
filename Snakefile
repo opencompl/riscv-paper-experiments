@@ -134,35 +134,35 @@ TESTSET_FAST = [
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
     *expand(
-        "{kernel}/20x{N}xf32/{variant}",
+        "{kernel}/40x{N}xf32/{variant}",
         kernel=[
             "relu",
         ],
-        N=[4, 8, 12, 16, 20],
+        N=[8, 16, 24, 32, 40],
         variant=["snitch_stream"],
     ),
     *expand(
-        "{kernel}/{M}x20xf32/{variant}",
+        "{kernel}/{M}x40xf32/{variant}",
         kernel=[
             "relu",
         ],
-        M=[4, 8, 12, 16, 20],
+        M=[8, 16, 24, 32, 40],
         variant=["snitch_stream"],
     ),
     *expand(
-        "{kernel}/20x{N}xf32/{variant}",
+        "{kernel}/40x{N}xf32/{variant}",
         kernel=[
             "sum",
         ],
-        N=[4, 8, 12, 16, 20],
+        N=[8, 16, 24, 32, 40],
         variant=["linalg_xdsl"],
     ),
     *expand(
-        "{kernel}/{M}x20xf32/{variant}",
+        "{kernel}/{M}x40xf32/{variant}",
         kernel=[
             "sum",
         ],
-        M=[4, 8, 12, 16, 20],
+        M=[8, 16, 24, 32, 40],
         variant=["linalg_xdsl"],
     ),
     *expand(
