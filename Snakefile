@@ -85,10 +85,22 @@ MANUAL_KERNELS = [
 # Test sets
 ###########################################################
 
+PIPELINE_PARAMS_FAST = "1x20x5xf64"
+PIPELINE_PARAMS_FULL = "1x200x5xf64"
+
+TESTSET_PIPELINE_FAST = [
+    *expand("matmul/" + PIPELINE_PARAMS_FAST + "/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
+]
+
+TESTSET_PIPELINE = [
+    *expand("matmul/" + PIPELINE_PARAMS_FULL + "/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
+]
+
 # Minimum set of tests to be used as a meaningful smoke test,
 # runs as fast as possible to save CI time
 TESTSET_FAST = [
     *MANUAL_KERNELS,
+    *TESTSET_PIPELINE_FAST,
     # 3d templated kernels
     *expand(
         "matmul_transb/4x16x16xf32/{variant}",
@@ -118,7 +130,6 @@ TESTSET_FAST = [
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
-    *expand("matmul/1x20x5xf64/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -176,6 +187,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
 TESTSET_ALL = [
     *MANUAL_KERNELS,
     *TESTSET_LOW_LEVEL_REPRESENTATION,
+    *TESTSET_PIPELINE,
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
@@ -185,9 +197,7 @@ TESTSET_ALL = [
         variant=["baseline", "linalg_xdsl"],
     ),
     # Passes contributions
-    "matmul/1x400x25xf64/linalg_xdsl",
-    "matmul/1x400x25xf64/linalg_full_xdsl",
-    *expand("matmul/1x400x25xf64/{phase}", phase=XDSL_LINALG_OPT_VARIANTS),
+    "matmul/" + PIPELINE_PARAMS_FULL + "/linalg_xdsl",
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
         "{kernel}/{M}x{N}xf64/{variant}",
@@ -224,7 +234,8 @@ def select_test_set_profiles(wildcards) -> list[str]:
     sets = {
         "fast": sorted(set(TESTSET_FAST)),
         "all": sorted(set(TESTSET_ALL)),
-        "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION))
+        "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
+        "pipeline": sorted(set(TESTSET_PIPELINE)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -233,6 +244,19 @@ def select_test_set_profiles(wildcards) -> list[str]:
         )
     return expand("kernels/{test}.profile.json", test=sets[name])
 
+def select_test_set_regalloc_jsons(wildcards) -> list[str]:
+    sets = {
+        "fast": sorted(set(TESTSET_FAST)),
+        "all": sorted(set(TESTSET_ALL)),
+        "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
+        "pipeline": sorted(set(TESTSET_PIPELINE)),
+    }
+    name = wildcards.testset
+    if name not in sets:
+        raise ValueError(
+            f"unknown test set name '{name}', valid values are: {sets.keys()}"
+        )
+    return expand("kernels/{test}.regalloc.json", test=sets[name])
 
 ###########################################################
 # Target rules
@@ -246,7 +270,6 @@ rule fast:
         "results/pivoted_fpu.fast.csv",
         "results/pivoted_ipc.fast.csv",
         "results/regalloc.fast.csv",
-        "results/pipeline.fast.csv",
     # This is the default rule taking over former result
     # file names:
     output:
@@ -265,6 +288,17 @@ rule fast:
 rule low_level_representation:
     input:
         "results/kernels.low_level_representation.csv"
+
+rule pipeline:
+    input:
+        kernels="results/kernels.pipeline.csv",
+        regalloc="kernels/regalloc.pipeline.jsonl",
+        frep_count="results/frep_count.csv",
+        pipeline_py="scripts/pipeline.py",
+    output:
+        "results/pipeline.csv",
+    shell:
+        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
 rule all:
     input:
@@ -384,18 +418,18 @@ rule assembly_to_regalloc_stats:
 
 rule combine_regalloc_stats:
     input:
-        *expand("kernels/{test}.regalloc.json", test=TESTSET_FAST),
+        select_test_set_regalloc_jsons
     output:
-        "kernels/regalloc.fast.jsonl",
+        "kernels/regalloc.{testset}.jsonl",
     shell:
         "cat {input} > {output}"
 
 
 rule count_frep_instructions:
     input:
-        expand("kernels/matmul/1x20x5xf64/{test}.S", test=XDSL_LINALG_OPT_VARIANTS)
+        expand("kernels/matmul/" + PIPELINE_PARAMS_FULL + "/{phase}.S", phase=XDSL_LINALG_OPT_VARIANTS),
     output:
-        "results/frep_count.fast.csv"
+        "results/frep_count.csv"
     shell:
         """
         echo "variant,frep_count" > {output}
@@ -411,7 +445,7 @@ rule regalloc_stats_to_csv:
     input:
         "kernels/regalloc.fast.jsonl",
     output:
-        "results/regalloc.fast.csv",
+        "results/regalloc.{testset}.csv",
     run:
         import pandas as pd
 
@@ -422,18 +456,6 @@ rule regalloc_stats_to_csv:
         del df["variant"]
         df.set_index(["impl", "params"], inplace=True)
         df.to_csv(output[0], index=True)
-
-
-rule pipeline:
-    input:
-        kernels="results/kernels.fast.csv",
-        regalloc="kernels/regalloc.fast.jsonl",
-        frep_count="results/frep_count.fast.csv",
-        pipeline_py="scripts/pipeline.py",
-    output:
-        "results/pipeline.fast.csv",
-    shell:
-        "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
 
 rule optimization_pipelines:
