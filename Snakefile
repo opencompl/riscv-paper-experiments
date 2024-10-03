@@ -7,16 +7,20 @@ C_VARIANTS = [
     "fused",  # optimized c + inline asm for snitch festures with manual fusion of reduction/elementwise loop nests
 ]
 
-XDSL_VARIANTS = [
+XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
-    "snitch_stream",  # xDSL lowering from snitch_stream dialect
-    "riscv_scf",  # xDSL lowering from riscv_scf dialect
     "linalg_full_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
     "linalg_0_xdsl",  # incremental insertion of xDSL passes
     "linalg_1_xdsl",  # incremental insertion of xDSL passes
     "linalg_2_xdsl",  # incremental insertion of xDSL passes
     "linalg_3_xdsl",  # incremental insertion of xDSL passes
     "linalg_4_xdsl",  # incremental insertion of xDSL passes
+]
+
+XDSL_VARIANTS = [
+    *XDSL_LINALG_VARIANTS,
+    "snitch_stream",  # xDSL lowering from snitch_stream dialect
+    "riscv_scf",  # xDSL lowering from riscv_scf dialect
 ]
 
 MLIR_VARIANTS = [
@@ -605,10 +609,10 @@ rule xdsl_kernel_generate_source:
         json="kernels/{kernel}/{shape}/params.json",
         template="kernels/{kernel}/linalg.mlir.template",
     output:
-        # Restrict this rule to variant=linalg_xdsl to avoid ambiguous matches
-        "kernels/{kernel}/{shape}/linalg_xdsl.xdsl.mlir",
+        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
+        variant="|".join(XDSL_LINALG_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],

@@ -17,8 +17,8 @@ def merge_stats(
         "linalg_0_xdsl": "Baseline",
         "linalg_1_xdsl": "+ Streams",
         "linalg_2_xdsl": "+ Scalar Replacement",
-        "linalg_3_xdsl": "+ FRep",
-        "linalg_4_xdsl": "+ Unroll and Jam",
+        "linalg_3_xdsl": "+ Unroll and Jam",
+        "linalg_4_xdsl": "+ FRep",
     }
     col_names = {
         "allocated_float": "F Registers",

@@ -2,5 +2,5 @@ variant,F Registers,X Registers,FPU Occupancy [%]
 Baseline,3,14,2.47
 + Streams,3,12,5.22
 + Scalar Replacement,5,8,22.54
-+ FRep,5,9,22.09
-+ Unroll and Jam,8,8,58.12
++ Unroll and Jam,5,9,22.09
++ FRep,8,8,58.12
