@@ -12,6 +12,9 @@ fast: maybe_update_xdsl_commit
 all: maybe_update_xdsl_commit
 	snakemake --cores $(JOBS) --rerun-incomplete all
 
+low_level_representation: maybe_update_xdsl_commit
+	snakemake --cores $(JOBS) --rerun-incomplete low_level_representation
+
 clean:
 	snakemake --delete-all-output --rerun-incomplete fast all
 
