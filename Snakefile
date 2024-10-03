@@ -108,7 +108,7 @@ TESTSET_FAST = [
     ),
     *expand(
         "matmul/4x16x8xf64/{variant}",
-        variant=["baseline", "linalg_xdsl"],
+        variant=["baseline", "linalg", "linalg_xdsl"],
     ),
     # 2d templated kernels: baseline + linalg_xdsl
     *expand(
@@ -121,7 +121,7 @@ TESTSET_FAST = [
             "pooling_nchw_max_d1_s2_3x3",
             "conv2d_d1_s1_3x3",
         ],
-        variant=["baseline", "linalg_xdsl"],
+        variant=["baseline", "linalg", "linalg_xdsl"],
     ),
     *expand(
         "relu/4x8xf32/{variant}", variant=["baseline", "linalg", "snrt", "snitch_stream"]
@@ -211,7 +211,7 @@ TESTSET_ALL = [
         ],
         M=[4, 8, 12, 16, 20],
         N=[4, 8, 12, 16, 20],
-        variant=["baseline", "linalg_xdsl"],
+        variant=["baseline", "linalg", "linalg_xdsl"],
     ),
     *expand(
         "sum/{M}x{N}xf32/{variant}",
