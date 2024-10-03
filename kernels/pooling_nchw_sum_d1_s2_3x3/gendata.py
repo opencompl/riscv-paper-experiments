@@ -32,12 +32,15 @@ def sum_pool_data(
     y_in = np.random.uniform(rmin, rmax, (n, c, new_h, new_w))
     y_out = y_in.copy()
 
-    for row in range(0, H - pool_size[0] + 1, stride):
-        for col in range(0, W - pool_size[1] + 1, stride):
-            pooling_region = x[:, :, row : row + pool_size[0], col : col + pool_size[1]]
-            y_out[:, :, row // stride, col // stride] = np.sum(
-                pooling_region, axis=(2, 3)
-            )
+    for row in range(new_h):
+        for col in range(new_w):
+            pooling_region = x[
+                :,
+                :,
+                row * stride : row * stride + pool_size[0],
+                col * stride : col * stride + pool_size[1],
+            ]
+            y_out[:, :, row, col] = np.sum(pooling_region, axis=(2, 3))
 
     yield Define("N", n)
     yield Define("C", c)
