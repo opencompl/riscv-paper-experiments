@@ -191,7 +191,7 @@ TESTSET_ALL = [
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
-        M=[4, 8],
+        M=[1, 4, 8],
         K=range(4, 65, 4),
         N=range(4, 65, 4),
         variant=["baseline", "linalg_xdsl"],
