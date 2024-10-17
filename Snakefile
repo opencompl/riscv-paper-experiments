@@ -131,7 +131,7 @@ TESTSET_FAST = [
         "relu/4x8xf32/{variant}", variant=["baseline", "linalg", "snrt", "snitch_stream"]
     ),
     *expand(
-        "fill/4x8xf32/{variant}", variant=["baseline", "linalg"]
+        "fill/4x8xf32/{variant}", variant=["baseline", "linalg", "linalg_xdsl"]
     ),
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]

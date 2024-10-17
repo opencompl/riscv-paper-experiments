@@ -3,6 +3,7 @@ conv2d_d1_s1_3x3,4x4xf64,8,8
 ddot,128xf64,6,7
 dense,8x8xf64,5,11
 fill,4x4xf64,3,3
+fill,4x8xf32,3,3
 matmul,4x16x8xf64,8,8
 matmul_transb,4x16x16xf32,11,12
 matmul_transb,4x16x16xf64,8,8
