@@ -1,0 +1,8 @@
+func.func public @matmul_transb(%X: tensor<{{M}}x{{K}}xf64> {"llvm.noalias"},
+                         %Y: tensor<{{N}}x{{K}}xf64> {"llvm.noalias"},
+                         %Z: tensor<{{M}}x{{N}}xf64> {"llvm.noalias"}) -> tensor<{{M}}x{{N}}xf64> {
+  %zero = arith.constant 0.0 : f64
+  %zeros = linalg.fill ins(%zero : f64) outs(%Z : tensor<{{M}}x{{N}}xf64>) -> tensor<{{M}}x{{N}}xf64>
+  %res = linalg.matmul_transpose_b ins(%X, %Y : tensor<{{M}}x{{K}}xf64>, tensor<{{N}}x{{K}}xf64>) outs(%zeros : tensor<{{M}}x{{N}}xf64>) -> tensor<{{M}}x{{N}}xf64>
+  func.return %res : tensor<{{M}}x{{N}}xf64>
+}

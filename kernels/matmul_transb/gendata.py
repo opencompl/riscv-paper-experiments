@@ -3,7 +3,7 @@
 # usage: `python -m matmul.gendata -p matmul/4x4xf64/params.json`
 
 import numpy as np
-from typing import Iterator
+from collections.abc import Iterator
 
 from gendatautils import main, Define, Array
 
@@ -15,7 +15,7 @@ def matrix_data(
     yield Define("K", K)
     yield Define("N", N)
 
-    t = {32: np.float32}[precision]
+    t = {32: np.float32, 64: np.float64}[precision]
 
     # Errors accumulate a lot with the strategy used in snrt,
     # especially due to the repeated (quite a bit) flaky SIMD reductions.
@@ -28,8 +28,8 @@ def matrix_data(
     n = N
     k = K
     np.random.seed(0)
-    x = np.random.uniform(rmin, rmax, m * k).astype(t).reshape((m, k))
-    y = np.random.uniform(rmin, rmax, k * n).astype(t).reshape((k, n))
+    x = np.random.uniform(rmin, rmax, (m, k)).astype(t)
+    y = np.random.uniform(rmin, rmax, (k, n)).astype(t)
     g_in = np.zeros((m, n), dtype=t)
 
     g_out = x @ y

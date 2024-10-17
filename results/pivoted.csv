@@ -5,6 +5,7 @@ dense 8x8xf64,3206,3530,,2741,2723
 fill 4x4xf64,50,50,64,,
 matmul 4x16x8xf64,2495,2694,708,,
 matmul_transb 4x16x16xf32,3386,,,845,849
+matmul_transb 4x16x16xf64,,5142,1295,,
 pooling_nchw_max_d1_s2_3x3 4x4xf64,584,484,275,,
 pooling_nchw_sum_d1_s2_3x3 4x4xf64,902,832,271,,
 relu 4x4xf64,142,125,72,,

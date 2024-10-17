@@ -107,6 +107,10 @@ TESTSET_FAST = [
         variant=["baseline", "snrt", "snitch_stream"],
     ),
     *expand(
+        "matmul_transb/4x16x16xf64/{variant}",
+        variant=["linalg", "linalg_xdsl"],
+    ),
+    *expand(
         "matmul/4x16x8xf64/{variant}",
         variant=["baseline", "linalg", "linalg_xdsl"],
     ),
