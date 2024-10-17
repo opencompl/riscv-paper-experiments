@@ -104,7 +104,7 @@ TESTSET_FAST = [
     # 3d templated kernels
     *expand(
         "matmul_transb/4x16x16xf32/{variant}",
-        variant=["baseline", "snrt", "snitch_stream"],
+        variant=["linalg", "baseline", "snrt", "snitch_stream"],
     ),
     *expand(
         "matmul_transb/4x16x16xf64/{variant}",
