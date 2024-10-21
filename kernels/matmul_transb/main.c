@@ -5,22 +5,22 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void matmul_transb(const float *x, const float *y, float *g);
+void matmul_transb(const DTYPE *x, const DTYPE *y, DTYPE *g);
 
 int main() {
     // Allocate shared local memory
     // By avoiding allocators and bumping by a known offset a base pointer
     // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
     // essentially providing the same memory regions to all the cores in this cluster.
-    float *local_x = (float *)snrt_l1_next();
-    float *local_y = local_x + M * K;
-    float *local_z = local_y + N * K;
+    DTYPE *local_x = (DTYPE *)snrt_l1_next();
+    DTYPE *local_y = local_x + M * K;
+    DTYPE *local_z = local_y + N * K;
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * K * sizeof(float));
-        snrt_dma_start_1d(local_y, Y, N * K * sizeof(float));
-        snrt_dma_start_1d(local_z, G_IN, M * N * sizeof(float));
+        snrt_dma_start_1d(local_x, X, M * K * sizeof(DTYPE));
+        snrt_dma_start_1d(local_y, Y, N * K * sizeof(DTYPE));
+        snrt_dma_start_1d(local_z, G_IN, M * N * sizeof(DTYPE));
         snrt_dma_wait_all();
     }
 
@@ -39,7 +39,7 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < TEST_COUNT; i++) {
-        float d = fabsf(local_z[i] - G_OUT[i]);
+        DTYPE d = fabs(local_z[i] - G_OUT[i]);
         nerr += !(d <= 1E-2f);  // Make sure to take into account NaNs (e.g.: happy path
                                 // on the taken branch)
     }
