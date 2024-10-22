@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void fill(const double x, double* restrict y) {
+void fill(const DTYPE x, DTYPE* restrict y) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             // row-major accesses

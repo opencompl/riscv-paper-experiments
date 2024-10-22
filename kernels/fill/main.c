@@ -5,15 +5,15 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void fill(double x, double *y);
+void fill(DTYPE x, DTYPE *y);
 
 int main() {
     // Allocate shared local memory
     // By avoiding allocators and bumping by a known offset a base pointer
     // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
     // essentially providing the same memory regions to all the cores in this cluster.
-    double local_x = X;
-    double *local_y = (double *)snrt_l1_next();
+    DTYPE local_x = X;
+    DTYPE *local_y = (DTYPE *)snrt_l1_next();
 
     snrt_cluster_hw_barrier();
 
