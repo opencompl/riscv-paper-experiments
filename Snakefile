@@ -136,6 +136,9 @@ TESTSET_FAST = [
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
+    *expand(
+        "pooling_nchw_sum_d1_s2_3x3/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
+    ),
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
 ]
 

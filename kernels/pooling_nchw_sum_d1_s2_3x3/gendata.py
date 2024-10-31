@@ -29,7 +29,7 @@ def sum_pool_data(
     x = np.random.uniform(rmin, rmax, (n, c, H, W)).astype(t)
 
     # Perform the max pooling operation
-    y_in = np.random.uniform(rmin, rmax, (n, c, new_h, new_w))
+    y_in = np.random.uniform(rmin, rmax, (n, c, new_h, new_w)).astype(t)
     y_out = y_in.copy()
 
     for row in range(new_h):
