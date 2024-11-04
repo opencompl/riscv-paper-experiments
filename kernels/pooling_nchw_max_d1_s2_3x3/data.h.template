@@ -1,5 +1,16 @@
 #pragma once
 
+#define PRECISION {{precision}}
+#if PRECISION == 16
+#define DTYPE __fp16
+#elif PRECISION == 32
+#define DTYPE float
+#elif PRECISION == 64
+#define DTYPE double
+#else
+#error Unsupported precision
+#endif
+
 #define N 1
 #define C 1
 #define H {{(M - 1) * 1 + 3 + 1}}
@@ -7,8 +18,8 @@
 #define NEW_H {{M}}
 #define NEW_W {{N}}
 
-extern const double X[N * C * H * W];
-extern const double Y_IN[N * C * NEW_H * NEW_W];
-extern const double Y_OUT[N * C * NEW_H * NEW_W];
+extern const DTYPE X[N * C * H * W];
+extern const DTYPE Y_IN[N * C * NEW_H * NEW_W];
+extern const DTYPE Y_OUT[N * C * NEW_H * NEW_W];
 
 #define TEST_COUNT (N * C * NEW_H * NEW_W)
