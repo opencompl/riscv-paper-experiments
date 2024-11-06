@@ -60,7 +60,7 @@ def generate_heatmaps(data: pd.DataFrame):
     # filter out K values unrelated to the heatmap experimental runs
     data = data[(data["K"] <= 65)]
 
-    sns.set(rc={'text.usetex': True})
+    # sns.set(rc={'text.usetex': True})
 
     for m_value, m_group in data.groupby("M"):
         selection = m_group[["K", "N", "fp_flop_throughput"]]
