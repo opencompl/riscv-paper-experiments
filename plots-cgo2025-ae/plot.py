@@ -36,7 +36,7 @@ def main():
 
     # Print the regalloc stats
     regalloc_df = get_regalloc(RESULTS_DIR)
-    print_regalloc(regalloc_df, filename=output_dir / "regalloc.tex")
+    print_regalloc(regalloc_df, filename=output_dir / "regalloc.csv")
 
     # Plot low-level representation
     llr_kernels_df = get_low_level_representation(RESULTS_DIR)
@@ -47,7 +47,7 @@ def main():
     # Print opt pipeline table
     opt_pipeline_df = get_opt_pipeline(RESULTS_DIR)
     opt_pipeline_table = get_opt_pipeline_table(opt_pipeline_df)
-    with open(output_dir / "opt_pipeline.tex", "w") as f:
+    with open(output_dir / "opt_pipeline.csv", "w") as f:
         f.write(opt_pipeline_table)
 
     # Print max utilization stats
