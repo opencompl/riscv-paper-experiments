@@ -123,7 +123,7 @@ def generate_heatmaps(data: pd.DataFrame):
             label.set_visible(False)
 
         cbar = ax.collections[0].colorbar
-        cbar.set_label("\% of FLOP/cycle Roofline", labelpad=2, fontsize=10)
+        cbar.set_label("% of FLOP/cycle Roofline", labelpad=2, fontsize=10)
         cbar.ax.tick_params(size=0)
 
         plt.tight_layout()
