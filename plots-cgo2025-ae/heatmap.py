@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import argparse
+import os
+
+SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = SCRIPT_DIR / "results"
 
 
 def add_metrics(data: pd.DataFrame) -> pd.DataFrame:
@@ -126,15 +132,26 @@ def generate_heatmaps(data: pd.DataFrame):
 
 
 def main():
+    output_dir = SCRIPT_DIR / "output"
+    output_dir.mkdir(exist_ok=True)
+
     parser = argparse.ArgumentParser(description="Generate heatmaps from CSV data.")
     parser.add_argument("csv_file", help="Path to the CSV file")
     args = parser.parse_args()
-    data = pd.read_csv(args.csv_file)
+
+    csv_path = Path(args.csv_file)
+
+    if not csv_path.is_absolute():
+        csv_path = SCRIPT_DIR / csv_path
+
+    data = pd.read_csv(csv_path)
     data = add_metrics(data)
     # FIXME we are able to generate snitch_stream matmul only at the moment
     data = data.loc[(data["test"] == "matmul") & (data["impl"] == "linalg_xdsl")]
     for m, fig in generate_heatmaps(data):
-        fig.savefig(f"matmul_heatmap_M_{m}.pdf", format="pdf", bbox_inches="tight")
+        fig.savefig(
+            output_dir / f"matmul_heatmap_M_{m}.pdf", format="pdf", bbox_inches="tight"
+        )
 
 
 if __name__ == "__main__":
