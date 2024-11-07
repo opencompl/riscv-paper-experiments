@@ -2,9 +2,11 @@ import re
 import pandas as pd
 from data import get_regalloc as _get_regalloc
 
+from pathlib import Path
 
-def get_regalloc() -> pd.DataFrame:
-    regalloc_df = _get_regalloc()
+
+def get_regalloc(dir: Path = Path(".")) -> pd.DataFrame:
+    regalloc_df = _get_regalloc(dir)
 
     return regalloc_df
 
