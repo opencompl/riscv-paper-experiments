@@ -219,7 +219,7 @@ def get_params_dfs(operator_df: pd.DataFrame) -> Iterable[pd.DataFrame]:
 
 
 def get_regalloc() -> pd.DataFrame:
-    regalloc_df = pd.read_csv("results/regalloc.csv")
+    regalloc_df = pd.read_csv("results/regalloc.fast.csv")
     regalloc_df = regalloc_df[regalloc_df["impl"].isin(OPERATOR_BY_TEST)]
     regalloc_df.replace(OPERATOR_BY_TEST, inplace=True)
     regalloc_df = regalloc_df[~regalloc_df["params"].str.contains("f16")]
