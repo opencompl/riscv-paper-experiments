@@ -23,7 +23,17 @@ def print_regalloc(regalloc_df: pd.DataFrame, *, filename: str | None = None):
         ascending=[False, True, True],
     )
 
-    string_table = []
+    string_table = [
+        [
+            "Kernel",
+            "Precision bits",
+            "N",
+            "M",
+            "K",
+            "Allocated FP registers",
+            "Allocated Integer registers",
+        ]
+    ]
 
     for row in regalloc_df.iterrows():
         items = tuple(row[1])
