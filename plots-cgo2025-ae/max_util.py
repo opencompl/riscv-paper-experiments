@@ -1,8 +1,8 @@
-
 from typing import Sequence
 import pandas as pd
 
 from data import Impl, Operator
+
 
 def get_max_util(llr_kernels_df: pd.DataFrame, fpu_dfs: Sequence[pd.DataFrame]) -> str:
     llr_max_occupancy = llr_kernels_df["fpss_fpu_occupancy"].max()

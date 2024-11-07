@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 from enum import StrEnum
+from pathlib import Path
 
 
 class Impl(StrEnum):
@@ -96,8 +97,8 @@ def _get_kernels(filename: str) -> pd.DataFrame:
     return df_with_overhead
 
 
-def get_kernels(cleaned: bool = True) -> pd.DataFrame:
-    df = _get_kernels("results/kernels.csv")
+def get_kernels(dir: Path = Path("."), cleaned: bool = True) -> pd.DataFrame:
+    df = _get_kernels(f"{dir}/kernels.csv")
     # Drop unknown operators
     df = df[df.index.get_level_values(0).isin(tuple(Operator))]
     if cleaned:
@@ -106,8 +107,8 @@ def get_kernels(cleaned: bool = True) -> pd.DataFrame:
     return df
 
 
-def get_low_level_representation() -> pd.DataFrame:
-    return _get_kernels("results/kernels.low_level_representation.csv")
+def get_low_level_representation(dir: Path = Path(".")) -> pd.DataFrame:
+    return _get_kernels(f"{dir}/kernels.low_level_representation.csv")
 
 
 def get_pivoted_all(kernels_df: pd.DataFrame) -> pd.DataFrame:
@@ -119,7 +120,9 @@ def get_pivoted_fpu(pivoted_all_df: pd.DataFrame) -> pd.DataFrame:
 
 
 def get_pivoted_cycles(pivoted_all_df: pd.DataFrame) -> pd.DataFrame:
-    return pivoted_all_df[["cycles", "Min Cycles", "Overhead", "FLOPs", "Throughput", "Max Throughput"]]
+    return pivoted_all_df[
+        ["cycles", "Min Cycles", "Overhead", "FLOPs", "Throughput", "Max Throughput"]
+    ]
 
 
 def get_flops(operator_df: pd.DataFrame, operator: Operator) -> pd.Series:
@@ -158,6 +161,7 @@ def get_overhead(
     })
     return res
 
+
 def adding_overhead(
     operator_df: pd.DataFrame,
     operator: Operator,
@@ -172,6 +176,7 @@ def adding_overhead(
         ),
         axis=1,
     )
+
 
 def get_operator_df(
     pivoted_df: pd.DataFrame, operator: Operator, *, bitwidth: int
@@ -211,15 +216,17 @@ def get_params_dfs(operator_df: pd.DataFrame) -> Iterable[pd.DataFrame]:
                 name_components.append(col)
         other_cols = list(cols) + ["bitwidth"]
         del other_cols[i]
-        shape_string = " ".join("x".join(t) for t in operand_shapes_map(*name_components))
+        shape_string = " ".join(
+            "x".join(t) for t in operand_shapes_map(*name_components)
+        )
         new_name = f"{name} {shape_string}"
         my_df = my_df.rename(columns={col: new_name}).set_index(new_name).sort_index()
         my_df.drop(other_cols, axis=1, inplace=True)
         yield my_df
 
 
-def get_regalloc() -> pd.DataFrame:
-    regalloc_df = pd.read_csv("results/regalloc.fast.csv")
+def get_regalloc(dir: Path = Path(".")) -> pd.DataFrame:
+    regalloc_df = pd.read_csv(f"{dir}/regalloc.fast.csv")
     regalloc_df = regalloc_df[regalloc_df["impl"].isin(OPERATOR_BY_TEST)]
     regalloc_df.replace(OPERATOR_BY_TEST, inplace=True)
     regalloc_df = regalloc_df[~regalloc_df["params"].str.contains("f16")]
@@ -244,8 +251,8 @@ def get_regalloc() -> pd.DataFrame:
     return regalloc_df
 
 
-def get_opt_pipeline() -> pd.DataFrame:
-    opt_pipeline_df = pd.read_csv("results/pipeline.csv")
+def get_opt_pipeline(dir: Path = Path(".")) -> pd.DataFrame:
+    opt_pipeline_df = pd.read_csv(f"{dir}/pipeline.csv")
     opt_pipeline_df = opt_pipeline_df.rename(
         columns={
             "FPU Occupancy [%]": "Occupancy",

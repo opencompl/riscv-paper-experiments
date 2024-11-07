@@ -13,36 +13,46 @@ from regalloc import get_regalloc, print_regalloc
 from plot_utils import savefig
 from opt_pipeline import get_opt_pipeline_table
 
+from pathlib import Path
+
+import os
+
+SCRIPT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+RESULTS_DIR = SCRIPT_DIR / "results"
+
 
 def main():
-    kernels_df = get_kernels()
+    output_dir = SCRIPT_DIR / "output"
+    output_dir.mkdir(exist_ok=True)
+
+    kernels_df = get_kernels(RESULTS_DIR)
     pivoted_all_df = get_pivoted_all(kernels_df)
     pivoted_fpu_df = get_pivoted_fpu(pivoted_all_df)
 
     # Plot FPU utilization
     fpu_dfs = get_fpu(pivoted_fpu_df)
     fpu_fig = plot_fpu(fpu_dfs)
-    savefig(fpu_fig, "fpu.pdf")
+    savefig(fpu_fig, output_dir / "fpu.pdf")
 
     # Print the regalloc stats
-    regalloc_df = get_regalloc()
-    print_regalloc(regalloc_df, filename="regalloc.tex")
+    regalloc_df = get_regalloc(RESULTS_DIR)
+    print_regalloc(regalloc_df, filename=output_dir / "regalloc.tex")
 
     # Plot low-level representation
-    llr_kernels_df = get_low_level_representation()
+    llr_kernels_df = get_low_level_representation(RESULTS_DIR)
     llr_dfs = get_llr_dfs(llr_kernels_df)
     llr_fig = plot_llr(llr_dfs)
-    savefig(llr_fig, "low_level_representation.pdf")
+    savefig(llr_fig, output_dir / "low_level_representation.pdf")
 
     # Print opt pipeline table
-    opt_pipeline_df = get_opt_pipeline()
+    opt_pipeline_df = get_opt_pipeline(RESULTS_DIR)
     opt_pipeline_table = get_opt_pipeline_table(opt_pipeline_df)
-    with open("opt_pipeline.tex", "w") as f:
+    with open(output_dir / "opt_pipeline.tex", "w") as f:
         f.write(opt_pipeline_table)
 
     # Print max utilization stats
     max_util_macros = get_max_util(llr_kernels_df, fpu_dfs)
-    with open("max_util.tex", "w") as f:
+    with open(output_dir / "max_util.tex", "w") as f:
         f.write(max_util_macros)
 
 
