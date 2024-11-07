@@ -29,8 +29,9 @@ def print_regalloc(regalloc_df: pd.DataFrame, *, filename: str | None = None):
         items = tuple(row[1])
         params = items[:5]
         regs = items[5:]
+        max_regs = ("/20", "/15")
 
-        reg_cells = tuple(f"{reg}" for reg in regs)
+        reg_cells = tuple(f"{reg}{max_reg}" for reg, max_reg in zip(regs, max_regs))
 
         string_table.append([str(p) for p in params + reg_cells])
 
@@ -43,8 +44,8 @@ def print_regalloc(regalloc_df: pd.DataFrame, *, filename: str | None = None):
         if current_precision is None:
             current_precision = row[1]
 
-        line += " , ".join(val for val in row)
-        print(line, end="\\n", file=stream)
+        line += ", ".join(val for val in row)
+        print(line, file=stream)
 
     if stream is not None:
         stream.close()

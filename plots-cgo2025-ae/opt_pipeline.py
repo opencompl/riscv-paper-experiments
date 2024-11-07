@@ -36,9 +36,11 @@ def get_opt_pipeline_table(opt_pipeline_df: pd.DataFrame) -> str:
     del opt_pipeline_df["params"]
     csv_table = ""
 
-    csv_table += "Optimizations, Allocated Registers (#),  Assembly Operations (#) , Performance\\n"
+    csv_table += "Optimizations, Allocated Registers (#),  , Assembly Operations (#), , , , Performance\n"
 
-    csv_table += " , ".join(f"{col_names[col]}" for col in opt_pipeline_df.columns)
+    csv_table += ", ".join(f"{col_names[col]}" for col in opt_pipeline_df.columns)
+
+    csv_table += "\n"
 
     string_table = []
 
@@ -63,6 +65,6 @@ def get_opt_pipeline_table(opt_pipeline_df: pd.DataFrame) -> str:
         row[2] = row[2] + "/15"
 
     for row in string_table:
-        csv_table += " , ".join(val for val in row) + " \\n"
+        csv_table += ", ".join(val for val in row) + "\n"
 
     return csv_table

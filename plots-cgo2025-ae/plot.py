@@ -52,7 +52,7 @@ def main():
 
     # Print max utilization stats
     max_util_macros = get_max_util(llr_kernels_df, fpu_dfs)
-    with open(output_dir / "max_util.tex", "w") as f:
+    with open(output_dir / "max_util.csv", "w") as f:
         f.write(max_util_macros)
 
 

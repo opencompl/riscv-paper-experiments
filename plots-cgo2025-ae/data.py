@@ -236,7 +236,7 @@ def get_regalloc(dir: Path = Path(".")) -> pd.DataFrame:
     params = tuple(
         {p: v for p, v in zip("MNK", param[:-1])} for param in param_components
     )
-    params_df = pd.DataFrame(params).fillna("{--}")
+    params_df = pd.DataFrame(params).fillna("-")
     regalloc_df = pd.concat((regalloc_df, pd.DataFrame(bitwidths), params_df), axis=1)
     del regalloc_df["params"]
 
