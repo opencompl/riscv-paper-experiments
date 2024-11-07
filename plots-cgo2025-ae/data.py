@@ -98,7 +98,7 @@ def _get_kernels(filename: str) -> pd.DataFrame:
 
 
 def get_kernels(dir: Path = Path("."), cleaned: bool = True) -> pd.DataFrame:
-    df = _get_kernels(f"{dir}/kernels.csv")
+    df = _get_kernels(f"{dir}/kernels.all.csv")
     # Drop unknown operators
     df = df[df.index.get_level_values(0).isin(tuple(Operator))]
     if cleaned:
