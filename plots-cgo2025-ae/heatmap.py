@@ -149,9 +149,12 @@ def main():
     # FIXME we are able to generate snitch_stream matmul only at the moment
     data = data.loc[(data["test"] == "matmul") & (data["impl"] == "linalg_xdsl")]
     for m, fig in generate_heatmaps(data):
-        fig.savefig(
-            output_dir / f"matmul_heatmap_M_{m}.pdf", format="pdf", bbox_inches="tight"
-        )
+        if m == 1:
+            fig.savefig(
+                output_dir / f"figure9_matmul_heatmap_M_{m}.pdf",
+                format="pdf",
+                bbox_inches="tight",
+            )
 
 
 if __name__ == "__main__":

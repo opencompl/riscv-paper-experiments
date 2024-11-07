@@ -8,7 +8,6 @@ from data import (
 )
 from fpu import get_fpu, plot_fpu
 from low_level_representation import get_llr_dfs, plot_llr
-from max_util import get_max_util
 from regalloc import get_regalloc, print_regalloc
 from plot_utils import savefig
 from opt_pipeline import get_opt_pipeline_table
@@ -32,28 +31,23 @@ def main():
     # Plot FPU utilization
     fpu_dfs = get_fpu(pivoted_fpu_df)
     fpu_fig = plot_fpu(fpu_dfs)
-    savefig(fpu_fig, output_dir / "fpu.pdf")
+    savefig(fpu_fig, output_dir / "figure10.pdf")
 
     # Print the regalloc stats
     regalloc_df = get_regalloc(RESULTS_DIR)
-    print_regalloc(regalloc_df, filename=output_dir / "regalloc.csv")
+    print_regalloc(regalloc_df, filename=output_dir / "table2.csv")
 
     # Plot low-level representation
     llr_kernels_df = get_low_level_representation(RESULTS_DIR)
     llr_dfs = get_llr_dfs(llr_kernels_df)
     llr_fig = plot_llr(llr_dfs)
-    savefig(llr_fig, output_dir / "low_level_representation.pdf")
+    savefig(llr_fig, output_dir / "figure8.pdf")
 
     # Print opt pipeline table
     opt_pipeline_df = get_opt_pipeline(RESULTS_DIR)
     opt_pipeline_table = get_opt_pipeline_table(opt_pipeline_df)
-    with open(output_dir / "opt_pipeline.csv", "w") as f:
+    with open(output_dir / "table3.csv", "w") as f:
         f.write(opt_pipeline_table)
-
-    # Print max utilization stats
-    max_util_macros = get_max_util(llr_kernels_df, fpu_dfs)
-    with open(output_dir / "max_util.csv", "w") as f:
-        f.write(max_util_macros)
 
 
 if __name__ == "__main__":
