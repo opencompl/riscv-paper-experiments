@@ -234,8 +234,8 @@ def plot_combined(
         for entry, (color, marker, linestyle) in legend_entries.items()
     ]
     labels = list(legend_entries.keys())
-    fig.legend(lines, labels, ncols=legend_cols, bbox_to_anchor=(0.5, 1.03))
+    fig.legend(lines, labels, ncols=legend_cols, bbox_to_anchor=(0.5, 1.0))
 
-    fig.tight_layout()
+    fig.tight_layout(pad=2.5)
 
     return fig

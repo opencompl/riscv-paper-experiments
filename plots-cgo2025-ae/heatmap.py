@@ -115,7 +115,7 @@ def generate_heatmaps(data: pd.DataFrame):
         ax.set_xlabel("$N$")
         ax.set_ylabel("$K$", rotation=0)
         plt.yticks(rotation=0)
-        ax.yaxis.set_label_coords(-0.05, 0.95, transform=None)
+        ax.yaxis.set_label_coords(-0.1, 0.95, transform=None)
         ax.xaxis.set_label_coords(1, -0.05, transform=None)
 
         # Skip every second x-axis label
