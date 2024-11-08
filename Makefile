@@ -2,9 +2,11 @@ JOBS ?= all
 
 THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
 
-.PHONY: default fast all clean
+.PHONY: default fast all clean artifact
 
 default: fast
+
+artifact: fast all low_level_representation pipeline
 
 fast: maybe_update_xdsl_commit
 	snakemake --cores $(JOBS) --rerun-incomplete fast

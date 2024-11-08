@@ -1,0 +1,74 @@
+# vim: ft=config
+
+## Use TrueType fonts instead of Type 3 fonts
+#
+# Type 3 fonts embed bitmaps and are not allowed in camera-ready submissions
+# for many conferences. TrueType fonts look better and are accepted.
+# This follows: https://www.conference-publishing.com/Help.php
+pdf.fonttype: 42
+ps.fonttype: 42
+
+font.size: 12
+#font.family: serif
+font.family: sans-serif
+#font.sans-serif: ["Helvetica"]
+
+text.usetex: False
+
+## Enable tight_layout by default
+#
+# This ensures the plot has always sufficient space for legends, ...
+# Without this sometimes parts of the figure would be cut off.
+figure.autolayout: True
+
+#figure.figsize: 3, 2.5
+figure.figsize: 3, 2
+
+legend.frameon: False
+legend.fontsize: 8 
+legend.loc: upper right
+legend.fancybox: False
+legend.framealpha: 1.0
+legend.shadow: False
+legend.borderaxespad: 0
+legend.edgecolor: gray
+legend.handleheight: 1
+legend.labelspacing: 0.2
+legend.columnspacing: 0.4
+legend.handletextpad: 0.2
+
+patch.edgecolor: black
+patch.force_edgecolor: False
+patch.linewidth: 0.4
+
+xtick.top: False
+xtick.bottom: True
+xtick.major.size: 3
+xtick.major.width: 0.4
+
+ytick.left: True
+ytick.right: False
+ytick.direction: out
+ytick.major.size: 3
+ytick.major.width: 0.4
+
+axes.grid.axis: y
+axes.grid: True
+
+# Hide the right and top spines
+#
+# This reduces the number of lines in the plot. Lines typically catch
+# a readers attention and distract the reader from the actual content.
+# By removing unnecessary spines, we help the reader to focus on
+# the figures in the graph.
+axes.spines.right: False
+axes.spines.top: False
+
+grid.color: black
+grid.alpha: 0.2
+grid.linewidth: 0.4
+grid.linestyle: dotted
+
+
+savefig.bbox: tight
+savefig.pad_inches: 0.05
