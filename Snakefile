@@ -139,6 +139,18 @@ TESTSET_FAST = [
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
 ]
 
+TESTSET_TILE_SIZES = [
+    # 3d templated kernels
+    *expand(
+        "matmul_transb/1x5x100xf64/{variant}",
+        variant=["linalg_xdsl"],
+    ),
+    # *expand(
+    #     "matmul/4x16x8xf64/{variant}",
+    #     variant=["baseline", "linalg", "linalg_xdsl"],
+    # ),
+]
+
 TESTSET_LOW_LEVEL_REPRESENTATION = [
     *expand(
         "{kernel}/40x{N}xf32/{variant}",
