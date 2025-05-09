@@ -139,16 +139,14 @@ TESTSET_FAST = [
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
 ]
 
-TESTSET_TILE_SIZES = [
-    # 3d templated kernels
+TESTSET_COST_MODEL = [
     *expand(
-        "matmul_transb/1x5x100xf64/{variant}",
-        variant=["linalg_xdsl"],
+        "matmul_transb/1x{K}x{N}xf64/linalg_xdsl",
+        # reduction dimension = K
+        K = list(range(30,40)),
+        # row dimension = N
+        N = list(range(1,10)),
     ),
-    # *expand(
-    #     "matmul/4x16x8xf64/{variant}",
-    #     variant=["baseline", "linalg", "linalg_xdsl"],
-    # ),
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -255,6 +253,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "all": sorted(set(TESTSET_ALL)),
         "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
         "pipeline": sorted(set(TESTSET_PIPELINE)),
+        "cost_model": sorted(set(TESTSET_COST_MODEL)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -269,6 +268,7 @@ def select_test_set_regalloc_jsons(wildcards) -> list[str]:
         "all": sorted(set(TESTSET_ALL)),
         "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
         "pipeline": sorted(set(TESTSET_PIPELINE)),
+        "cost_model": sorted(set(TESTSET_COST_MODEL)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -326,6 +326,13 @@ rule all:
         "results/pivoted_fpu.all.csv",
         "results/pivoted_ipc.all.csv",
 
+rule cost_model:
+    input:
+        "results/kernels.cost_model.csv",
+        "results/pivoted.cost_model.csv",
+        "results/pivoted_fpu.cost_model.csv",
+        "results/pivoted_ipc.cost_model.csv",
+        "results/regalloc.cost_model.csv",
 
 ###########################################################
 # Rules
