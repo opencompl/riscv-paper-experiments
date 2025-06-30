@@ -82,7 +82,7 @@ RUN apt-get -y update \
 # Make our own python3.11 available for the current $USER
 ENV PATH="/opt/python3.11/bin:${PATH}"
 
-COPY entrypoint.sh /entrypoint.sh
+COPY docker/entrypoint.sh /entrypoint.sh
 # Ensure the entrypoint is executable
 RUN chmod +x /entrypoint.sh
 
