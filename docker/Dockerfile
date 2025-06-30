@@ -1,73 +1,89 @@
-FROM ghcr.io/pulp-platform/snitch_cluster:main as builder
+#-------------------------------------------------------------------------------
+# Stage 1: Builder
+# Clones the repository and builds the necessary artifacts.
+#-------------------------------------------------------------------------------
+FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 
-RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /src \
- && cd /src \
- && git reset --hard c757830632b7f7cd7d8ed511e5cc1eb662b43b37 \
- && git submodule update \
- # verilator model
- && cd /src/target/snitch_cluster \
- && make verilator \
- # snitch runtime
- && cd /src/target/snitch_cluster \
- && make DEBUG=ON sw \
+# Use WORKDIR to set the working directory for subsequent commands.
+WORKDIR /src
 
-FROM ubuntu:22.04 as toolchain
+# Combine all build steps into a single RUN command to leverage caching.
+# If the repo URL or commit hash doesn't change, this layer remains cached.
+RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git . \
+   && git reset --hard c757830632b7f7cd7d8ed511e5cc1eb662b43b37 \
+   && git submodule update --init --recursive \
+   # Build the verilator model and software in the same layer
+   && cd /src/target/snitch_cluster \
+   && make verilator \
+   && make DEBUG=ON sw
+
+#-------------------------------------------------------------------------------
+# Stage 2: Final Toolchain Image
+# Creates the final, lean image by copying artifacts from the builder
+# and installing only necessary runtime dependencies.
+#-------------------------------------------------------------------------------
+FROM ubuntu:22.04 AS toolchain
+
+# Set this environment variable early.
 ENV DEBIAN_FRONTEND=noninteractive
-# Runtime dependencies
+
+# Combine related COPY commands to reduce image layers.
+# Copying parent directories is more efficient than many individual sub-directories.
 COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
 COPY --from=builder /opt/python3.11 /opt/python3.11
 COPY --from=builder /src/util/trace /opt/snitch_cluster/util/trace
-# Compile and link time dependencies
-COPY --from=builder /src/sw/snRuntime /opt/snitch_cluster/sw/snRuntime
-COPY --from=builder /src/target/snitch_cluster/sw/runtime/rtl /opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
-COPY --from=builder /src/target/snitch_cluster/sw/runtime/common /opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
-COPY --from=builder /src/sw/math/ /opt/snitch_cluster/sw/math/
-# Transitive deps, this stuff must go at some point
-COPY --from=builder /src/sw/deps/riscv-opcodes /opt/snitch_cluster/sw/deps/riscv-opcodes
-COPY --from=builder /src/sw/deps/printf /opt/snitch_cluster/sw/deps/printf
+# Copy the entire 'sw' directory at once instead of its individual sub-directories.
+COPY --from=builder /src/sw /opt/snitch_cluster/sw
+# Copy the entire runtime directory at once.
+COPY --from=builder /src/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
 
-RUN apt-get -y update \
- && apt-get -y upgrade \
- # python runtime dependencies
- && apt-get -y install \
+# === Optimized Package Installation ===
+# Split apt commands into logical, cacheable layers.
+# 1. Install prerequisites for adding new repositories.
+RUN apt-get -y update && apt-get -y install --no-install-recommends \
+      ca-certificates \
       wget \
+      gnupg \
+      lsb-release \
+      software-properties-common
+
+# 2. Add PPAs and Keys. This layer will be cached if the sources don't change.
+RUN wget -O /etc/apt/keyrings/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key \
+   && echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main" >> /etc/apt/sources.list \
+   && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
+   && add-apt-repository -y ppa:git-core/ppa
+
+# 3. Update package lists and install final packages.
+#    This is the layer that will most likely change.
+#    Using --no-install-recommends reduces bloat.
+RUN apt-get -y update \
+   && apt-get -y install --no-install-recommends \
+      # python runtime dependencies
       zlib1g \
       libncurses5 \
       libgdbm5 \
       libnss3 \
-      libssl1.1 \
-      libreadline7 \
-      libffi6 \
+      libssl3 \
+      libreadline8 \
+      libffi7 \
       libsqlite3-0 \
       bzip2 \
       build-essential \
- # mlir
- && apt-get -y install wget lsb-release software-properties-common gnupg \
- && wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add - \
- && echo "\
-deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main \n\
-deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic main \n\
-deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main \n\
-deb-src http://apt.llvm.org/bionic/ llvm-toolchain-bionic-16 main\n" >> /etc/apt/sources.list \
- && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
- && apt-get -y update \
- && apt-get -y upgrade \
- && apt-get -y install mlir-16-tools \
- # misc stuff
- && apt-get -y install make \
- # make sure we have the latest git version,
- # otherwise github actions would have lots of issues
- # (e.g.: with recursive clones)
- && add-apt-repository -y ppa:git-core/ppa \
- && apt-get -y update \
- && apt-get -y install git \
- # cleanup
- && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
+      # mlir
+      mlir-16-tools \
+      # misc
+      make \
+      git \
+   # 4. Clean up in the SAME RUN command to reduce final image size.
+   && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
-# Make our own python3.11 available for current $USER:
-ENV PATH "/opt/python3.11/bin:${PATH}"
+# Make our own python3.11 available for the current $USER
+ENV PATH="/opt/python3.11/bin:${PATH}"
 
 COPY entrypoint.sh /entrypoint.sh
+# Ensure the entrypoint is executable
+RUN chmod +x /entrypoint.sh
+
 ENTRYPOINT ["/entrypoint.sh"]
