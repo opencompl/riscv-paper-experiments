@@ -1,45 +1,17 @@
-FROM ghcr.io/pulp-platform/snitch_cluster@sha256:9978f9d0e3e6b7ad1b2c1f0eb628a113226e8443bc42ae8b4ddd3f34d9528e96 as builder
+FROM ghcr.io/pulp-platform/snitch_cluster:main as builder
 
-RUN git clone --recursive https://github.com/nazavode/snitch_cluster.git /src \
+RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git /src \
  && cd /src \
- && git reset --hard 6c63f4c65d115ce16193f4f9a030ac08416a4acf \
+ && git reset --hard c757830632b7f7cd7d8ed511e5cc1eb662b43b37 \
  && git submodule update \
  # verilator model
  && cd /src/target/snitch_cluster \
- && make CFG_OVERRIDE=cfg/fdiv.hjson bin/snitch_cluster.vlt \
- # spike-dasm
- && cd /src/target/snitch_cluster/work-vlt/riscv-isa-sim \
- && ./configure --prefix=/opt/snitch-spike \
- && make install \
+ && make verilator \
  # snitch runtime
  && cd /src/target/snitch_cluster \
  && make DEBUG=ON sw \
- # clang+llvm+lld
- && mkdir -p /opt/snitch-llvm \
- && wget -qO- https://github.com/pulp-platform/llvm-project/releases/download/0.12.0/riscv32-pulp-llvm-ubuntu1804-0.12.0.tar.gz | \
-    tar xz --strip-components=1 -C /opt/snitch-llvm \
- # python 3.11
- && apt update -y \
- && apt install -y \
-      build-essential \
-      zlib1g-dev \
-      libncurses5-dev \
-      libgdbm-dev \
-      libnss3-dev \
-      libssl-dev \
-      libreadline-dev \
-      libffi-dev \
-      libsqlite3-dev \
-      wget \
-      libbz2-dev \
- && mkdir -p /tmp/python-src \
- && wget -qO- https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz | \
-    tar xz --strip-components=1 -C /tmp/python-src \
- && cd /tmp/python-src \
- && ./configure --prefix=/opt/python3.11 \
- && make install
 
-FROM ubuntu:18.04 as toolchain
+FROM ubuntu:22.04 as toolchain
 ENV DEBIAN_FRONTEND=noninteractive
 # Runtime dependencies
 COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
