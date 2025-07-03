@@ -9,7 +9,7 @@ WORKDIR /src
 
 RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
 
-RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src/snitch_cluster
+RUN mkdir -p /src/snitch_cluster && tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src/snitch_cluster
 
 RUN cd /src/snitch_cluster
 
