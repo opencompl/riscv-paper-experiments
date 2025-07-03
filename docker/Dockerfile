@@ -7,9 +7,9 @@ FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 # Use WORKDIR to set the working directory for subsequent commands.
 WORKDIR /src
 
-RUN curl https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
+RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
 
-RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
+RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src/snitch_cluster
 
 RUN cd /src/snitch_cluster
 
