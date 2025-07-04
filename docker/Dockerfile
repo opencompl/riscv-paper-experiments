@@ -9,13 +9,12 @@ WORKDIR /src
 
 RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
 
-RUN mkdir -p /src/snitch_cluster && tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src/snitch_cluster
+RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src
 
-RUN cd /src/snitch_cluster
-
-RUN make verilator
-
-RUN make DEBUG=on sw
+RUN cd /src/target/snitch_cluster \
+   && ls \
+   && make verilator \
+   && make DEBUG=on sw
 
 # # Combine all build steps into a single RUN command to leverage caching.
 # # If the repo URL or commit hash doesn't change, this layer remains cached.
