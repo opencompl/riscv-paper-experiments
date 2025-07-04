@@ -4,17 +4,30 @@
 #-------------------------------------------------------------------------------
 FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 
+# Clone the snitch_cluster repository into /repo
+RUN git clone https://github.com/pulp-platform/snitch_cluster /repo
+
+# Use WORKDIR to set the working directory for subsequent commands.
+WORKDIR /repo
+
+# Patch .gitmodules to replace SSH URLs with HTTPS
+RUN sed -i 's|git@github.com:|https://github.com/|g' .gitmodules
+
+# Initialize and update submodules (now using HTTPS)
+RUN git submodule update --init --recursive
+
+RUN make -C target/snitch_cluster verilator
+
+# TODO: stuff from here onwards have not been tried
+RUN cd target/snitch_cluster \
+   && make -C DEBUG=on sw
+
 # Use WORKDIR to set the working directory for subsequent commands.
 WORKDIR /src
 
 RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
 
 RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src
-
-RUN cd /src/target/snitch_cluster \
-   && ls \
-   && make verilator \
-   && make DEBUG=on sw
 
 # # Combine all build steps into a single RUN command to leverage caching.
 # # If the repo URL or commit hash doesn't change, this layer remains cached.
