@@ -5,9 +5,8 @@
 FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 
 # Clone the snitch_cluster repository into /repo
-RUN git clone https://github.com/pulp-platform/snitch_cluster /repo
+RUN git clone -b fix-deps https://github.com/pulp-platform/snitch_cluster /repo
 
-# Use WORKDIR to set the working directory for subsequent commands.
 WORKDIR /repo
 
 # Patch .gitmodules to replace SSH URLs with HTTPS
@@ -18,11 +17,14 @@ RUN git submodule update --init --recursive
 
 RUN make -C target/snitch_cluster verilator
 
-# TODO: stuff from here onwards have not been tried
-RUN cd target/snitch_cluster \
-   && make -C DEBUG=on sw
+RUN make -C target/snitch_cluster DEBUG=ON sw
 
-# Use WORKDIR to set the working directory for subsequent commands.
+WORKDIR /
+
+RUN cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
+  && ./configure --prefix=/opt/snitch-spike \
+  && make install
+
 WORKDIR /src
 
 RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
@@ -51,15 +53,27 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # Combine related COPY commands to reduce image layers.
 # Copying parent directories is more efficient than many individual sub-directories.
-COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
+
+#COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
+COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
+
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
-COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
-COPY --from=builder /opt/python3.11 /opt/python3.11
-COPY --from=builder /src/util/trace /opt/snitch_cluster/util/trace
+
+#COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
+COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /src/snitch-llvm
+
+#COPY --from=builder /opt/python3.11 /opt/python3.11
+
+#COPY --from=builder /src/util/trace /opt/snitch_cluster/util/trace
+COPY --from=builder /repo/util/trace /opt/snitch_cluster/util/trace
+
 # Copy the entire 'sw' directory at once instead of its individual sub-directories.
-COPY --from=builder /src/sw /opt/snitch_cluster/sw
+#COPY --from=builder /src/sw /opt/snitch_cluster/sw
+COPY --from=builder /repo/sw /opt/snitch_cluster/sw
+
 # Copy the entire runtime directory at once.
-COPY --from=builder /src/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
+#COPY --from=builder /src/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
+COPY --from=builder /repo/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
 
 # === Optimized Package Installation ===
 # Split apt commands into logical, cacheable layers.
@@ -85,7 +99,7 @@ RUN apt-get -y update \
       # python runtime dependencies
       zlib1g \
       libncurses5 \
-      libgdbm5 \
+      libgdbm6 \
       libnss3 \
       libssl3 \
       libreadline8 \
@@ -102,7 +116,7 @@ RUN apt-get -y update \
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
 # Make our own python3.11 available for the current $USER
-ENV PATH="/opt/python3.11/bin:${PATH}"
+#ENV PATH="/opt/python3.11/bin:${PATH}"
 
 COPY docker/entrypoint.sh /entrypoint.sh
 # Ensure the entrypoint is executable
