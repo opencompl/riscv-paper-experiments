@@ -37,25 +37,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Combine related COPY commands to reduce image layers.
 # Copying parent directories is more efficient than many individual sub-directories.
 
-#COPY --from=builder /src/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 
-#COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
 COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /src/snitch-llvm
 
-#COPY --from=builder /opt/python3.11 /opt/python3.11
-
-#COPY --from=builder /src/util/trace /opt/snitch_cluster/util/trace
 COPY --from=builder /repo/util/trace /opt/snitch_cluster/util/trace
 
 # Copy the entire 'sw' directory at once instead of its individual sub-directories.
-#COPY --from=builder /src/sw /opt/snitch_cluster/sw
 COPY --from=builder /repo/sw /opt/snitch_cluster/sw
 
 # Copy the entire runtime directory at once.
-#COPY --from=builder /src/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
 COPY --from=builder /repo/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
 
 # === Optimized Package Installation ===
@@ -97,9 +90,6 @@ RUN apt-get -y update \
       git \
    # 4. Clean up in the SAME RUN command to reduce final image size.
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
-
-# Make our own python3.11 available for the current $USER
-#ENV PATH="/opt/python3.11/bin:${PATH}"
 
 COPY docker/entrypoint.sh /entrypoint.sh
 # Ensure the entrypoint is executable
