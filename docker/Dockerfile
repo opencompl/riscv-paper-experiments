@@ -4,16 +4,17 @@
 #-------------------------------------------------------------------------------
 FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 
+# Patch .gitmodules to replace SSH URLs with HTTPS
+RUN git config --global url."https://github".insteadOf "git://github"
+RUN git config --global url."https://github.com/".insteadOf "git@github.com:"
+
 # Clone the snitch_cluster repository into /repo
-RUN git clone -b fix-deps https://github.com/pulp-platform/snitch_cluster /repo
+RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo
 
 WORKDIR /repo
 
-# Patch .gitmodules to replace SSH URLs with HTTPS
-RUN sed -i 's|git@github.com:|https://github.com/|g' .gitmodules
-
 # Initialize and update submodules (now using HTTPS)
-RUN git submodule update --init --recursive
+# RUN git submodule update --init --recursive
 
 RUN make -C target/snitch_cluster verilator
 
