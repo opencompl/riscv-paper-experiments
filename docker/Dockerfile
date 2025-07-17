@@ -5,42 +5,24 @@
 FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
 
 # Patch .gitmodules to replace SSH URLs with HTTPS
-RUN git config --global url."https://github".insteadOf "git://github"
-RUN git config --global url."https://github.com/".insteadOf "git@github.com:"
-
 # Clone the snitch_cluster repository into /repo
-RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo
-
-WORKDIR /repo
-
-# Initialize and update submodules (now using HTTPS)
-# RUN git submodule update --init --recursive
-
-RUN make -C target/snitch_cluster verilator
-
-RUN make -C target/snitch_cluster DEBUG=ON sw
-
-WORKDIR /
-
-RUN cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
-  && ./configure --prefix=/opt/snitch-spike \
-  && make install
+# If the repo URL or commit hash doesn't change, this layer remains cached.
+RUN git config --global url."https://github".insteadOf "git://github" \
+   && git config --global url."https://github.com/".insteadOf "git@github.com:" \
+   && git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo \
+   && cd /repo \
+   && git reset --hard 7f430f2 \
+   # Build the verilator model and software in the same layer
+   && make -C target/snitch_cluster verilator \
+   && make -C target/snitch_cluster DEBUG=ON sw \
+   && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
+   && ./configure --prefix=/opt/snitch-spike \
+   && make install
 
 WORKDIR /src
 
-RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz
-
-RUN tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src
-
-# # Combine all build steps into a single RUN command to leverage caching.
-# # If the repo URL or commit hash doesn't change, this layer remains cached.
-# RUN git clone --recursive https://github.com/pulp-platform/snitch_cluster.git . \
-#    && git reset --hard c757830632b7f7cd7d8ed511e5cc1eb662b43b37 \
-#    && git submodule update --init --recursive \
-#    # Build the verilator model and software in the same layer
-#    && cd /src/target/snitch_cluster \
-#    && make verilator \
-#    && make DEBUG=ON sw
+RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz \
+    && tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src
 
 #-------------------------------------------------------------------------------
 # Stage 2: Final Toolchain Image
