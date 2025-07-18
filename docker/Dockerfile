@@ -41,7 +41,7 @@ COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snit
 
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 
-COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /src/snitch-llvm
+COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /opt/snitch-llvm
 
 COPY --from=builder /repo/util/trace /opt/snitch_cluster/util/trace
 
