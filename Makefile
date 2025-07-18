@@ -8,19 +8,17 @@ default: fast
 
 artifact: fast all low_level_representation pipeline
 
-fast: maybe_update_xdsl_commit
+fast: requirements.txt
 	snakemake --cores $(JOBS) --rerun-incomplete fast
 
-all: maybe_update_xdsl_commit
+all: requirements.txt
 	snakemake --cores $(JOBS) --rerun-incomplete all
 
-low_level_representation: maybe_update_xdsl_commit
+low_level_representation: requirements.txt
 	snakemake --cores $(JOBS) --rerun-incomplete low_level_representation
 
-pipeline: maybe_update_xdsl_commit
+pipeline: requirements.txt
 	snakemake --cores $(JOBS) --rerun-incomplete pipeline
 
 clean:
 	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation
-
-include ./Makefile.xdsl

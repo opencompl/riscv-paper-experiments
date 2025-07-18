@@ -3,4 +3,4 @@ pandas==2.1.1
 seaborn==0.13.2
 numpy==1.26.4
 snakemake==8.14.0
--e /src/xdsl
+xdsl==0.45.0
