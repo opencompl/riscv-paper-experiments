@@ -30,6 +30,9 @@ int main() {
     int thiscore = snrt_cluster_core_idx();
     if (thiscore != 0) return 0;
 
+    // warm up instruction
+    matmul_transb(local_x, local_y, local_z);
+
     snrt_fpu_fence();
     (void)snrt_mcycle();
     matmul_transb(local_x, local_y, local_z);
