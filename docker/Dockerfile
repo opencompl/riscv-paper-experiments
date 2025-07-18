@@ -91,6 +91,11 @@ RUN apt-get -y update \
    # 4. Clean up in the SAME RUN command to reduce final image size.
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
+# Install uv and Python in a single layer, and ensure uv is in PATH
+RUN wget -qO- https://astral.sh/uv/install.sh | sh \
+   && ln -s /root/.local/bin/uv /usr/local/bin/uv \
+   && /root/.local/bin/uv python install
+
 COPY docker/entrypoint.sh /entrypoint.sh
 # Ensure the entrypoint is executable
 RUN chmod +x /entrypoint.sh
