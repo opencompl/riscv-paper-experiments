@@ -13,7 +13,7 @@
           #snitch_stream.stride_pattern<ub = [{{M * N // 2}}], strides = [8]>
         ]
       } ins(%X_1 : !riscv.reg) outs(%Y_1 : !riscv.reg) {
-      ^0(%x : !stream.readable<!riscv.freg<ft0>>, %0 : !stream.writable<!riscv.freg<ft1>>):
+      ^0(%x : !snitch_stream.readable<!riscv.freg<ft0>>, %0 : !snitch_stream.writable<!riscv.freg<ft1>>):
         %niter = riscv.li {{M * N // 2}} : !riscv.reg
         %c0 = riscv.li 0 : !riscv.reg
         %c1 = riscv.li 1 : !riscv.reg

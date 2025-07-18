@@ -23,7 +23,7 @@ riscv.assembly_section ".text" {
         #snitch_stream.stride_pattern<ub = [{{M}}, {{N // 4}}, {{K // 2}}, {{4}}], strides = [0, {{4 * 4 * K}}, {{4 * 2}}, {{4 * K}}]>
       ]
     } ins(%X_moved, %Y_moved : !riscv.reg, !riscv.reg) {
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
+    ^bb0(%X_stream : !snitch_stream.readable<!riscv.freg<ft0>>, %Y_stream : !snitch_stream.readable<!riscv.freg<ft1>>):
       %res_size = riscv.li {{M * N * 4}} : !riscv.reg
       %row_size = riscv.li {{N * 4}} : !riscv.reg
       %row_tile_stride = riscv.li {{4 * 4}} : !riscv.reg
