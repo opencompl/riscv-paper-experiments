@@ -19,7 +19,7 @@ jobs:
   run-experiments:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/opencompl/snitch-toolchain:2.10
+      image: ghcr.io/opencompl/snitch-toolchain:3.1.0
       options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v3
@@ -27,9 +27,8 @@ jobs:
           submodules: recursive
       - name: Install dependencies in venv
         run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -r /src/requirements.txt
+          uv venv -p 3.11 venv
+          uv pip install -r /src/requirements.txt
       - name: Clean and make pivoted
         run: |
           . venv/bin/activate
