@@ -32,7 +32,7 @@ riscv.assembly_section ".text" {
       ],
       "operandSegmentSizes" = array<i32: 3, 0>
     }> ({
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %W_stream : !stream.readable<!riscv.freg<ft1>>, %B_stream : !stream.readable<!riscv.freg<ft2>>):
+    ^bb0(%X_stream : !snitch.readable<!riscv.freg<ft0>>, %W_stream : !snitch.readable<!riscv.freg<ft1>>, %B_stream : !snitch.readable<!riscv.freg<ft2>>):
       riscv_scf.for %y_i : !riscv.reg = %c0 to %c512 step %c8 {
         %Y_dest = riscv.add %Y_moved, %y_i : (!riscv.reg, !riscv.reg) -> !riscv.reg
         %c = riscv.fmv.d %zero_float : (!riscv.freg) -> !riscv.freg
