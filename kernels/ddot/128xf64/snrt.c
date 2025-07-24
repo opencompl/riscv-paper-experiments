@@ -4,6 +4,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // x[ N ]
 // y[ N ]
 // g[ 1 ]
@@ -32,3 +36,7 @@ void ddot(const double* x, const double* y, double* g) {
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

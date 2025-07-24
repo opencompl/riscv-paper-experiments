@@ -4,6 +4,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // * Inputs:  x[ M x K ]
 // * Weights: w[ K x N ]
 // * Biases:  b[ M x N ]
@@ -53,3 +57,7 @@ void dense(const double* x, const double* w, const double* b, double* y) {
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

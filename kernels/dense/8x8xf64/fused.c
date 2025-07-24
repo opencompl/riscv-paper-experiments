@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // Baseline version, fused, unaliased ptrs allow for reduntant loads to
 // be elided
 // * Inputs:  x[ M x K ]
@@ -21,3 +25,7 @@ void dense(const double* x, const double* w, const double* b, double* y) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

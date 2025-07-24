@@ -7,6 +7,11 @@
 // Weights: w[ K x N ]
 // Biases:  b[ M x N ]
 // Outputs: y[ M x N ]
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void dense(const double* x, const double* w, const double* b, double* y) {
     // Y = X W
     for (uint32_t i = 0; i < M; ++i) {
@@ -33,3 +38,7 @@ void dense(const double* x, const double* w, const double* b, double* y) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif
