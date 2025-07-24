@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void ddot(double *x, double *y, double *g);
+extern "C" void ddot(double *x, double *y, double *g);
 
 int main() {
     // Allocate shared local memory

@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void matmul_transb(const DTYPE *x, const DTYPE *y, DTYPE *g);
+extern "C" void matmul_transb(const DTYPE *x, const DTYPE *y, DTYPE *g);
 
 int main() {
     // Allocate shared local memory

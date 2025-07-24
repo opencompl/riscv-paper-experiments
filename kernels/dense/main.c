@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void dense(double *x, double *w, double *b, double *y);
+extern "C" void dense(double *x, double *w, double *b, double *y);
 
 int main() {
     // Allocate shared local memory

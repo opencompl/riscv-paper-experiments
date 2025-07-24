@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void saxpy(float a, float *x, float *y, float *z);
+extern "C" void saxpy(float a, float *x, float *y, float *z);
 
 int main() {
     // Allocate shared local memory

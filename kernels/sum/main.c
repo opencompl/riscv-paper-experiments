@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void sum(DTYPE *x, DTYPE *y, DTYPE *z);
+extern "C" void sum(DTYPE *x, DTYPE *y, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
