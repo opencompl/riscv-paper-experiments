@@ -60,13 +60,14 @@ ldflags:
   - -fuse-ld=/opt/snitch-llvm/bin/ld.lld
   - -nostartfiles
   - -nostdlib
-  - -lc
-  - -lsnRuntime
-  - -L/opt/snitch-llvm/lib/clang/12.0.1/lib/
+  - -L/opt/snitch-llvm/lib/clang/15.0.0/lib/
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/
-  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
+  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
+  - -lc
+  - -lsnRuntime
+  - -lclang_rt.builtins-riscv32
 xdsl-passes:
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:
