@@ -16,7 +16,7 @@ double fmax(double __x, double __y) { return __builtin_fmax(__x, __y); }
 #error Unsupported precision
 #endif
 
-void relu(const DTYPE* restrict x, DTYPE* restrict y) {
+void relu(const DTYPE* x, DTYPE* y) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             // row-major accesses
