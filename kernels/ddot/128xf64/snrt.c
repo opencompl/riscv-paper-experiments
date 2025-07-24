@@ -7,7 +7,7 @@
 // x[ N ]
 // y[ N ]
 // g[ 1 ]
-void ddot(const double* restrict x, const double* restrict y, double* restrict g) {
+void ddot(const double* x, const double* y, double* g) {
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL,
                      // Bounds
                      N,

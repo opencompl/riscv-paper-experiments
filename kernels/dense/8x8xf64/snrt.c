@@ -8,8 +8,7 @@
 // * Weights: w[ K x N ]
 // * Biases:  b[ M x N ]
 // * Outputs: y[ M x N ]
-void dense(const double* restrict x, const double* restrict w, const double* restrict b,
-           double* restrict y) {
+void dense(const double* x, const double* w, const double* b, double* y) {
     // Y = relu(X W + B)
     snrt_ssr_loop_3d(SNRT_SSR_DM0,
                      // Bounds
