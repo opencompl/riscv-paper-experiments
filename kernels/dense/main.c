@@ -19,10 +19,10 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * K * sizeof(double));
-        snrt_dma_start_1d(local_w, W, K * N * sizeof(double));
-        snrt_dma_start_1d(local_b, B, M * N * sizeof(double));
-        snrt_dma_start_1d(local_y, Y_IN, M * N * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_x, (uint64_t)X, M * K * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_w, (uint64_t)W, K * N * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_b, (uint64_t)B, M * N * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_y, (uint64_t)Y_IN, M * N * sizeof(double));
         snrt_dma_wait_all();
     }
 

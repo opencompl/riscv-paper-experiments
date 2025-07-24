@@ -14,8 +14,8 @@ void ddot(const double* restrict x, const double* restrict y, double* restrict g
                      // Strides
                      sizeof(double));
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, x);
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, y);
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (volatile void*)x);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, (volatile void*)y);
 
     snrt_ssr_enable();
 

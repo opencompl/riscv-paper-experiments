@@ -29,9 +29,9 @@ void dense(const double* restrict x, const double* restrict w, const double* res
                      // Strides
                      sizeof(double), sizeof(double) * N);
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, x);
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, w);
-    snrt_ssr_read(SNRT_SSR_DM2, SNRT_SSR_2D, b);
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, (volatile void*)x);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, (volatile void*)w);
+    snrt_ssr_read(SNRT_SSR_DM2, SNRT_SSR_2D, (volatile void*)b);
 
     snrt_ssr_enable();
 
