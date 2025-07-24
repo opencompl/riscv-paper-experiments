@@ -1,3 +1,5 @@
+#include "data.h"
+
 #define N 128
 
 const double X[N] = {

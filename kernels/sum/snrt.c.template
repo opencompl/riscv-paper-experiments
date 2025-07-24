@@ -13,9 +13,9 @@ void sum(float* x, float* y, float* z) {
 
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, niter, 8);
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, x);   // ft0
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, y);   // ft1
-    snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_1D, z);  // ft2
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (volatile void*)x);   // ft0
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, (volatile void*)y);   // ft1
+    snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_1D, (volatile void*)z);  // ft2
 
     snrt_ssr_enable();
 

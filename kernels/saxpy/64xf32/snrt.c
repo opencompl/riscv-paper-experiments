@@ -13,6 +13,10 @@
 // * There are (usually) three data movers, i.e., there may be at most
 //   three streams active at the same time.
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void saxpy(float a, float* x, float* y, float* z) {
     // Due to the SSR limitation of moving 64 bits at a time,
     // when dealing with a data type smaller than double
@@ -72,7 +76,7 @@ void saxpy(float a, float* x, float* y, float* z) {
           [vtmp6] "=&f"(vtmp[6]), [vtmp7] "=&f"(vtmp[7])  // see [1]
         : [nfrep] "r"(nfrep), [va] "f"(va)
         : "ft0", "ft1", "ft2", "memory");
-    
+
     snrt_ssr_disable();
 }
 
@@ -82,3 +86,7 @@ void saxpy(float a, float* x, float* y, float* z) {
 // early-clobber [...]. This gives the compiler register allocator more freedom.
 // Source:
 // https://gcc.gnu.org/onlinedocs/gcc/Extended-Asm.html#Clobbers-and-Scratch-Registers-1
+
+#ifdef __cplusplus
+}
+#endif

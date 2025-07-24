@@ -4,12 +4,15 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // * Inputs:  x[ M x K ]
 // * Weights: w[ K x N ]
 // * Biases:  b[ M x N ]
 // * Outputs: y[ M x N ]
-void dense(const double* restrict x, const double* restrict w, const double* restrict b,
-           double* restrict y) {
+void dense(const double* x, const double* w, const double* b, double* y) {
     // Y = relu(X W + B)
     snrt_ssr_loop_3d(SNRT_SSR_DM0,
                      // Bounds
@@ -29,9 +32,9 @@ void dense(const double* restrict x, const double* restrict w, const double* res
                      // Strides
                      sizeof(double), sizeof(double) * N);
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, x);
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, w);
-    snrt_ssr_read(SNRT_SSR_DM2, SNRT_SSR_2D, b);
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, (volatile void*)x);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_3D, (volatile void*)w);
+    snrt_ssr_read(SNRT_SSR_DM2, SNRT_SSR_2D, (volatile void*)b);
 
     snrt_ssr_enable();
 
@@ -54,3 +57,7 @@ void dense(const double* restrict x, const double* restrict w, const double* res
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

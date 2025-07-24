@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-void sum(const DTYPE* restrict x, const DTYPE* restrict y, DTYPE* restrict z) {
+void sum(const DTYPE* x, const DTYPE* y, DTYPE* z) {
     for (uint32_t i = 0; i < N * M; ++i) {
         z[i] = x[i] + y[i];
     }

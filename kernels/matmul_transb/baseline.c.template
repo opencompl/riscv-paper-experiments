@@ -6,7 +6,7 @@
 
 typedef float v2f32 __attribute__((vector_size(8)));
 
-void matmul_transb(const float* restrict x, const float* restrict y, float* restrict g) {
+void matmul_transb(const float* x, const float* y, float* g) {
     const register float zero = 0.0;
     for (int m = 0; m < M; ++m) {
         for (int n = 0; n < N; ++n) {

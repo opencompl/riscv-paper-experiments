@@ -1,3 +1,5 @@
+#include "data.h"
+
 #define M 8
 #define K 8
 #define N 8
