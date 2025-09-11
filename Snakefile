@@ -377,7 +377,7 @@ rule dasm_to_trace:
         spike=config["spike"],
         gentrace=config["gentrace"],
     shell:
-        "{params.spike} < {input} | {params.gentrace} --permissive -d {output.json} > {output.txt}"
+        "{params.spike} < {input} | {params.gentrace} --permissive --dump-hart-perf {log.json} -o {log.txt}"
 
 
 # Rule used to generate traces for debugging purposes, not used for csv generation
