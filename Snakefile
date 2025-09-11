@@ -548,7 +548,7 @@ rule cc_compile_c:
         cc=config["cc"],
         cflags=config["cflags"],
     shell:
-        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -o {output} {input.c}"
+        "{params.cc} -I$(dirname {input}) -I$(dirname {output}) {params.cflags} -S -x c++ -o {output} {input.c}"
 
 
 rule cc_compile_ll:
@@ -615,7 +615,7 @@ rule cc_compile_shared_main:
         cc=config["cc"],
         cflags=config["cflags"],
     shell:
-        "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -o {output} {input.c}"
+        "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -x c++ -o {output} {input.c}"
 
 
 ###########################################################
