@@ -350,8 +350,8 @@ rule profile_to_csv:
 
 rule trace_to_profile:
     input:
-        txt="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.txt",
-        json="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000000.trace.json",
+        txt="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000.trace.txt",
+        json="kernels/{kernel}/{shape}/{variant}.logs/trace_hart_00000.trace.json",
     output:
         "kernels/{kernel}/{shape}/{variant}.profile.json",
     params:
@@ -369,10 +369,10 @@ rule trace_to_profile:
 
 rule dasm_to_trace:
     input:
-        "{test}.logs/trace_hart_00000000.dasm",
-    output:
-        txt="{test}.logs/trace_hart_00000000.trace.txt",
-        json="{test}.logs/trace_hart_00000000.trace.json",
+        "{test}.logs/trace_hart_00000.dasm",
+    log:
+        txt="{test}.logs/trace_hart_00000.trace.txt",
+        json="{test}.logs/trace_hart_00000.trace.json",
     params:
         spike=config["spike"],
         gentrace=config["gentrace"],
@@ -383,9 +383,9 @@ rule dasm_to_trace:
 # Rule used to generate traces for debugging purposes, not used for csv generation
 rule dasm_to_trace_debug:
     input:
-        "{test}.logs/logs/trace_hart_00000000.dasm",
+        "{test}.logs/logs/trace_hart_00000.dasm",
     output:
-        txt="{test}.logs/logs/trace_hart_00000000.trace.txt",
+        txt="{test}.logs/logs/trace_hart_00000.trace.txt",
     params:
         spike=config["spike"],
         gentrace=config["gentrace"],
@@ -397,7 +397,7 @@ rule verilator:
     input:
         "{test}.x",
     output:
-        expand("{{test}}.logs/trace_hart_0000000{hart}.dasm", hart=range(9)),
+        expand("{{test}}.logs/trace_hart_0000{hart}.dasm", hart=range(9)),
     params:
         workdir="{test}.logs",
         vltsim=config["vltsim"],
