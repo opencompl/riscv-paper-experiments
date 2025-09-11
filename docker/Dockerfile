@@ -37,7 +37,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Combine related COPY commands to reduce image layers.
 # Copying parent directories is more efficient than many individual sub-directories.
 
-COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
+COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster_bin.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 
