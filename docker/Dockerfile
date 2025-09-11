@@ -43,13 +43,17 @@ COPY --from=builder /opt/snitch-spike /opt/snitch-spike
 
 COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /opt/snitch-llvm
 
-COPY --from=builder /repo/util/trace /opt/snitch_cluster/util/trace
-
 # Copy the entire 'sw' directory at once instead of its individual sub-directories.
 COPY --from=builder /repo/sw /opt/snitch_cluster/sw
 
 # Copy the entire runtime directory at once.
 COPY --from=builder /repo/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
+
+# Copy Snitch Python package files.
+COPY --from=builder /repo/pyproject.toml /opt/snitch_cluster/
+COPY --from=builder /repo/util /opt/snitch_cluster/util
+COPY --from=builder /repo/nonfree/util /opt/snitch_cluster/nonfree/util
+COPY --from=builder /repo/target/snitch_cluster/util /opt/snitch_cluster/target/snitch_cluster/util
 
 # === Optimized Package Installation ===
 # Split apt commands into logical, cacheable layers.
