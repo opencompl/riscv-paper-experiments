@@ -3,6 +3,7 @@ xdsl-opt: xdsl-opt # from virtualenv
 mlir-opt: /usr/bin/mlir-opt-16
 mlir-translate: /usr/bin/mlir-translate-16
 cc: /opt/snitch-llvm/bin/clang++
+llvm-mc: /tools/riscv-llvm/bin/llvm-mc
 spike: /opt/snitch-spike/bin/spike-dasm
 vltsim: /opt/snitch-rtl/bin/snitch_cluster.vlt
 gentrace: /opt/snitch_cluster/util/trace/gen_trace.py
@@ -68,6 +69,9 @@ ldflags:
   - -lc
   - -lsnRuntime
   - -lclang_rt.builtins-riscv32
+llvm-mcflags:
+  - -disassemble
+  - -mcpu=snitch
 xdsl-passes:
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:
