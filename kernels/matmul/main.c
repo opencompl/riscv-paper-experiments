@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void matmul(double *x, double *y, double *g);
+extern "C" void matmul(double *x, double *y, double *g);
 
 int main() {
     // Allocate shared local memory

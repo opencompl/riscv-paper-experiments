@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void relu(DTYPE *x, DTYPE *y);
+extern "C" void relu(DTYPE *x, DTYPE *y);
 
 int main() {
     // Allocate shared local memory

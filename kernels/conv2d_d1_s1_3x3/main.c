@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void conv_2d_nchw_fchw_d1_s1_3x3(double *x, double *y, double *z);
+extern "C" void conv_2d_nchw_fchw_d1_s1_3x3(double *x, double *y, double *z);
 
 int main() {
     // Allocate shared local memory

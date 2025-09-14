@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void ssum(float *x, float *y, float *z);
+extern "C" void ssum(float *x, float *y, float *z);
 
 int main() {
     // Allocate shared local memory

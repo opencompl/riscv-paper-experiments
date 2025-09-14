@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void softmax(const double *x, double *y);
+extern "C" void softmax(const double *x, double *y);
 
 int main() {
     // Allocate shared local memory
