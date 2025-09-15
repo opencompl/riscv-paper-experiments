@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void conv_2d_nchw_fchw_d1_s1_3x3(const double* x, const double* y,
                                  double* z) {
     for (int row = 0; row < NEW_H; ++row) {
@@ -27,3 +31,7 @@ void conv_2d_nchw_fchw_d1_s1_3x3(const double* x, const double* y,
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

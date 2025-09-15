@@ -4,6 +4,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void fill(const DTYPE x, DTYPE* y) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
@@ -12,3 +16,7 @@ void fill(const DTYPE x, DTYPE* y) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

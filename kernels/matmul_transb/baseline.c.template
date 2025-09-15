@@ -6,6 +6,10 @@
 
 typedef float v2f32 __attribute__((vector_size(8)));
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void matmul_transb(const float* x, const float* y, float* g) {
     const register float zero = 0.0;
     for (int m = 0; m < M; ++m) {
@@ -43,3 +47,7 @@ void matmul_transb(const float* x, const float* y, float* g) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

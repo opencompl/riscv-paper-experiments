@@ -2,6 +2,10 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void pooling_nchw_sum_d1_s2_3x3(const double* x, double* y) {
     for (int row = 0; row < H - 3 + 1; row += 1) {
         for (int col = 0; col < W - 3 + 1; col += 1) {
@@ -27,3 +31,7 @@ void pooling_nchw_sum_d1_s2_3x3(const double* x, double* y) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

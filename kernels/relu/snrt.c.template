@@ -14,6 +14,10 @@ typedef float v2f32 __attribute__((vector_size(8)));
 #endif
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void relu(DTYPE* x, DTYPE* y) {
     const uint32_t niter = M * N / 2;
 
@@ -37,3 +41,7 @@ void relu(DTYPE* x, DTYPE* y) {
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

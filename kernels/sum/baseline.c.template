@@ -4,8 +4,16 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void sum(const DTYPE* x, const DTYPE* y, DTYPE* z) {
     for (uint32_t i = 0; i < N * M; ++i) {
         z[i] = x[i] + y[i];
     }
 }
+
+#ifdef __cplusplus
+}
+#endif
