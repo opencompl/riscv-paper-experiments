@@ -17,7 +17,7 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * N * sizeof(DTYPE));
+        snrt_dma_start_1d(local_x, (volatile void *)X, M * N * sizeof(DTYPE));
         snrt_dma_wait_all();
     }
 
