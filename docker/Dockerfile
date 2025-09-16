@@ -1,6 +1,4 @@
-FROM ghcr.io/pulp-platform/snitch_cluster-sw@sha256:290416751224ccb0a5bf5a583dbad6bc60c985f8fd4a2577775a4af43f2abf6a AS toolchain
-ARG VIRTUAL_ENV="/root/.venvs/snitch_cluster"
-ARG PYTHON_VERSION=3.11
+FROM ghcr.io/pulp-platform/snitch_cluster-sw@sha256:a09680ebe74b3c8a704af3cc31322dae7359998a570665ae8da413d9efdec42c AS toolchain
 
 # Patch .gitmodules to replace SSH URLs with HTTPS
 # Clone the snitch_cluster repository into /repo
@@ -31,8 +29,7 @@ RUN wget -O /etc/apt/keyrings/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-sn
 # 3. Update package lists and install final packages.
 #    This is the layer that will most likely change.
 #    Using --no-install-recommends reduces bloat.
-RUN apt-add-repository ppa:deadsnakes/ppa \
-   && apt-get -y update \
+RUN apt-get -y update \
    && apt-get -y install --no-install-recommends \
       # python runtime dependencies
       zlib1g \
@@ -50,10 +47,13 @@ RUN apt-add-repository ppa:deadsnakes/ppa \
       # misc
       make \
       git \
-      python${PYTHON_VERSION}-dev \
    # 4. Clean up in the SAME RUN command to reduce final image size.
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
+# Install uv and ensure uv is in PATH
+RUN wget -qO- https://astral.sh/uv/install.sh | sh \
+   && ln -s /root/.local/bin/uv /usr/local/bin/uv
+
 COPY requirements.txt ./requirements.txt
 COPY xdsl ./xdsl
-RUN . ${VIRTUAL_ENV}/bin/activate && pip install -r ./requirements.txt
+RUN uv pip install -r ./requirements.txt
