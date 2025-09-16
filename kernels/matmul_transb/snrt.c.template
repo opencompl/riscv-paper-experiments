@@ -18,6 +18,10 @@ typedef float v2f32 __attribute__((vector_size(8)));
 #error N must be a multiple of the number of elements processed at each execution of the k-loop
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // A[ M x K ]
 // B[ K x N ]
 // C[ M x N ]
@@ -35,8 +39,8 @@ void matmul_transb(const float* A, const float* B, float* C) {
                      // Strides
                      sizeof(float) * K, sizeof(float) * 2, sizeof(float) * UNROLL * K, 0);
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, A);
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_4D, B);
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, (volatile void *)A);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_4D, (volatile void *)B);
 
     const uint32_t n_frep = K / 2 - 1;
     const float zero = 0.0;
@@ -104,3 +108,7 @@ void matmul_transb(const float* A, const float* B, float* C) {
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

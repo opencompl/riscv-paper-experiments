@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void pooling_nchw_max_d1_s2_3x3(double *x, double *y);
+extern "C" void pooling_nchw_max_d1_s2_3x3(double *x, double *y);
 
 int main() {
     // Allocate shared local memory
@@ -17,8 +17,9 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, N * C * H * W * sizeof(double));
-        snrt_dma_start_1d(local_y, Y_IN, N * C * NEW_H * NEW_W * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_x, (uint64_t)X, N * C * H * W * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_y, (uint64_t)Y_IN,
+                          N * C * NEW_H * NEW_W * sizeof(double));
         snrt_dma_wait_all();
     }
 

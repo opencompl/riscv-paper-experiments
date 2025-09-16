@@ -4,7 +4,11 @@
 
 #include <stdint.h>
 
-void fill(const DTYPE x, DTYPE* restrict y) {
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void fill(const DTYPE x, DTYPE* y) {
     for (uint32_t i = 0; i < M; ++i) {
         for (uint32_t j = 0; j < N; ++j) {
             // row-major accesses
@@ -12,3 +16,7 @@ void fill(const DTYPE x, DTYPE* restrict y) {
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

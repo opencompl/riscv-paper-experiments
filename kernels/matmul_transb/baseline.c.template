@@ -6,13 +6,17 @@
 
 typedef float v2f32 __attribute__((vector_size(8)));
 
-void matmul_transb(const float* restrict x, const float* restrict y, float* restrict g) {
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void matmul_transb(const float* x, const float* y, float* g) {
     const register float zero = 0.0;
     for (int m = 0; m < M; ++m) {
         for (int n = 0; n < N; ++n) {
             float* c = g + (m * N + n);
-            float* a = x + m * K;
-            float* b = y + n * K;
+            const float* a = x + m * K;
+            const float* b = y + n * K;
             v2f32 dot;
             v2f32 reduce;
             asm volatile(
@@ -43,3 +47,7 @@ void matmul_transb(const float* restrict x, const float* restrict y, float* rest
         }
     }
 }
+
+#ifdef __cplusplus
+}
+#endif

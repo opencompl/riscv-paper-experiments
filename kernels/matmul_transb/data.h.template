@@ -15,9 +15,17 @@
 #define K {{K}}
 #define N {{N}}
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const DTYPE X[M * K];
 extern const DTYPE Y[N * K];
 extern const DTYPE G_IN[M * N];
 extern const DTYPE G_OUT[M * N];
+
+#ifdef __cplusplus
+}
+#endif
 
 #define TEST_COUNT (M * N)

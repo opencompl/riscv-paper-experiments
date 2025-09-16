@@ -177,13 +177,13 @@ memref.global constant @{symbol} : memref<{shape}x{type}> = dense<[
 
 
 ARRAY_GLOBAL = """
-const {type} {symbol}[{shape}] = {{
+extern const {type} {symbol}[{shape}] = {{
 {initializer}
 }};
 """
 
 SCALAR_GLOBAL = """
-const {type} {symbol} = {value};
+extern const {type} {symbol} = {value};
 """
 
 _P = ParamSpec("_P")
