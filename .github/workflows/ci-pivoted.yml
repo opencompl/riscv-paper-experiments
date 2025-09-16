@@ -20,7 +20,6 @@ jobs:
         run: |
           uv venv -p 3.11
           uv pip install -r /src/requirements.txt
-          uv pip install /opt/snitch_cluster/
       - name: Clean and make pivoted
         run: |
           . .venv/bin/activate

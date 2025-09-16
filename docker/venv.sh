@@ -11,7 +11,6 @@ if [[ -d /src/xdsl ]]; then
     uv venv -p 3.11 ${VENV_DIR}
     source ${VENV_DIR}/bin/activate
     uv pip install -r /src/requirements.txt
-    uv pip install /opt/snitch_cluster/
   else
     source ${VENV_DIR}/bin/activate
   fi
