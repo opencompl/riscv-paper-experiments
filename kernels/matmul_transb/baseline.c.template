@@ -15,8 +15,8 @@ void matmul_transb(const float* x, const float* y, float* g) {
     for (int m = 0; m < M; ++m) {
         for (int n = 0; n < N; ++n) {
             float* c = g + (m * N + n);
-            float* a = x + m * K;
-            float* b = y + n * K;
+            const float* a = x + m * K;
+            const float* b = y + n * K;
             v2f32 dot;
             v2f32 reduce;
             asm volatile(
