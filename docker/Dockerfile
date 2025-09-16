@@ -1,4 +1,4 @@
-FROM ghcr.io/pulp-platform/snitch_cluster-sw:sw-dev-image AS toolchain
+FROM ghcr.io/pulp-platform/snitch_cluster-sw@sha256:290416751224ccb0a5bf5a583dbad6bc60c985f8fd4a2577775a4af43f2abf6a AS toolchain
 ARG VIRTUAL_ENV="/root/.venvs/snitch_cluster"
 ARG PYTHON_VERSION=3.11
 
