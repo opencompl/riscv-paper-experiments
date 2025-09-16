@@ -6,29 +6,21 @@ on:
       - main
   pull_request:
 
-# BEWARE: Github broke CI for everyone using older distros
-# (including Ubuntu LTS):
-# https://github.com/actions/checkout/issues/1590
-# To make sure the CI doesn't break, export this variable
-# and stick to actions/checkout@v3.
-# This ugly hack is still expected to break at some point.
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/opencompl/snitch-toolchain:3.1.0
+      image: ghcr.io/opencompl/snitch-toolchain:4.0.0
       options: --volume ${{ github.workspace }}:/src
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Install dependencies in venv
         run: |
           uv venv -p 3.11
           uv pip install -r /src/requirements.txt
+          uv pip install /opt/snitch_cluster/
       - name: Clean and make pivoted
         run: |
           . .venv/bin/activate

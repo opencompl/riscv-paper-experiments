@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void ssum(float *x, float *y, float *z);
+extern "C" void ssum(float *x, float *y, float *z);
 
 int main() {
     // Allocate shared local memory
@@ -18,8 +18,8 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * N * sizeof(float));
-        snrt_dma_start_1d(local_y, Y, M * N * sizeof(float));
+        snrt_dma_start_1d(local_x, (volatile void *)X, M * N * sizeof(float));
+        snrt_dma_start_1d(local_y, (volatile void *)Y, M * N * sizeof(float));
         snrt_dma_wait_all();
     }
 

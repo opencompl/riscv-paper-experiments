@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void matmul(double *x, double *y, double *g);
+extern "C" void matmul(double *x, double *y, double *g);
 
 int main() {
     // Allocate shared local memory
@@ -18,9 +18,9 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, M * K * sizeof(double));
-        snrt_dma_start_1d(local_y, Y, K * N * sizeof(double));
-        snrt_dma_start_1d(local_z, G_IN, M * N * sizeof(double));
+        snrt_dma_start_1d(local_x, (volatile void *)X, M * K * sizeof(double));
+        snrt_dma_start_1d(local_y, (volatile void *)Y, K * N * sizeof(double));
+        snrt_dma_start_1d(local_z, (volatile void *)G_IN, M * N * sizeof(double));
         snrt_dma_wait_all();
     }
 
