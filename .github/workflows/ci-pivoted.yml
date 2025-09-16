@@ -6,15 +6,6 @@ on:
       - main
   pull_request:
 
-# BEWARE: Github broke CI for everyone using older distros
-# (including Ubuntu LTS):
-# https://github.com/actions/checkout/issues/1590
-# To make sure the CI doesn't break, export this variable
-# and stick to actions/checkout@v3.
-# This ugly hack is still expected to break at some point.
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
@@ -22,7 +13,7 @@ jobs:
       image: ghcr.io/opencompl/snitch-toolchain:4.0.0
       options: --volume ${{ github.workspace }}:/src
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Install dependencies in venv
