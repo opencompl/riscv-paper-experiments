@@ -1,0 +1,53 @@
+#include "data.h"
+
+#include <snrt.h>
+
+#include <stdint.h>
+
+typedef float v2f32 __attribute__((vector_size(8)));
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void matmul_transb(const float* x, const float* y, float* g) {
+    const register float zero = 0.0;
+    for (int m = 0; m < M; ++m) {
+        for (int n = 0; n < N; ++n) {
+            float* c = g + (m * N + n);
+            const float* a = x + m * K;
+            const float* b = y + n * K;
+            v2f32 dot;
+            v2f32 reduce;
+            asm volatile(
+                "vfcpka.s.s %[dot], %[zero], %[zero]\n"
+                "vfcpka.s.s %[reduce], %[zero], %[zero]\n"
+                : [dot] "=f"(dot), [reduce] "=f"(reduce)
+                : [zero] "f"(zero)
+                :);
+            v2f32 va;
+            v2f32 vb;
+            for (int k = 0; k < K / 2; ++k) {
+                asm volatile(
+                    "fld %[va], 0(%[a]) \n"
+                    "fld %[vb], 0(%[b]) \n"
+                    "vfmac.s %[dot], %[va], %[vb] \n"
+                    "add %[a], %[a], 8 \n"
+                    "add %[b], %[b], 8 \n"
+                    : [a] "+r"(a), [b] "+r"(b), [dot] "+f"(dot), [va] "=&f"(va),
+                      [vb] "=&f"(vb)
+                    ::);
+            }
+            asm volatile(
+                "vfsum.s %[reduce], %[dot] \n"
+                "fsw %[reduce], 0(%[c]) \n"
+                : [reduce] "+f"(reduce)
+                : [c] "r"(c), [dot] "f"(dot)
+                :);
+        }
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif

@@ -1,0 +1,31 @@
+#pragma once
+
+#define PRECISION {{precision}}
+#if PRECISION == 16
+#define DTYPE __fp16
+#elif PRECISION == 32
+#define DTYPE float
+#elif PRECISION == 64
+#define DTYPE double
+#else
+#error Unsupported precision
+#endif
+
+#define M {{M}}
+#define K {{K}}
+#define N {{N}}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern const DTYPE X[M * K];
+extern const DTYPE Y[N * K];
+extern const DTYPE G_IN[M * N];
+extern const DTYPE G_OUT[M * N];
+
+#ifdef __cplusplus
+}
+#endif
+
+#define TEST_COUNT (M * N)

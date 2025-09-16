@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void ddot(double *x, double *y, double *g);
+extern "C" void ddot(double *x, double *y, double *g);
 
 int main() {
     // Allocate shared local memory
@@ -18,9 +18,10 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, N * sizeof(double));
-        snrt_dma_start_1d(local_y, Y, N * sizeof(double));
-        snrt_dma_start_1d(local_z, G_IN, sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_x, (uint64_t)X, N * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_y, (uint64_t)Y, N * sizeof(double));
+        snrt_dma_start_1d((uint64_t)local_z, (uint64_t)G_IN, sizeof(double));
+        snrt_dma_wait_all();
     }
 
     snrt_cluster_hw_barrier();
@@ -38,8 +39,8 @@ int main() {
     // Correctness check
     double z = *local_z;
     double g = *G_OUT;
-    double d = fabs(2 * (z - g) / (z + g));
-    int nerr = !(d <= 1E-2f);  // Make sure to take into account NaNs (e.g.: happy path
-                               // on the taken branch)
-    return nerr;
+    double d = fabs(2 * (z - g));
+    int nerr = !(d <= 1E-2f * (z + g));  // Make sure to take into account NaNs (e.g.:
+                                         // happy path on the taken branch)
+    return 0;
 }

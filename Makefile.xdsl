@@ -1,0 +1,22 @@
+THIS := $(dir $(realpath $(lastword $(MAKEFILE_LIST))))
+
+.PHONY: maybe_update_xdsl_commit force_xdsl_commit
+
+XDSL_DIR         = $(THIS)/xdsl
+XDSL_COMMIT_FILE = $(THIS)/xdsl_commit.txt
+
+# Get the current commit hash of xdsl
+CURRENT_XDSL_COMMIT := $(shell git -C $(XDSL_DIR) rev-parse HEAD)
+
+# Read the last recorded commit hash from a file, if it exists
+LAST_XDSL_COMMIT := $(shell cat $(XDSL_COMMIT_FILE) 2>/dev/null)
+
+# Rule to update the recorded commit hash in a file
+maybe_update_xdsl_commit:
+	@if [ "$(CURRENT_XDSL_COMMIT)" != "$(LAST_XDSL_COMMIT)" ]; then \
+		echo $(CURRENT_XDSL_COMMIT) > $(XDSL_COMMIT_FILE); \
+	fi
+
+# Phony target to force re-reading xdsl commit
+force_xdsl_commit:
+	$(RM) $(SUBMODULE_COMMIT_FILE)

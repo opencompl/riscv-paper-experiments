@@ -1,0 +1,6 @@
+pip
+pandas
+seaborn
+numpy
+snakemake==8.14.0
+-e /src/xdsl

@@ -1,0 +1,34 @@
+#include "data.h"
+
+#include <snrt.h>
+
+#include <stdint.h>
+
+#if PRECISION == 32
+// Copied from math.h
+double fmax(double __x, double __y) { return __builtin_fmaxf(__x, __y); }
+#define MY_ZERO 0.0f
+#elif PRECISION == 64
+// Copied from math.h
+double fmax(double __x, double __y) { return __builtin_fmax(__x, __y); }
+#define MY_ZERO 0.0
+#else
+#error Unsupported precision
+#endif
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void relu(const DTYPE* x, DTYPE* y) {
+    for (uint32_t i = 0; i < M; ++i) {
+        for (uint32_t j = 0; j < N; ++j) {
+            // row-major accesses
+            y[i * N + j] = fmax(MY_ZERO, x[i * N + j]);
+        }
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif

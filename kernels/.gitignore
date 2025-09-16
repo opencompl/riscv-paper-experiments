@@ -1,7 +1,21 @@
+# Instantiated templates for a specific kernel shape
+*/*/*.c
+*/*/*.h
+*/*/*.mlir
+*/*/*.xdsl.mlir
+
+# Profiling results
+*.json
+*.jsonl
+
 # Build byproducts, not really useful up to now
 *.ll.mlir
 *.ll
 *.S
 
-# Verilator traces directory
-logs/
+# Verilator traces
+*.dasm
+*.trace.txt
+*.trace.json
+
+optimization_pipeline.txt

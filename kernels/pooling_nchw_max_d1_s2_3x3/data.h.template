@@ -1,0 +1,22 @@
+#pragma once
+
+#define N 1
+#define C 1
+#define H {{(M - 1) * 1 + 3 + 1}}
+#define W {{(N - 1) * 1 + 3 + 1}}
+#define NEW_H {{M}}
+#define NEW_W {{N}}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern const double X[N * C * H * W];
+extern const double Y_IN[N * C * NEW_H * NEW_W];
+extern const double Y_OUT[N * C * NEW_H * NEW_W];
+
+#ifdef __cplusplus
+}
+#endif
+
+#define TEST_COUNT (N * C * NEW_H * NEW_W)

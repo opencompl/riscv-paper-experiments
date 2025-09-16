@@ -1,0 +1,26 @@
+#include "data.h"
+
+#include <snrt.h>
+
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void matmul(const double* x, const double* y, double* g) {
+    for (uint32_t i = 0; i < M; ++i) {
+        for (uint32_t j = 0; j < N; ++j) {
+            double dot = 0.;
+            for (uint32_t k = 0; k < K; ++k) {
+                // row-major accesses
+                dot += x[i * K + k] * y[k * N + j];
+            }
+            g[i * N + j] = dot;
+        }
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif

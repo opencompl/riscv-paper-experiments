@@ -1,0 +1,6 @@
+
+func.func public @fill(%X: f{{precision}},
+                       %Y: memref<{{M}}x{{N}}xf{{precision}}> {llvm.noalias}) -> () {
+  linalg.fill ins(%X : f{{precision}}) outs(%Y : memref<{{M}}x{{N}}xf{{precision}}>) -> ()
+  return
+}

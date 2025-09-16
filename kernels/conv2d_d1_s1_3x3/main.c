@@ -5,7 +5,7 @@
 #include <math.h>
 
 // Kernel provided via external definition
-void conv_2d_nchw_fchw_d1_s1_3x3(double *x, double *y, double *z);
+extern "C" void conv_2d_nchw_fchw_d1_s1_3x3(double *x, double *y, double *z);
 
 int main() {
     // Allocate shared local memory
@@ -18,9 +18,11 @@ int main() {
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d(local_x, X, N * C * H * W * sizeof(double));
-        snrt_dma_start_1d(local_y, Y, F * C * 3 * 3 * sizeof(double));
-        snrt_dma_start_1d(local_z, Z_IN, N * F * NEW_H * NEW_W * sizeof(double));
+        snrt_dma_start_1d(local_x, (volatile void *)X, N * C * H * W * sizeof(double));
+        snrt_dma_start_1d(local_y, (volatile void *)Y, F * C * 3 * 3 * sizeof(double));
+        snrt_dma_start_1d(local_z, (volatile void *)Z_IN,
+                          N * F * NEW_H * NEW_W * sizeof(double));
+        snrt_dma_wait_all();
     }
 
     snrt_cluster_hw_barrier();
@@ -37,7 +39,7 @@ int main() {
 
     // Correctness check
     int nerr = 0;
-    for (int i = 0; i < N * F * NEW_H * NEW_W; i++) {
+    for (int i = 0; i < TEST_COUNT; i++) {
         double d = fabs(local_z[i] - Z_OUT[i]);
         nerr += !(d <= 1E-2f);  // Make sure to take into account NaNs (e.g.: happy path
                                 // on the taken branch)

@@ -7,7 +7,7 @@ import argparse
 import sys
 import abc
 
-from typing import Callable, Iterator, Literal, NamedTuple, ParamSpec
+from typing import Callable, Iterator, Literal, NamedTuple, ParamSpec, Any
 
 
 class Define(NamedTuple):
@@ -15,14 +15,21 @@ class Define(NamedTuple):
     value: int
 
 
+class Scalar(NamedTuple):
+    name: str
+    precision: int
+    value: object
+
+
 class Array(NamedTuple):
     name: str
-    shape_names: tuple[str]
+    shape_names: tuple[str, ...]
     data: np.ndarray
 
 
 def array_precision(array: Array) -> int:
     return {
+        np.dtype("float16"): 16,
         np.dtype("float32"): 32,
         np.dtype("float64"): 64,
     }[array.data.dtype]
@@ -36,12 +43,18 @@ def array_to_c_initializer(array: np.array):
     return np.array2string(array.flatten(), separator=",\n").strip(" []")
 
 
+def float_to_c_literal(value: Any) -> str:
+    if isinstance(value, np.float32 | np.float16):
+        return f"{value:+}f"
+    return f"{value:+}"
+
+
 class Printer(abc.ABC):
 
     BASE_PRINTOPTIONS = {"linewidth": None, "threshold": sys.maxsize}
     C_PRINTOPTIONS = {
         **BASE_PRINTOPTIONS,
-        "formatter": {"double ": lambda x: f"{x:+}f"},
+        "formatter": {"float_kind": float_to_c_literal},
     }
     MLIR_PRINTOPTIONS = {**BASE_PRINTOPTIONS, "sign": "+"}
 
@@ -70,14 +83,21 @@ class Printer(abc.ABC):
             )
         )
 
-    def print(self, item: Define | Array):
+    @classmethod
+    @abc.abstractmethod
+    def print_scalar(cls, scalar: Scalar) -> None:
+        raise NotImplementedError
+
+    def print(self, item: Define | Array | Scalar):
         match item:
             case Define():
                 self.print_define(item)
             case Array():
                 self.print_array(item)
+            case Scalar():
+                self.print_scalar(item)
 
-    def print_items(self, items: Iterator[Define | Array]):
+    def print_items(self, items: Iterator[Define | Array | Scalar]):
         for item in items:
             self.print(item)
 
@@ -95,6 +115,16 @@ class CPrinter(Printer):
             type=C_TYPES[str(precision)],
             shape=shape or "*".join(str(dim) for dim in array.shape),
             initializer=array_to_c_initializer(array),
+        )
+
+    @classmethod
+    def print_scalar(cls, scalar: Scalar) -> None:
+        print(
+            SCALAR_GLOBAL.format(
+                symbol=scalar.name,
+                type=C_TYPES[str(scalar.precision)],
+                value=scalar.value,
+            )
         )
 
 
@@ -122,16 +152,19 @@ def get_printer(format: Literal["c", "mlir"]):
 
 
 C_TYPES = {
+    "16": "__fp16",
     "32": "float",
     "64": "double",
 }
 
 NUMPY_TYPES = {
+    "16": np.half,
     "32": np.single,
     "64": np.double,
 }
 
 MLIR_TYPES = {
+    "16": "f16",
     "32": "f32",
     "64": "f64",
 }
@@ -144,15 +177,21 @@ memref.global constant @{symbol} : memref<{shape}x{type}> = dense<[
 
 
 ARRAY_GLOBAL = """
-const {type} {symbol}[{shape}] = {{
+extern const {type} {symbol}[{shape}] = {{
 {initializer}
 }};
+"""
+
+SCALAR_GLOBAL = """
+extern const {type} {symbol} = {value};
 """
 
 _P = ParamSpec("_P")
 
 
-def main(items_iterator_factory: Callable[_P, Iterator[Define | Array]]) -> None:
+def main(
+    items_iterator_factory: Callable[_P, Iterator[Define | Array | Scalar]]
+) -> None:
     parser = argparse.ArgumentParser(
         prog="gendata.py",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,

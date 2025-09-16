@@ -9,28 +9,42 @@ on:
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
-    container: ghcr.io/opencompl/snitch-toolchain:latest
+    container:
+      image: ghcr.io/opencompl/snitch-toolchain:4.0.0
+      options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Check pivoted is up to date
-        run: cd kernels
-          make -q pivoted.csv
+      - name: Install dependencies in venv
+        run: |
+          uv venv -p 3.11
+          uv pip install -r /src/requirements.txt
+          uv pip install /opt/snitch_cluster/
+      - name: Clean and make pivoted
+        run: |
+          . .venv/bin/activate
+          cp results/pivoted.csv results/pivoted_old.csv.txt
+          make clean
+          make
+      - name: Check pivoted has not changed
+        run: |
+          cd /src/
+          ./scripts/nodiff.sh results/pivoted.csv results/pivoted_old.csv.txt
       - name: Read Cycles CSV
         id: cycles-csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path: kernels/pivoted.csv
-      - name: Create MD
-        uses: petems/csv-to-md-table-action@master
-        id: cycles-csv-table-output
-        with:
-          csvinput: ${{ steps.cycles-csv.outputs.content }}
+          path: results/pivoted.csv
+      # - name: Create MD
+      #   uses: petems/csv-to-md-table-action@master
+      #   id: cycles-csv-table-output
+      #   with:
+      #     csvinput: ${{ steps.cycles-csv.outputs.content }}
       - uses: mshick/add-pr-comment@v1
         with:
           message: |
-            ${{steps.cycles-csv-table-output.outputs.markdown-table}}
+            ${{steps.cycles-csv.outputs.content}}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
           allow-repeats: true
@@ -38,16 +52,16 @@ jobs:
         id: fpu-csv
         uses: juliangruber/read-file-action@v1.1.6
         with:
-          path: kernels/pivoted_fpu.csv
-      - name: Create MD
-        uses: petems/csv-to-md-table-action@master
-        id: fpu-csv-table-output
-        with:
-          csvinput: ${{ steps.fpu-csv.outputs.content }}
+          path: results/pivoted_fpu.csv
+      # - name: Create MD
+      #   uses: petems/csv-to-md-table-action@master
+      #   id: fpu-csv-table-output
+      #   with:
+      #     csvinput: ${{ steps.fpu-csv.outputs.content }}
       - uses: mshick/add-pr-comment@v1
         with:
           message: |
-            ${{steps.fpu-csv-table-output.outputs.markdown-table}}
+            ${{steps.fpu-csv.outputs.content}}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: "github-actions[bot]" # The user.login for temporary GitHub tokens
           allow-repeats: true

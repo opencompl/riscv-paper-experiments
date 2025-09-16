@@ -1,0 +1,8 @@
+func.func public @matmul_transb(%X: tensor<{{M}}x{{K}}xf{{precision}}> {"llvm.noalias"},
+                         %Y: tensor<{{N}}x{{K}}xf{{precision}}> {"llvm.noalias"},
+                         %Z: tensor<{{M}}x{{N}}xf{{precision}}> {"llvm.noalias"}) -> tensor<{{M}}x{{N}}xf{{precision}}> {
+  %zero = arith.constant 0.0 : f{{precision}}
+  %zeros = linalg.fill ins(%zero : f{{precision}}) outs(%Z : tensor<{{M}}x{{N}}xf{{precision}}>) -> tensor<{{M}}x{{N}}xf{{precision}}>
+  %res = linalg.matmul_transpose_b ins(%X, %Y : tensor<{{M}}x{{K}}xf{{precision}}>, tensor<{{N}}x{{K}}xf{{precision}}>) outs(%zeros : tensor<{{M}}x{{N}}xf{{precision}}>) -> tensor<{{M}}x{{N}}xf{{precision}}>
+  func.return %res : tensor<{{M}}x{{N}}xf{{precision}}>
+}

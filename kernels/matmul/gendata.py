@@ -23,7 +23,7 @@ def matrix_data(
     np.random.seed(0)
     x = np.random.uniform(rmin, rmax, m * k).astype(t).reshape((m, k))
     y = np.random.uniform(rmin, rmax, k * n).astype(t).reshape((k, n))
-    g_in = np.random.uniform(rmin, rmax, (k, n)).astype(t)
+    g_in = np.random.uniform(rmin, rmax, (m, n)).astype(t)
 
     g_out = x @ y
 

@@ -1,0 +1,47 @@
+#include "data.h"
+
+#include <snrt.h>
+
+#include <stdint.h>
+
+typedef float v2f32 __attribute__((vector_size(8)));
+
+#if PRECISION == 32
+// Copied from math.h
+#define MY_ZERO 0.0f
+#else
+#error Unsupported precision
+#endif
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void relu(DTYPE* x, DTYPE* y) {
+    const uint32_t niter = M * N / 2;
+
+    snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, niter, 8);
+
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (volatile void*)x);   // ft0
+    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_1D, (volatile void*)y);  // ft1
+
+    snrt_ssr_enable();
+
+    DTYPE zero_float = MY_ZERO;
+    v2f32 zero_vec;
+
+    asm volatile(
+        "vfcpka.s.s %[zero_vec], %[zero_float], %[zero_float]\n"
+        "frep.o  %[nfrep], 1, 0, 0 \n"
+        "vfmax.s ft1, ft0, %[zero_vec]\n"
+        : [zero_vec] "+f"(zero_vec)
+        : [nfrep] "r"(niter - 1), [zero_float] "f"(zero_float)
+        : "ft0", "ft1", "ft2", "memory");
+
+    snrt_ssr_disable();
+}
+
+#ifdef __cplusplus
+}
+#endif

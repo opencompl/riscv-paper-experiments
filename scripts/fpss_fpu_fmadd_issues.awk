@@ -17,18 +17,19 @@ BEGIN {
 }
 
 END {
-    # JSON
-    # printf "[\n"
-    # for (i = 0; i <= section; i++) {
-    #     printf "  { \"fpss_fpu_fmadd_issues\": %d }", counter[i]
-    #     if (i < section) printf ","
-    #     printf "\n"
-    # }
-    # printf "]\n"
-
-    # CSV
-    printf "fpss_fpu_fmadd_issues\n"
-    for (i = 0; i <= section; i++) {
-        printf "%d\n", counter[i]
+    if (fmt == "csv") {
+        printf "fpss_fpu_fmadd_issues\n"
+        for (i = 0; i <= section; i++) {
+            printf "%d\n", counter[i]
+        }
+    } else {
+        # Defaults to JSON
+        printf "[\n"
+        for (i = 0; i <= section; i++) {
+            printf "  { \"fpss_fpu_fmadd_issues\": %d }", counter[i]
+            if (i < section) printf ","
+            printf "\n"
+        }
+        printf "]\n"
     }
 }

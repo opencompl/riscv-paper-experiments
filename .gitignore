@@ -1,3 +1,9 @@
+# Snakemake logs
+.snakemake/
+
+# persistent virtualenv for docker image
+.venv-docker/
+
 # lit tests results
 **/.lit_test_times.txt
 tests/**/Output/*
@@ -208,3 +214,6 @@ cython_debug/
 
 # Ignore .DS_Store on macs
 .DS_Store
+
+# VSCode
+.vscode
