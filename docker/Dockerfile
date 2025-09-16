@@ -9,8 +9,7 @@ RUN git config --global url."https://github".insteadOf "git://github" \
    && git config --global url."https://github.com/".insteadOf "git@github.com:" \
    && git clone --recursive https://github.com/pulp-platform/snitch_cluster /opt/snitch_cluster \
    && cd /opt/snitch_cluster \
-   && git reset --hard 7f430f2 \
-   && cd target/snitch_cluster \
+   && git reset --hard 742fbe3259125fc182fba11f756fd0af4d87404f \
    && make DEBUG=ON sn-runtime -j
 
 # === Optimized Package Installation ===
