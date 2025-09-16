@@ -17,9 +17,9 @@ RUN git config --global url."https://github".insteadOf "git://github" \
    && cd /repo \
    && git reset --hard 7f430f2 \
    # Enable division and build verilator
-   && CFG_OVERRIDE=/docker/default.hjson make -C target/snitch_cluster verilator \
+   && make -C target/snitch_cluster verilator \
    # Build software with DEBUG=ON for traces
-   && make -C target/snitch_cluster DEBUG=ON sw \
+   && make -C target/snitch_cluster DEBUG=ON SN_RISCV_CFLAGS=-mno-fdiv sw \
    && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
    && ./configure --prefix=/opt/snitch-spike \
    && make install
