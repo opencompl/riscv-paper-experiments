@@ -3,4 +3,4 @@ pandas
 seaborn
 numpy
 snakemake==8.14.0
--e xdsl
+git+https://github.com/xdslproject/xdsl.git@902bfbc8#egg=xdsl

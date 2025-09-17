@@ -7,7 +7,6 @@ llvm-mc: /tools/riscv-llvm/bin/llvm-mc
 spike: /opt/snitch-spike/bin/spike-dasm
 vltsim: snitch_cluster.vlt
 gentrace: /opt/snitch_cluster/util/trace/gen_trace.py
-xdsl_commit: /src/xdsl_commit.txt
 
 # Flags
 asflags:
