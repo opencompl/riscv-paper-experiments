@@ -376,8 +376,10 @@ rule dasm_to_trace:
     params:
         spike=config["spike"],
         gentrace=config["gentrace"],
+        llvm_mc=config["llvm-mc"],
+        llvm_mcflags=config["llvm-mcflags"],
     shell:
-        "{params.spike} < {input} | {params.gentrace} --permissive --dump-hart-perf {log.json} -o {log.txt}"
+        "{params.gentrace} {input} --mc-exec {params.llvm_mc} --mc-flags \"{params.llvm_mcflags}\" --permissive --dump-hart-perf {log.json} -o {log.txt}"
 
 
 # Rule used to generate traces for debugging purposes, not used for csv generation
