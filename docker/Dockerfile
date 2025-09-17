@@ -55,5 +55,4 @@ RUN wget -qO- https://astral.sh/uv/install.sh | sh \
    && ln -s /root/.local/bin/uv /usr/local/bin/uv
 
 COPY requirements.txt ./requirements.txt
-COPY xdsl ./xdsl
 RUN uv pip install -r ./requirements.txt
