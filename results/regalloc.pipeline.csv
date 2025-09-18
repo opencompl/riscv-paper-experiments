@@ -1,0 +1,10 @@
+impl,params,allocated_float,allocated_int
+conv2d_d1_s1_3x3,4x4xf64,8,9
+fill,4x4xf64,3,4
+matmul,4x16x8xf64,8,9
+pooling_nchw_max_d1_s2_3x3,4x4xf64,7,7
+pooling_nchw_sum_d1_s2_3x3,4x4xf64,7,7
+relu,4x4xf64,3,6
+sum,4x4xf64,3,8
+sum,4x8xf32,3,8
+sum,8x8xf16,3,8
