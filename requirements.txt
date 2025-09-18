@@ -1,6 +1,7 @@
 pip
-pandas==2.1.1
-seaborn==0.13.2
-numpy==1.26.4
+pandas
+seaborn
+numpy
 snakemake==8.14.0
--e /src/xdsl
+git+https://github.com/xdslproject/xdsl.git@902bfbc8#egg=xdsl
+/opt/snitch_cluster/

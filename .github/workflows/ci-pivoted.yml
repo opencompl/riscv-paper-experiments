@@ -6,33 +6,23 @@ on:
       - main
   pull_request:
 
-# BEWARE: Github broke CI for everyone using older distros
-# (including Ubuntu LTS):
-# https://github.com/actions/checkout/issues/1590
-# To make sure the CI doesn't break, export this variable
-# and stick to actions/checkout@v3.
-# This ugly hack is still expected to break at some point.
-env:
-  ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-
 jobs:
   run-experiments:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/opencompl/snitch-toolchain:2.10
+      image: ghcr.io/opencompl/snitch-toolchain:4.0.0
       options: --volume ${{ github.workspace }}:/src
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Install dependencies in venv
         run: |
-          python3 -m venv venv
-          . venv/bin/activate
-          pip install -r /src/requirements.txt
+          uv venv -p 3.11
+          uv pip install -r /src/requirements.txt
       - name: Clean and make pivoted
         run: |
-          . venv/bin/activate
+          . .venv/bin/activate
           cp results/pivoted.csv results/pivoted_old.csv.txt
           make clean
           make

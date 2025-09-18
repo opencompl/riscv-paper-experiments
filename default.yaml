@@ -2,11 +2,10 @@
 xdsl-opt: xdsl-opt # from virtualenv
 mlir-opt: /usr/bin/mlir-opt-16
 mlir-translate: /usr/bin/mlir-translate-16
-cc: /opt/snitch-llvm/bin/riscv32-unknown-elf-clang
+cc: /opt/snitch-llvm/bin/clang++
 spike: /opt/snitch-spike/bin/spike-dasm
 vltsim: /opt/snitch-rtl/bin/snitch_cluster.vlt
 gentrace: /opt/snitch_cluster/util/trace/gen_trace.py
-xdsl_commit: /src/xdsl_commit.txt
 
 # Flags
 asflags:
@@ -60,13 +59,14 @@ ldflags:
   - -fuse-ld=/opt/snitch-llvm/bin/ld.lld
   - -nostartfiles
   - -nostdlib
-  - -lclang_rt.builtins-riscv32
-  - -lc
-  - -lsnRuntime
-  - -L/opt/snitch-llvm/lib/clang/12.0.1/lib/
-  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
+  - -L/opt/snitch-llvm/lib/clang/15.0.0/lib/
+  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
   - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
+  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
+  - -lc
+  - -lsnRuntime
+  - -lclang_rt.builtins-riscv32
 xdsl-passes:
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:

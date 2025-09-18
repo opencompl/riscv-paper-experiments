@@ -4,18 +4,22 @@
 
 #include <stdint.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 // x[ N ]
 // y[ N ]
 // g[ 1 ]
-void ddot(const double* restrict x, const double* restrict y, double* restrict g) {
+void ddot(const double* x, const double* y, double* g) {
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL,
                      // Bounds
                      N,
                      // Strides
                      sizeof(double));
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, x);
-    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, y);
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (volatile void*)x);
+    snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, (volatile void*)y);
 
     snrt_ssr_enable();
 
@@ -32,3 +36,7 @@ void ddot(const double* restrict x, const double* restrict y, double* restrict g
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

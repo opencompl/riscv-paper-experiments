@@ -14,13 +14,17 @@ typedef float v2f32 __attribute__((vector_size(8)));
 #endif
 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void relu(DTYPE* x, DTYPE* y) {
     const uint32_t niter = M * N / 2;
 
     snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, niter, 8);
 
-    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, x);   // ft0
-    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_1D, y);  // ft1
+    snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (volatile void*)x);   // ft0
+    snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_1D, (volatile void*)y);  // ft1
 
     snrt_ssr_enable();
 
@@ -37,3 +41,7 @@ void relu(DTYPE* x, DTYPE* y) {
 
     snrt_ssr_disable();
 }
+
+#ifdef __cplusplus
+}
+#endif

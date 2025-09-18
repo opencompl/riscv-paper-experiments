@@ -4,9 +4,17 @@
 #define K {{K}}
 #define N {{N}}
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern const double X[M * K];
 extern const double Y[K * N];
 extern const double G_IN[M * N];
 extern const double G_OUT[M * N];
+
+#ifdef __cplusplus
+}
+#endif
 
 #define TEST_COUNT (M * N)
