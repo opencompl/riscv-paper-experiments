@@ -1,0 +1,7 @@
+variant,F Registers,X Registers,params,Cycles,FPU Occupancy [%],F Loads,F Stores,FMAdd Issues,FRep Count
+Baseline,3,13,1x200x5xf64,40102,2.50,0,0,1000,0
++ Streams,3,11,1x200x5xf64,19099,5.27,0,0,1000,0
++ Scalar Replacement,3,10,1x200x5xf64,4110,24.50,0,0,1000,0
++ FRep,3,9,1x200x5xf64,4088,24.63,0,0,1000,2
++ Fuse Fill,5,8,1x200x5xf64,4079,24.81,0,0,1000,1
++ Unroll and Jam,8,7,1x200x5xf64,1056,95.74,0,0,1000,1
