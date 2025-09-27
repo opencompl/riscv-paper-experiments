@@ -4,4 +4,3 @@ seaborn
 numpy
 snakemake==8.14.0
 git+https://github.com/xdslproject/xdsl.git@902bfbc8#egg=xdsl
-/opt/snitch_cluster/
