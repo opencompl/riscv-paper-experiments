@@ -67,6 +67,7 @@ ldflags:
   - -lc
   - -lsnRuntime
   - -lclang_rt.builtins-riscv32
+  - -lm
 xdsl-passes:
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:

@@ -70,6 +70,8 @@ PARAMS = {
 ###########################################################
 
 MANUAL_KERNELS = [
+    *expand("exp/64xf32/{variant}", variant=["baseline"]),
+    *expand("exp/64xf16/{variant}", variant=["baseline"]),
     *expand("saxpy/64xf32/{variant}", variant=["baseline", "snrt", "linalg"]),
     *expand(
         "ddot/128xf64/{variant}",
