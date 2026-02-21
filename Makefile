@@ -32,8 +32,16 @@ clean:
 
 .PHONY: docker-build
 docker-build:
-	docker build -t $(IMAGE) -f docker/Dockerfile .
+	@PLATFORM_FLAG="" ; \
+	if [ "$$(uname -s)" = "Darwin" ]; then \
+		PLATFORM_FLAG="--platform linux/amd64" ; \
+	fi ; \
+	docker build $$PLATFORM_FLAG -t $(IMAGE) -f docker/Dockerfile .
 
 .PHONY: docker-run
 docker-run:
-	docker run --rm -ti --volume $(CURDIR):/src $(IMAGE) $(or $(CMD),bash)
+	@PLATFORM_FLAG="" ; \
+	if [ "$$(uname -s)" = "Darwin" ]; then \
+		PLATFORM_FLAG="--platform linux/amd64" ; \
+	fi ; \
+	docker run $$PLATFORM_FLAG --rm -ti --volume $(CURDIR):/src $(IMAGE) $(or $(CMD),bash)

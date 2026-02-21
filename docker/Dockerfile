@@ -1,63 +1,75 @@
 #-------------------------------------------------------------------------------
-# Stage 1: Builder
-# Clones the repository and builds the necessary artifacts.
+# Version pins — all version-sensitive values live here.
+#
+# The base image provides Verilator and Bender (build tools). It does NOT
+# provide the LLVM toolchain we use — we download that explicitly below so
+# that build-time and run-time compilers are identical.
+#
+# SNITCH_COMMIT must be paired with the correct SNITCH_LLVM_VERSION.
+# Commit 7f430f2 was developed against LLVM 15.0.0-snitch-0.2.0 and uses
+# the env var LLVM_BINROOT (renamed to SN_LLVM_BINROOT on main after this
+# commit). If you bump the commit, check util/container/Dockerfile in the
+# new commit for the expected LLVM version and env-var name.
+#
+# Build:  make docker-build
+# Run:    make docker-run
 #-------------------------------------------------------------------------------
-FROM ghcr.io/pulp-platform/snitch_cluster:main AS builder
+ARG SNITCH_COMMIT=7f430f2
+ARG SNITCH_LLVM_VERSION=15.0.0-snitch-0.2.0
+# Digest of ghcr.io/pulp-platform/snitch_cluster:main as of 2025-09.
+# Pinned because the registry has no semver tags, only branch names.
+ARG SNITCH_BASE_IMAGE=ghcr.io/pulp-platform/snitch_cluster@sha256:ad2491d877e84803297962091ce3485821bb529e921079ec4547f4a26d14d92a
 
-# Patch .gitmodules to replace SSH URLs with HTTPS
-# Clone the snitch_cluster repository into /repo
-# If the repo URL or commit hash doesn't change, this layer remains cached.
+#-------------------------------------------------------------------------------
+# Stage 1: Builder
+# Clones the repository and builds verilator model, software, and spike.
+#-------------------------------------------------------------------------------
+FROM ${SNITCH_BASE_IMAGE} AS builder
+ARG SNITCH_COMMIT
+ARG SNITCH_LLVM_VERSION
+
+# Download the LLVM toolchain that matches our pinned commit, so the
+# compiler used at build time is the same one shipped in the final image.
+RUN curl -L -o /tmp/snitch-llvm.tar.gz \
+      https://github.com/pulp-platform/llvm-project/releases/download/${SNITCH_LLVM_VERSION}/riscv32-snitch-llvm-ubuntu2204-${SNITCH_LLVM_VERSION}.tar.gz \
+   && mkdir -p /opt/snitch-llvm \
+   && tar -xzf /tmp/snitch-llvm.tar.gz -C /opt/snitch-llvm --strip-components=1 \
+   && rm /tmp/snitch-llvm.tar.gz
+
+ENV LLVM_BINROOT="/opt/snitch-llvm/bin"
+
 RUN git config --global url."https://github".insteadOf "git://github" \
    && git config --global url."https://github.com/".insteadOf "git@github.com:" \
    && git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo \
    && cd /repo \
-   && git reset --hard 7f430f2 \
-   # Build the verilator model and software in the same layer
+   && git reset --hard ${SNITCH_COMMIT} \
    && make -C target/snitch_cluster verilator \
    && make -C target/snitch_cluster DEBUG=ON sw \
    && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
    && ./configure --prefix=/opt/snitch-spike \
    && make install
 
-WORKDIR /src
-
-RUN curl -L -o riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz https://github.com/pulp-platform/llvm-project/releases/download/15.0.0-snitch-0.2.0/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz \
-    && tar -xzf riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0.tar.gz -C /src
-
 #-------------------------------------------------------------------------------
 # Stage 2: Final Toolchain Image
-# Creates the final, lean image by copying artifacts from the builder
-# and installing only necessary runtime dependencies.
+# Lean image with only the artifacts and runtime dependencies needed to
+# compile and simulate Snitch programs.
 #-------------------------------------------------------------------------------
 FROM ubuntu:22.04 AS toolchain
 
-# Set this environment variable early.
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Combine related COPY commands to reduce image layers.
-# Copying parent directories is more efficient than many individual sub-directories.
-
 COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster_bin.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
-
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
+COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
 
-COPY --from=builder /src/riscv32-snitch-llvm-ubuntu2204-15.0.0-snitch-0.2.0 /opt/snitch-llvm
-
-# Copy the entire 'sw' directory at once instead of its individual sub-directories.
 COPY --from=builder /repo/sw /opt/snitch_cluster/sw
-
-# Copy the entire runtime directory at once.
 COPY --from=builder /repo/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
 
-# Copy Snitch Python package files.
 COPY --from=builder /repo/pyproject.toml /opt/snitch_cluster/
 COPY --from=builder /repo/util /opt/snitch_cluster/util
 COPY --from=builder /repo/nonfree/util /opt/snitch_cluster/nonfree/util
 COPY --from=builder /repo/target/snitch_cluster/util /opt/snitch_cluster/target/snitch_cluster/util
 
-# === Optimized Package Installation ===
-# Split apt commands into logical, cacheable layers.
-# 1. Install prerequisites for adding new repositories.
 RUN apt-get -y update && apt-get -y install --no-install-recommends \
       ca-certificates \
       wget \
@@ -65,18 +77,13 @@ RUN apt-get -y update && apt-get -y install --no-install-recommends \
       lsb-release \
       software-properties-common
 
-# 2. Add PPAs and Keys. This layer will be cached if the sources don't change.
 RUN wget -O /etc/apt/keyrings/llvm-snapshot.gpg.key https://apt.llvm.org/llvm-snapshot.gpg.key \
    && echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg.key] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-16 main" >> /etc/apt/sources.list \
    && add-apt-repository -y ppa:ubuntu-toolchain-r/test \
    && add-apt-repository -y ppa:git-core/ppa
 
-# 3. Update package lists and install final packages.
-#    This is the layer that will most likely change.
-#    Using --no-install-recommends reduces bloat.
 RUN apt-get -y update \
    && apt-get -y install --no-install-recommends \
-      # python runtime dependencies
       zlib1g \
       libncurses5 \
       libgdbm6 \
@@ -87,19 +94,14 @@ RUN apt-get -y update \
       libsqlite3-0 \
       bzip2 \
       build-essential \
-      # mlir
       mlir-16-tools \
-      # misc
       make \
       git \
-   # 4. Clean up in the SAME RUN command to reduce final image size.
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
-# Install uv (pin version for reproducibility) and Python 3.11
 COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /uvx /bin/
 RUN uv python install 3.11
 
-# Install project dependencies into a venv in the image (repo is mounted at /src at run time)
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv venv /opt/venv -p 3.11 \
@@ -112,7 +114,6 @@ ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /src
 
 COPY docker/entrypoint.sh /entrypoint.sh
-# Ensure the entrypoint is executable
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
