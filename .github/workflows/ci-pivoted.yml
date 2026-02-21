@@ -16,6 +16,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: Sync dependencies
+        run: /entrypoint.sh true
       - name: Clean and make pivoted
         run: |
           cp results/pivoted.csv results/pivoted_old.csv.txt
