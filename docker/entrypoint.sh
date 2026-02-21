@@ -2,12 +2,9 @@
 
 set -euo pipefail
 
-SETUP=/src/docker/venv.sh
-
-if [ -f "${SETUP}" ]; then
-  source "${SETUP}"
-else
-  >&2 echo "WARNING: can't find source repo mounted at /src, brace for bad things"
+# When the repo is mounted at /src, sync deps from its pyproject.toml into the image venv
+if [ -f /src/pyproject.toml ]; then
+  uv sync --directory /src
 fi
 
 exec "$@"

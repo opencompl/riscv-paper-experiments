@@ -95,10 +95,21 @@ RUN apt-get -y update \
    # 4. Clean up in the SAME RUN command to reduce final image size.
    && rm -rf /var/lib/apt/lists/* /var/tmp/* /tmp/*
 
-# Install uv and Python in a single layer, and ensure uv is in PATH
-RUN wget -qO- https://astral.sh/uv/install.sh | sh \
-   && ln -s /root/.local/bin/uv /usr/local/bin/uv \
-   && /root/.local/bin/uv python install
+# Install uv (pin version for reproducibility) and Python 3.11
+COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /uvx /bin/
+RUN uv python install 3.11
+
+# Install project dependencies into a venv in the image (repo is mounted at /src at run time)
+WORKDIR /app
+COPY pyproject.toml uv.lock ./
+RUN uv venv /opt/venv -p 3.11 \
+   && . /opt/venv/bin/activate \
+   && uv sync --locked --no-install-project \
+   && uv pip install /opt/snitch_cluster
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+WORKDIR /src
 
 COPY docker/entrypoint.sh /entrypoint.sh
 # Ensure the entrypoint is executable

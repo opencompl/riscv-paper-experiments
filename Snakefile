@@ -585,7 +585,8 @@ def filter_xdsl_pipeline_passes(wildcards):
 rule xdsl_compile:
     input:
         xdsl_input="kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
-        requirements="requirements.txt",
+        requirements="pyproject.toml",
+        lockfile="uv.lock",
         optimization_pipelines="kernels/optimization_pipeline.txt"
     output:
         "kernels/{kernel}/{shape}/{variant}.S",
