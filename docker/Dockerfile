@@ -1,21 +1,17 @@
 #-------------------------------------------------------------------------------
 # Version pins — all version-sensitive values live here.
 #
-# The base image provides Verilator and Bender (build tools). It does NOT
-# provide the LLVM toolchain we use — we download that explicitly below so
-# that build-time and run-time compilers are identical.
+# The base image provides Verilator, Bender, and the Snitch-patched LLVM
+# toolchain. We use its LLVM for both building and in the final image.
 #
-# SNITCH_COMMIT must be paired with the correct SNITCH_LLVM_VERSION.
-# Commit 7f430f2 was developed against LLVM 15.0.0-snitch-0.2.0 and uses
-# the env var LLVM_BINROOT (renamed to SN_LLVM_BINROOT on main after this
-# commit). If you bump the commit, check util/container/Dockerfile in the
-# new commit for the expected LLVM version and env-var name.
+# Commit 7f430f2 uses the env var LLVM_BINROOT (renamed to SN_LLVM_BINROOT
+# on main after this commit). If you bump the commit, check
+# util/container/Dockerfile in the new commit for the expected env-var name.
 #
 # Build:  make docker-build
 # Run:    make docker-run
 #-------------------------------------------------------------------------------
 ARG SNITCH_COMMIT=7f430f2
-ARG SNITCH_LLVM_VERSION=15.0.0-snitch-0.2.0
 # Digest of ghcr.io/pulp-platform/snitch_cluster:main as of 2025-09.
 # Pinned because the registry has no semver tags, only branch names.
 ARG SNITCH_BASE_IMAGE=ghcr.io/pulp-platform/snitch_cluster@sha256:ad2491d877e84803297962091ce3485821bb529e921079ec4547f4a26d14d92a
@@ -26,17 +22,9 @@ ARG SNITCH_BASE_IMAGE=ghcr.io/pulp-platform/snitch_cluster@sha256:ad2491d877e848
 #-------------------------------------------------------------------------------
 FROM ${SNITCH_BASE_IMAGE} AS builder
 ARG SNITCH_COMMIT
-ARG SNITCH_LLVM_VERSION
 
-# Download the LLVM toolchain that matches our pinned commit, so the
-# compiler used at build time is the same one shipped in the final image.
-RUN curl -L -o /tmp/snitch-llvm.tar.gz \
-      https://github.com/pulp-platform/llvm-project/releases/download/${SNITCH_LLVM_VERSION}/riscv32-snitch-llvm-ubuntu2204-${SNITCH_LLVM_VERSION}.tar.gz \
-   && mkdir -p /opt/snitch-llvm \
-   && tar -xzf /tmp/snitch-llvm.tar.gz -C /opt/snitch-llvm --strip-components=1 \
-   && rm /tmp/snitch-llvm.tar.gz
-
-ENV LLVM_BINROOT="/opt/snitch-llvm/bin"
+# The base image sets SN_LLVM_BINROOT, but commit 7f430f2 expects LLVM_BINROOT.
+ENV LLVM_BINROOT="/tools/riscv-llvm/bin"
 
 RUN git config --global url."https://github".insteadOf "git://github" \
    && git config --global url."https://github.com/".insteadOf "git@github.com:" \
@@ -60,7 +48,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 COPY --from=builder /repo/target/snitch_cluster/bin/snitch_cluster_bin.vlt /opt/snitch-rtl/bin/snitch_cluster.vlt
 COPY --from=builder /opt/snitch-spike /opt/snitch-spike
-COPY --from=builder /opt/snitch-llvm /opt/snitch-llvm
+COPY --from=builder /tools/riscv-llvm /opt/snitch-llvm
 
 COPY --from=builder /repo/sw /opt/snitch_cluster/sw
 COPY --from=builder /repo/target/snitch_cluster/sw/runtime /opt/snitch_cluster/target/snitch_cluster/sw/runtime
