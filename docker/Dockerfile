@@ -90,14 +90,17 @@ RUN apt-get -y update \
 COPY --from=ghcr.io/astral-sh/uv:0.10.4 /uv /uvx /bin/
 RUN uv python install 3.11
 
+# Tell uv to use /opt/venv for all project operations, so that both
+# build-time sync and the entrypoint's runtime sync target the same env.
+ENV UV_PROJECT_ENVIRONMENT=/opt/venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
 WORKDIR /app
 COPY pyproject.toml uv.lock ./
 RUN uv venv /opt/venv -p 3.11 \
-   && . /opt/venv/bin/activate \
    && uv sync --locked --no-install-project \
    && uv pip install /opt/snitch_cluster
-ENV VIRTUAL_ENV=/opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /src
 
