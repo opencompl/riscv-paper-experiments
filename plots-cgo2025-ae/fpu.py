@@ -34,8 +34,8 @@ def get_fpu(pivoted_fpu_df: pd.DataFrame) -> tuple[pd.DataFrame, ...]:
                 # Operator.MATMUL, # Matmul included in other plot
             ),
         ),
-        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=16),
         *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=32),
+        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=64),
     )
 
 
