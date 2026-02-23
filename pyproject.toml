@@ -1,0 +1,12 @@
+[project]
+name = "riscv-paper-experiments"
+version = "0.1.0"
+description = "RISC-V paper experiments (Snitch toolchain, xDSL pipelines)"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas",
+    "seaborn",
+    "numpy",
+    "snakemake==8.14.0",
+    "xdsl @ git+https://github.com/xdslproject/xdsl.git@902bfbc8",
+]

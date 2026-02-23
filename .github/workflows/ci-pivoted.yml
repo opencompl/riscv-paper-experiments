@@ -10,19 +10,16 @@ jobs:
   run-experiments:
     runs-on: ubuntu-latest
     container:
-      image: ghcr.io/opencompl/snitch-toolchain:4.0.0
+      image: ghcr.io/opencompl/snitch-toolchain:5.0.0
       options: --volume ${{ github.workspace }}:/src
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-      - name: Install dependencies in venv
-        run: |
-          uv venv -p 3.11
-          uv pip install -r /src/requirements.txt
+      - name: Sync dependencies
+        run: /entrypoint.sh true
       - name: Clean and make pivoted
         run: |
-          . .venv/bin/activate
           cp results/pivoted.csv results/pivoted_old.csv.txt
           make clean
           make
