@@ -8,29 +8,34 @@ from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined
 
 
 def all_plot_dfs(
-    pivoted_df: pd.DataFrame, operators: tuple[Operator, ...]
+    pivoted_df: pd.DataFrame, operators: tuple[Operator, ...], *, bitwidth: int = 64
 ) -> tuple[pd.DataFrame, ...]:
     return tuple(
         param_df
         for operator in operators
         for param_df in get_params_dfs(
-            get_operator_df(pivoted_df, operator, bitwidth=64)
+            get_operator_df(pivoted_df, operator, bitwidth=bitwidth)
         )
     )
 
 
 def get_fpu(pivoted_fpu_df: pd.DataFrame) -> tuple[pd.DataFrame, ...]:
-    return all_plot_dfs(
-        pivoted_fpu_df.filter([Impl.OURS, Impl.CLANG, Impl.MLIR]),
-        (
-            Operator.SUM,
-            Operator.FILL,
-            Operator.RELU,
-            Operator.CONV,
-            Operator.MAX_POOL,
-            Operator.SUM_POOL,
-            # Operator.MATMUL, # Matmul included in other plot
+    filtered = pivoted_fpu_df.filter([Impl.OURS, Impl.CLANG, Impl.MLIR])
+    return (
+        *all_plot_dfs(
+            filtered,
+            (
+                Operator.SUM,
+                Operator.FILL,
+                Operator.RELU,
+                Operator.CONV,
+                Operator.MAX_POOL,
+                Operator.SUM_POOL,
+                # Operator.MATMUL, # Matmul included in other plot
+            ),
         ),
+        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=16),
+        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=32),
     )
 
 
@@ -67,8 +72,12 @@ class FPUGridPlotRow(GridPlotRow):
 
 
 def plot_fpu(fpu_dfs: tuple[pd.DataFrame, ...]):
+    nrows = -(-len(fpu_dfs) // 6)  # ceil division
     return plot_combined(
-        FPUGridPlotRow.get_rows(fpu_dfs, 6, hide_xtick_labels=[True, False]),
+        FPUGridPlotRow.get_rows(
+            fpu_dfs, 6,
+            hide_xtick_labels=[True] * (nrows - 1) + [False],
+        ),
         legend_cols=4,
         rcparams_cfg_file="config/gridplot.mplstyle",
     )

@@ -14,6 +14,7 @@ class Impl(StrEnum):
 
 class Operator(StrEnum):
     CONV = "Conv 3x3"
+    EXP = "Exp"
     FILL = "Fill"
     MATMUL = "MatMul"
     MATMUL_TRANSB = "MatMulT"
@@ -25,6 +26,7 @@ class Operator(StrEnum):
 
 OPERATOR_BY_TEST = {
     "conv2d_d1_s1_3x3": Operator.CONV,
+    "exp": Operator.EXP,
     "fill": Operator.FILL,
     "matmul": Operator.MATMUL,
     "matmul_transb": Operator.MATMUL_TRANSB,
@@ -37,6 +39,7 @@ OPERATOR_BY_TEST = {
 
 PARAMS_BY_OPERATOR = {
     Operator.CONV: ("M", "N"),
+    Operator.EXP: ("N",),
     Operator.FILL: ("M", "N"),
     Operator.MATMUL: ("M", "K", "N"),
     Operator.MATMUL_TRANSB: ("M", "K", "N"),
@@ -48,6 +51,7 @@ PARAMS_BY_OPERATOR = {
 
 FLOPS_BY_OPERATOR = {
     Operator.CONV: lambda m, n: 2 * 9 * n * m,
+    Operator.EXP: lambda n: 14 * n,
     Operator.FILL: lambda m, n: n * m,
     Operator.MATMUL: lambda m, k, n: 2 * n * m * k,
     Operator.MATMUL_TRANSB: lambda m, k, n: 2 * n * m * k,
@@ -62,6 +66,7 @@ FLOPS adjusted for whether the operation can benefit from the fmadd instruction.
 
 OPERAND_SHAPES_BY_OPERATOR = {
     Operator.CONV: lambda m, n: ((m, n),),
+    Operator.EXP: lambda n: ((n,),),
     Operator.FILL: lambda m, n: ((m, n),),
     Operator.MATMUL: lambda m, k, n: ((m, k), (k, n)),
     Operator.MATMUL_TRANSB: lambda m, k, n: ((m, k), (n, k)),

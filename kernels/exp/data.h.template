@@ -1,0 +1,27 @@
+#pragma once
+
+#define PRECISION {{precision}}
+#if PRECISION == 32
+#define DTYPE float
+#define EXPF expf
+#define FABSF fabsf
+#elif PRECISION == 64
+#define DTYPE double
+#define EXPF exp
+#define FABSF fabs
+#else
+#error Unsupported precision
+#endif
+
+#define N {{N}}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+extern const DTYPE X[N];
+extern const DTYPE G[N];
+
+#ifdef __cplusplus
+}
+#endif

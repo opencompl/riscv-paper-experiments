@@ -15,19 +15,19 @@ extern "C" {
 }
 
 // Kernel provided via external definition
-extern "C" void exp_kernel(const fp_t *x, fp_t *z);
+extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
     // By avoiding allocators and bumping by a known offset a base pointer
     // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
     // essentially providing the same memory regions to all the cores in this cluster.
-    fp_t *local_x = (fp_t *)snrt_l1_next();
-    fp_t *local_z = local_x + N;
+    DTYPE *local_x = (DTYPE *)snrt_l1_next();
+    DTYPE *local_z = local_x + N;
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
-        snrt_dma_start_1d((uint64_t)local_x, (uint64_t)X, N * sizeof(fp_t));
+        snrt_dma_start_1d((uint64_t)local_x, (uint64_t)X, N * sizeof(DTYPE));
         snrt_dma_wait_all();
     }
 
@@ -46,10 +46,10 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
-        fp_t d = FABSF(local_z[i] - G[i]);
-        fp_t ref = FABSF(G[i]);
+        DTYPE d = FABSF(local_z[i] - G[i]);
+        DTYPE ref = FABSF(G[i]);
         // Use relative error for large values, absolute for small
-        fp_t tol = ref > (fp_t)1.0 ? ref * (fp_t)1E-2 : (fp_t)1E-2;
+        DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)1E-2 : (DTYPE)1E-2;
         nerr += !(d <= tol);
     }
     return nerr;

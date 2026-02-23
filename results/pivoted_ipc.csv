@@ -2,8 +2,8 @@ kernels,baseline,linalg,linalg_xdsl,snitch_stream,snrt
 conv2d_d1_s1_3x3 4x4xf64,0.58,0.51,0.98,,
 ddot 128xf64,0.98,0.98,,0.88,0.26
 dense 8x8xf64,0.55,0.54,,0.40,0.33
-exp 64xf16,0.50,,,,
 exp 64xf32,0.51,,,,
+exp 64xf64,0.51,,,,
 fill 4x4xf64,0.66,0.66,0.87,,
 fill 4x8xf32,0.91,0.91,0.72,,
 matmul 4x16x8xf64,0.63,0.56,0.98,,

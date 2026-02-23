@@ -9,9 +9,8 @@
 extern "C" {
 #endif
 
-void exp_kernel(const fp_t* x, fp_t* z) {
-    const uint32_t n = N;
-    for (uint32_t i = 0; i < n; ++i) {
+void exp_kernel(const DTYPE* x, DTYPE* z) {
+    for (uint32_t i = 0; i < N; ++i) {
         z[i] = EXPF(x[i]);
     }
 }
