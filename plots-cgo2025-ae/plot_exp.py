@@ -8,117 +8,148 @@ Usage:
 
 import argparse
 from pathlib import Path
+from typing import Sequence
 
-import matplotlib.pyplot as plt
 import numpy as np
+import numpy.typing as npt
 import pandas as pd
+from matplotlib.axes import Axes
 
 from data import EXP_FLOPS_F16, EXP_FLOPS_F32, EXP_FLOPS_F64
+from fpu import FPUGridPlotRow
+from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined, savefig
 
 
 def load_and_prepare(csv_path: str) -> pd.DataFrame:
     df = pd.read_csv(csv_path)
 
-    # Extract total number of elements and precision
-    # exp params: "64xf32" -> N=64
-    # relu params: "1x64xf32" -> M=1, N=64, total=64
     def get_total_elements(row):
         parts = row["params"].split("x")
-        # Last part is like "f32" or "f64"
         dims = [int(p) for p in parts[:-1]]
         return int(np.prod(dims))
 
     def get_precision(row):
         parts = row["params"].split("x")
-        return parts[-1]  # "f32" or "f64"
+        return parts[-1]
 
     df["total_elements"] = df.apply(get_total_elements, axis=1)
     df["precision"] = df.apply(get_precision, axis=1)
     df["bitwidth"] = df["precision"].str.extract(r"f(\d+)").astype(int)
 
-    # Compute FLOPs and throughput
     def get_flops(row):
         if row["test"] == "exp":
             flops_per_elem = {16: EXP_FLOPS_F16, 32: EXP_FLOPS_F32, 64: EXP_FLOPS_F64}[row["bitwidth"]]
         else:
-            # relu, fill, sum: 1 FP op per element
             flops_per_elem = 1
         return flops_per_elem * row["total_elements"]
 
     df["flops"] = df.apply(get_flops, axis=1)
     df["throughput"] = df["flops"] / df["cycles"]
-    df["max_throughput"] = 64 // df["bitwidth"]  # peak FP ops/cycle (no FMA)
+
+    # Capitalize test names for display
+    df["test"] = df["test"].map({"exp": "Exp", "relu": "ReLU"})
 
     df = df.sort_values("total_elements")
     return df
 
 
-def plot_comparison(df: pd.DataFrame, output_path: str):
-    precisions = sorted(df["precision"].unique())
-    kernels = sorted(df["test"].unique())
-
-    fig, axes = plt.subplots(len(precisions), 3, figsize=(15, 4 * len(precisions)))
-    if len(precisions) == 1:
-        axes = [axes]
-
-    # Compute shared y-axis limits across all precisions for comparability
-    max_cycles = df["cycles"].max()
-    max_fpu = df["fpss_fpu_occupancy"].max()
-    max_throughput = max(df["throughput"].max(), max(64 // int(p[1:]) for p in precisions))
-
-    for row_idx, prec in enumerate(precisions):
-        ax_cycles = axes[row_idx][0]
-        ax_fpu = axes[row_idx][1]
-        ax_throughput = axes[row_idx][2]
-
-        for kernel in kernels:
-            subset = df[(df["test"] == kernel) & (df["precision"] == prec)]
-            if subset.empty:
-                continue
-
-            ax_cycles.plot(
-                subset["total_elements"], subset["cycles"],
-                marker="o", label=kernel,
-            )
-            ax_fpu.plot(
-                subset["total_elements"], subset["fpss_fpu_occupancy"],
-                marker="o", label=kernel,
-            )
-            ax_throughput.plot(
-                subset["total_elements"], subset["throughput"],
-                marker="o", label=kernel,
-            )
-
-        # Add roofline to throughput plot
-        bitwidth = int(prec[1:])
-        max_tp = 64 // bitwidth
-        ax_throughput.axhline(
-            y=max_tp, color="gray", linestyle="--", label="Roofline",
+def make_pivoted_dfs(
+    df: pd.DataFrame, metric: str, precisions: list[str],
+) -> list[pd.DataFrame]:
+    """Create one pivoted DataFrame per precision, with kernels as columns."""
+    dfs = []
+    for prec in precisions:
+        prec_df = df[df["precision"] == prec]
+        pivoted = prec_df.pivot_table(
+            index="total_elements", columns="test", values=metric,
         )
+        cols = [c for c in ["Exp", "ReLU"] if c in pivoted.columns]
+        pivoted = pivoted[cols]
+        pivoted.index.name = f"Exp N ({prec})"
+        dfs.append(pivoted)
+    return dfs
 
-        # Apply shared y-axis limits
-        ax_cycles.set_ylim(0, max_cycles * 1.05)
-        ax_fpu.set_ylim(0, max_fpu * 1.05)
-        ax_throughput.set_ylim(0, max_throughput * 1.05)
 
-        ax_cycles.set_xlabel("Total Elements")
-        ax_cycles.set_ylabel("Cycles")
-        ax_cycles.set_title(f"Cycles ({prec})")
-        ax_cycles.legend()
+class ExpThroughputPlotRow(GridPlotRow):
+    ylabel = "Throughput (FP ops/cycle)"
 
-        ax_fpu.set_xlabel("Total Elements")
-        ax_fpu.set_ylabel("FPU Occupancy")
-        ax_fpu.set_title(f"FPU Occupancy ({prec})")
-        ax_fpu.legend()
+    @classmethod
+    def yrange(cls, dfs: Sequence[pd.DataFrame]) -> npt.NDArray[np.float64]:
+        max_val = max(df.max().max() for df in dfs)
+        step = max(1, int(np.ceil(max_val / 8)))
+        return np.arange(0, max_val + step + 1, step).astype(np.float64)
 
-        ax_throughput.set_xlabel("Total Elements")
-        ax_throughput.set_ylabel("Throughput (FLOPs/cycle)")
-        ax_throughput.set_title(f"Throughput ({prec})")
-        ax_throughput.legend()
+    @classmethod
+    def plot_grid_cell(cls, ax: Axes, df: pd.DataFrame, *, hide_xlabel: bool) -> None:
+        for col in df:
+            if col == "Performance Roofline":
+                continue
+            ax.scatter(
+                x=df.index, y=df[col],
+                color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+            )
+        ax.set_xticks(df.index)
+        if not hide_xlabel:
+            ax.set_xlabel(df.index.name)
 
-    plt.tight_layout()
-    plt.savefig(output_path)
-    print(f"Saved plot to {output_path}")
+    @classmethod
+    def get_roofline(cls, df: pd.DataFrame) -> float | None:
+        if "Performance Roofline" in df.columns:
+            return df["Performance Roofline"].iloc[0]
+        return None
+
+
+class ExpCyclesPlotRow(GridPlotRow):
+    ylabel = "Cycles"
+
+    @classmethod
+    def yrange(cls, dfs: Sequence[pd.DataFrame]) -> npt.NDArray[np.float64]:
+        max_val = max(df.max().max() for df in dfs)
+        step = max(1, int(np.ceil(max_val / 8)))
+        magnitude = 10 ** int(np.log10(step))
+        step = int(np.ceil(step / magnitude)) * magnitude
+        return np.arange(0, max_val + step + 1, step).astype(np.float64)
+
+    @classmethod
+    def plot_grid_cell(cls, ax: Axes, df: pd.DataFrame, *, hide_xlabel: bool) -> None:
+        for col in df:
+            ax.scatter(
+                x=df.index, y=df[col],
+                color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+            )
+        ax.set_xticks(df.index)
+        if not hide_xlabel:
+            ax.set_xlabel(df.index.name)
+
+
+def get_exp_dfs(df: pd.DataFrame) -> tuple[list[pd.DataFrame], list[pd.DataFrame], list[pd.DataFrame]]:
+    precisions = sorted(df["precision"].unique())
+
+    fpu_dfs = make_pivoted_dfs(df, "fpss_fpu_occupancy", precisions)
+    throughput_dfs = make_pivoted_dfs(df, "throughput", precisions)
+    cycles_dfs = make_pivoted_dfs(df, "cycles", precisions)
+
+    # Add roofline values to throughput dfs
+    for i, prec in enumerate(precisions):
+        bitwidth = int(prec[1:])
+        throughput_dfs[i]["Performance Roofline"] = float(64 // bitwidth)
+
+    return fpu_dfs, throughput_dfs, cycles_dfs
+
+
+def plot_exp(fpu_dfs, throughput_dfs, cycles_dfs):
+    ncols = len(fpu_dfs)
+    rows = [
+        FPUGridPlotRow(fpu_dfs, hide_xtick_labels=True),
+        ExpThroughputPlotRow(throughput_dfs, hide_xtick_labels=True),
+        ExpCyclesPlotRow(cycles_dfs),
+    ]
+    return plot_combined(
+        rows,
+        legend_cols=3,
+        rcparams_cfg_file="config/gridplot.mplstyle",
+        figsize=(ncols * 3.5, len(rows) * 1.8),
+    )
 
 
 def main():
@@ -138,7 +169,10 @@ def main():
     Path(args.output).parent.mkdir(exist_ok=True)
 
     df = load_and_prepare(args.input)
-    plot_comparison(df, args.output)
+    fpu_dfs, throughput_dfs, cycles_dfs = get_exp_dfs(df)
+    fig = plot_exp(fpu_dfs, throughput_dfs, cycles_dfs)
+    savefig(fig, args.output)
+    print(f"Saved plot to {args.output}")
 
 
 if __name__ == "__main__":
