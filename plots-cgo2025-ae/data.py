@@ -49,16 +49,22 @@ PARAMS_BY_OPERATOR = {
     Operator.SUM_POOL: ("M", "N"),
 }
 
+# Number of FPU instructions per element for exp, measured from trace data:
+#   f32: 12 FPU instructions per element
+#   f64: 13 FPU instructions per element
+EXP_FLOPS_F32 = 12
+EXP_FLOPS_F64 = 13
+
 FLOPS_BY_OPERATOR = {
-    Operator.CONV: lambda m, n: 2 * 9 * n * m,
-    Operator.EXP: lambda n: 14 * n,
-    Operator.FILL: lambda m, n: n * m,
-    Operator.MATMUL: lambda m, k, n: 2 * n * m * k,
-    Operator.MATMUL_TRANSB: lambda m, k, n: 2 * n * m * k,
-    Operator.MAX_POOL: lambda m, n: 9 * n * m,
-    Operator.RELU: lambda m, n: n * m,
-    Operator.SUM: lambda m, n: n * m,
-    Operator.SUM_POOL: lambda m, n: 9 * n * m,
+    Operator.CONV: lambda m, n, bitwidth: 2 * 9 * n * m,
+    Operator.EXP: lambda n, bitwidth: np.where(bitwidth == 32, EXP_FLOPS_F32, EXP_FLOPS_F64) * n,
+    Operator.FILL: lambda m, n, bitwidth: n * m,
+    Operator.MATMUL: lambda m, k, n, bitwidth: 2 * n * m * k,
+    Operator.MATMUL_TRANSB: lambda m, k, n, bitwidth: 2 * n * m * k,
+    Operator.MAX_POOL: lambda m, n, bitwidth: 9 * n * m,
+    Operator.RELU: lambda m, n, bitwidth: n * m,
+    Operator.SUM: lambda m, n, bitwidth: n * m,
+    Operator.SUM_POOL: lambda m, n, bitwidth: 9 * n * m,
 }
 """
 FLOPS adjusted for whether the operation can benefit from the fmadd instruction.
@@ -134,7 +140,7 @@ def get_flops(operator_df: pd.DataFrame, operator: Operator) -> pd.Series:
     operator_series: list[pd.Series] = [
         operator_df[param] for param in PARAMS_BY_OPERATOR[operator]
     ]
-    return FLOPS_BY_OPERATOR[operator](*operator_series)
+    return FLOPS_BY_OPERATOR[operator](*operator_series, operator_df["bitwidth"])
 
 
 def get_overhead(
