@@ -50,14 +50,16 @@ PARAMS_BY_OPERATOR = {
 }
 
 # Number of FPU instructions per element for exp, measured from trace data:
+#   f16: 12 FPU instructions per element (same as f32, promoted to float)
 #   f32: 12 FPU instructions per element
 #   f64: 13 FPU instructions per element
+EXP_FLOPS_F16 = 12
 EXP_FLOPS_F32 = 12
 EXP_FLOPS_F64 = 13
 
 FLOPS_BY_OPERATOR = {
     Operator.CONV: lambda m, n, bitwidth: 2 * 9 * n * m,
-    Operator.EXP: lambda n, bitwidth: np.where(bitwidth == 32, EXP_FLOPS_F32, EXP_FLOPS_F64) * n,
+    Operator.EXP: lambda n, bitwidth: np.where(bitwidth == 16, EXP_FLOPS_F16, np.where(bitwidth == 32, EXP_FLOPS_F32, EXP_FLOPS_F64)) * n,
     Operator.FILL: lambda m, n, bitwidth: n * m,
     Operator.MATMUL: lambda m, k, n, bitwidth: 2 * n * m * k,
     Operator.MATMUL_TRANSB: lambda m, k, n, bitwidth: 2 * n * m * k,

@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from data import EXP_FLOPS_F32, EXP_FLOPS_F64
+from data import EXP_FLOPS_F16, EXP_FLOPS_F32, EXP_FLOPS_F64
 
 
 def load_and_prepare(csv_path: str) -> pd.DataFrame:
@@ -39,7 +39,7 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
     # Compute FLOPs and throughput
     def get_flops(row):
         if row["test"] == "exp":
-            flops_per_elem = EXP_FLOPS_F32 if row["bitwidth"] == 32 else EXP_FLOPS_F64
+            flops_per_elem = {16: EXP_FLOPS_F16, 32: EXP_FLOPS_F32, 64: EXP_FLOPS_F64}[row["bitwidth"]]
         else:
             # relu, fill, sum: 1 FP op per element
             flops_per_elem = 1
@@ -60,6 +60,11 @@ def plot_comparison(df: pd.DataFrame, output_path: str):
     fig, axes = plt.subplots(len(precisions), 3, figsize=(15, 4 * len(precisions)))
     if len(precisions) == 1:
         axes = [axes]
+
+    # Compute shared y-axis limits across all precisions for comparability
+    max_cycles = df["cycles"].max()
+    max_fpu = df["fpss_fpu_occupancy"].max()
+    max_throughput = max(df["throughput"].max(), max(64 // int(p[1:]) for p in precisions))
 
     for row_idx, prec in enumerate(precisions):
         ax_cycles = axes[row_idx][0]
@@ -90,6 +95,11 @@ def plot_comparison(df: pd.DataFrame, output_path: str):
         ax_throughput.axhline(
             y=max_tp, color="gray", linestyle="--", label="Roofline",
         )
+
+        # Apply shared y-axis limits
+        ax_cycles.set_ylim(0, max_cycles * 1.05)
+        ax_fpu.set_ylim(0, max_fpu * 1.05)
+        ax_throughput.set_ylim(0, max_throughput * 1.05)
 
         ax_cycles.set_xlabel("Total Elements")
         ax_cycles.set_ylabel("Cycles")

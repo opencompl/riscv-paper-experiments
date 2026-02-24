@@ -1,7 +1,11 @@
 #pragma once
 
 #define PRECISION {{precision}}
-#if PRECISION == 32
+#if PRECISION == 16
+#define DTYPE __fp16
+#define EXPF expf
+#define FABSF fabsf
+#elif PRECISION == 32
 #define DTYPE float
 #define EXPF expf
 #define FABSF fabsf
