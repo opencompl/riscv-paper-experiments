@@ -3,9 +3,9 @@ xdsl-opt: xdsl-opt # from virtualenv
 mlir-opt: /usr/bin/mlir-opt-16
 mlir-translate: /usr/bin/mlir-translate-16
 cc: /opt/snitch-llvm/bin/clang++
-spike: /opt/snitch-spike/bin/spike-dasm
-vltsim: /opt/snitch-rtl/bin/snitch_cluster.vlt
-gentrace: /opt/snitch_cluster/util/trace/gen_trace.py
+llvm-mc: /opt/snitch-llvm/bin/llvm-mc
+vltsim: /opt/snitch_cluster.vlt
+gentrace: snitch_cluster/util/trace/gen_trace.py
 
 # Flags
 asflags:
@@ -19,18 +19,18 @@ asflags:
   - -fno-common
   - -O3
   - -D__DEFINED_uint64_t
-  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
-  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
-  - -I/opt/snitch_cluster/sw/snRuntime/api
-  - -I/opt/snitch_cluster/sw/snRuntime/src
-  - -I/opt/snitch_cluster/sw/snRuntime/src/omp/
-  - -I/opt/snitch_cluster/sw/snRuntime/api/omp/
-  - -I/opt/snitch_cluster/sw/math/arch/riscv64/bits/
-  - -I/opt/snitch_cluster/sw/math/arch/generic
-  - -I/opt/snitch_cluster/sw/math/src/include
-  - -I/opt/snitch_cluster/sw/math/src/internal
-  - -I/opt/snitch_cluster/sw/math/include/bits
-  - -I/opt/snitch_cluster/sw/math/include
+  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
+  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/common
+  - -Isnitch_cluster/sw/snRuntime/api
+  - -Isnitch_cluster/sw/snRuntime/src
+  - -Isnitch_cluster/sw/snRuntime/src/omp/
+  - -Isnitch_cluster/sw/snRuntime/api/omp/
+  - -Isnitch_cluster/sw/math/arch/riscv64/bits/
+  - -Isnitch_cluster/sw/math/arch/generic
+  - -Isnitch_cluster/sw/math/src/include
+  - -Isnitch_cluster/sw/math/src/internal
+  - -Isnitch_cluster/sw/math/include/bits
+  - -Isnitch_cluster/sw/math/include
 cflags:
   - -Wno-unused-command-line-argument
   - -menable-experimental-extensions
@@ -43,30 +43,33 @@ cflags:
   - -fno-common
   - -O3
   - -D__DEFINED_uint64_t
-  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
-  - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/common
-  - -I/opt/snitch_cluster/sw/snRuntime/api
-  - -I/opt/snitch_cluster/sw/snRuntime/src
-  - -I/opt/snitch_cluster/sw/snRuntime/src/omp/
-  - -I/opt/snitch_cluster/sw/snRuntime/api/omp/
-  - -I/opt/snitch_cluster/sw/math/arch/riscv64/bits/
-  - -I/opt/snitch_cluster/sw/math/arch/generic
-  - -I/opt/snitch_cluster/sw/math/src/include
-  - -I/opt/snitch_cluster/sw/math/src/internal
-  - -I/opt/snitch_cluster/sw/math/include/bits
-  - -I/opt/snitch_cluster/sw/math/include
+  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
+  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/common
+  - -Isnitch_cluster/sw/snRuntime/api
+  - -Isnitch_cluster/sw/snRuntime/src
+  - -Isnitch_cluster/sw/snRuntime/src/omp/
+  - -Isnitch_cluster/sw/snRuntime/api/omp/
+  - -Isnitch_cluster/sw/math/arch/riscv64/bits/
+  - -Isnitch_cluster/sw/math/arch/generic
+  - -Isnitch_cluster/sw/math/src/include
+  - -Isnitch_cluster/sw/math/src/internal
+  - -Isnitch_cluster/sw/math/include/bits
+  - -Isnitch_cluster/sw/math/include
 ldflags:
   - -fuse-ld=/opt/snitch-llvm/bin/ld.lld
   - -nostartfiles
   - -nostdlib
   - -L/opt/snitch-llvm/lib/clang/15.0.0/lib/
-  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/
-  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl
-  - -L/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
-  - -T/opt/snitch_cluster/sw/snRuntime/base.ld
+  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/
+  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/rtl
+  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
+  - -Tsnitch_cluster/sw/snRuntime/base.ld
   - -lc
   - -lsnRuntime
   - -lclang_rt.builtins-riscv32
+llvm-mcflags:
+  - -disassemble
+  - -mcpu=snitch
 xdsl-passes:
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:
