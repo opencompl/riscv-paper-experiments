@@ -374,10 +374,11 @@ rule dasm_to_trace:
         txt="{test}.logs/trace_hart_00000.trace.txt",
         json="{test}.logs/trace_hart_00000.trace.json",
     params:
-        spike=config["spike"],
         gentrace=config["gentrace"],
+        llvm_mc=config["llvm-mc"],
+        llvm_mcflags=config["llvm-mcflags"],
     shell:
-        "{params.spike} < {input} | {params.gentrace} --permissive --dump-hart-perf {log.json} -o {log.txt}"
+        "{params.gentrace} {input} --mc-exec {params.llvm_mc} --mc-flags \"{params.llvm_mcflags}\" --permissive --dump-hart-perf {log.json} -o {log.txt}"
 
 
 # Rule used to generate traces for debugging purposes, not used for csv generation
@@ -387,10 +388,11 @@ rule dasm_to_trace_debug:
     output:
         txt="{test}.logs/logs/trace_hart_00000.trace.txt",
     params:
-        spike=config["spike"],
         gentrace=config["gentrace"],
+        llvm_mc=config["llvm-mc"],
+        llvm_mcflags=config["llvm-mcflags"],
     shell:
-        "{params.spike} < {input} | {params.gentrace} --permissive > {output.txt}"
+        "{params.gentrace} {input} --mc-exec {params.llvm_mc} --mc-flags \"{params.llvm_mcflags}\" --permissive -o {log.txt}"
 
 
 rule verilator:
