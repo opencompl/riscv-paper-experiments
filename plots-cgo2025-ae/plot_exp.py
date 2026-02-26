@@ -33,8 +33,15 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 
     df["total_elements"] = df.apply(get_total_elements, axis=1)
     df["precision"] = df.apply(get_precision, axis=1)
-    # Capitalize test names for display
-    df["test"] = df["test"].map({"exp": "Exp", "relu": "ReLU"})
+    # Capitalize test names for display, distinguish relu implementations
+    def map_test_impl(row):
+        if row["test"] == "exp":
+            return "Exp"
+        if row["test"] == "relu" and row["impl"] in ("snitch_stream", "linalg_xdsl"):
+            return "ReLU Optimized"
+        return "ReLU"
+
+    df["test"] = df.apply(map_test_impl, axis=1)
 
     df = df.sort_values("total_elements")
     return df
@@ -50,7 +57,7 @@ def make_pivoted_dfs(
         pivoted = prec_df.pivot_table(
             index="total_elements", columns="test", values=metric,
         )
-        cols = [c for c in ["Exp", "ReLU"] if c in pivoted.columns]
+        cols = [c for c in ["Exp", "ReLU", "ReLU Optimized"] if c in pivoted.columns]
         pivoted = pivoted[cols]
         pivoted.index.name = f"Exp N ({prec})"
         dfs.append(pivoted)

@@ -45,6 +45,7 @@ IMPL_COLORS = {
     "Performance Roofline": dark_gray,
     "Exp": light_blue,
     "ReLU": dark_gray,
+    "ReLU Optimized": dark_green,
 }
 
 IMPL_MARKERS = {
@@ -56,6 +57,7 @@ IMPL_MARKERS = {
     "Performance Roofline": "",
     "Exp": "o",
     "ReLU": "s",
+    "ReLU Optimized": "v",
 }
 
 IMPL_LINESTYLES = {
@@ -67,6 +69,7 @@ IMPL_LINESTYLES = {
     "Performance Roofline": "--",
     "Exp": "",
     "ReLU": "",
+    "ReLU Optimized": "",
 }
 
 
