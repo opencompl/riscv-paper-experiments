@@ -142,7 +142,7 @@ TESTSET_FAST = [
 
     *expand(
         "exp/64xf{precision}/{variant}",
-        precision=[32, 64],
+        precision=[16, 32, 64],
         variant=["baseline"],
     ),
 
@@ -200,7 +200,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
     *expand(
         "exp/{N}xf{precision}/{variant}",
         N=[16, 32, 64, 128, 256],
-        precision=[32, 64],
+        precision=[16, 32, 64],
         variant=["baseline"],
     ),
 ]
@@ -250,7 +250,7 @@ TESTSET_ALL = [
     *expand(
         "exp/{N}xf{precision}/{variant}",
         N=[16, 32, 64, 128, 256],
-        precision=[32, 64],
+        precision=[16, 32, 64],
         variant=["baseline"],
     ),
 ]

@@ -43,6 +43,9 @@ IMPL_COLORS = {
     "Min Cycles": dark_gray,
     "Overhead": dark_red,
     "Performance Roofline": dark_gray,
+    "Exp": light_blue,
+    "ReLU": dark_gray,
+    "ReLU Optimized": dark_green,
 }
 
 IMPL_MARKERS = {
@@ -52,6 +55,9 @@ IMPL_MARKERS = {
     "Min Cycles": '^',
     "Overhead": 'x',
     "Performance Roofline": "",
+    "Exp": "o",
+    "ReLU": "s",
+    "ReLU Optimized": "v",
 }
 
 IMPL_LINESTYLES = {
@@ -61,6 +67,9 @@ IMPL_LINESTYLES = {
     "Min Cycles": '',
     "Overhead": '',
     "Performance Roofline": "--",
+    "Exp": "",
+    "ReLU": "",
+    "ReLU Optimized": "",
 }
 
 
@@ -198,14 +207,20 @@ def subplots(nrows: int, ncols: int, figsize: tuple[float, float]):
 
 
 def plot_combined(
-    rows: Sequence["GridPlotRow"], rcparams_cfg_file: str = "", *, legend_cols: int
+    rows: Sequence["GridPlotRow"],
+    rcparams_cfg_file: str = "",
+    *,
+    legend_cols: int,
+    figsize: tuple[float, float] | None = None,
 ):
     nrows = len(rows)
     ncols = max(len(row.dfs) for row in rows)
     if os.path.exists(rcparams_cfg_file):
         plt.style.use(rcparams_cfg_file)
 
-    fig, axs = subplots(nrows, ncols, (ncols * 2.5, nrows * 1.8))
+    if figsize is None:
+        figsize = (ncols * 2.5, nrows * 1.8)
+    fig, axs = subplots(nrows, ncols, figsize)
 
     fig.align_labels()
     fig.subplots_adjust(hspace=0.5, wspace=0.3)
