@@ -14,6 +14,7 @@ class Impl(StrEnum):
 
 class Operator(StrEnum):
     CONV = "Conv 3x3"
+    EXP = "Exp"
     FILL = "Fill"
     MATMUL = "MatMul"
     MATMUL_TRANSB = "MatMulT"
@@ -25,6 +26,7 @@ class Operator(StrEnum):
 
 OPERATOR_BY_TEST = {
     "conv2d_d1_s1_3x3": Operator.CONV,
+    "exp": Operator.EXP,
     "fill": Operator.FILL,
     "matmul": Operator.MATMUL,
     "matmul_transb": Operator.MATMUL_TRANSB,
@@ -37,6 +39,7 @@ OPERATOR_BY_TEST = {
 
 PARAMS_BY_OPERATOR = {
     Operator.CONV: ("M", "N"),
+    Operator.EXP: ("N",),
     Operator.FILL: ("M", "N"),
     Operator.MATMUL: ("M", "K", "N"),
     Operator.MATMUL_TRANSB: ("M", "K", "N"),
@@ -46,15 +49,24 @@ PARAMS_BY_OPERATOR = {
     Operator.SUM_POOL: ("M", "N"),
 }
 
+# Number of FPU instructions per element for exp, measured from trace data:
+#   f16: 12 FPU instructions per element (same as f32, promoted to float)
+#   f32: 12 FPU instructions per element
+#   f64: 13 FPU instructions per element
+EXP_FLOPS_F16 = 12
+EXP_FLOPS_F32 = 12
+EXP_FLOPS_F64 = 13
+
 FLOPS_BY_OPERATOR = {
-    Operator.CONV: lambda m, n: 2 * 9 * n * m,
-    Operator.FILL: lambda m, n: n * m,
-    Operator.MATMUL: lambda m, k, n: 2 * n * m * k,
-    Operator.MATMUL_TRANSB: lambda m, k, n: 2 * n * m * k,
-    Operator.MAX_POOL: lambda m, n: 9 * n * m,
-    Operator.RELU: lambda m, n: n * m,
-    Operator.SUM: lambda m, n: n * m,
-    Operator.SUM_POOL: lambda m, n: 9 * n * m,
+    Operator.CONV: lambda m, n, bitwidth: 2 * 9 * n * m,
+    Operator.EXP: lambda n, bitwidth: np.where(bitwidth == 16, EXP_FLOPS_F16, np.where(bitwidth == 32, EXP_FLOPS_F32, EXP_FLOPS_F64)) * n,
+    Operator.FILL: lambda m, n, bitwidth: n * m,
+    Operator.MATMUL: lambda m, k, n, bitwidth: 2 * n * m * k,
+    Operator.MATMUL_TRANSB: lambda m, k, n, bitwidth: 2 * n * m * k,
+    Operator.MAX_POOL: lambda m, n, bitwidth: 9 * n * m,
+    Operator.RELU: lambda m, n, bitwidth: n * m,
+    Operator.SUM: lambda m, n, bitwidth: n * m,
+    Operator.SUM_POOL: lambda m, n, bitwidth: 9 * n * m,
 }
 """
 FLOPS adjusted for whether the operation can benefit from the fmadd instruction.
@@ -62,6 +74,7 @@ FLOPS adjusted for whether the operation can benefit from the fmadd instruction.
 
 OPERAND_SHAPES_BY_OPERATOR = {
     Operator.CONV: lambda m, n: ((m, n),),
+    Operator.EXP: lambda n: ((n,),),
     Operator.FILL: lambda m, n: ((m, n),),
     Operator.MATMUL: lambda m, k, n: ((m, k), (k, n)),
     Operator.MATMUL_TRANSB: lambda m, k, n: ((m, k), (n, k)),
@@ -129,7 +142,7 @@ def get_flops(operator_df: pd.DataFrame, operator: Operator) -> pd.Series:
     operator_series: list[pd.Series] = [
         operator_df[param] for param in PARAMS_BY_OPERATOR[operator]
     ]
-    return FLOPS_BY_OPERATOR[operator](*operator_series)
+    return FLOPS_BY_OPERATOR[operator](*operator_series, operator_df["bitwidth"])
 
 
 def get_overhead(

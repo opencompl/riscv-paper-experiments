@@ -1,0 +1,36 @@
+{
+    "axis": {
+        "xlabel": {
+            "label": ""
+        },
+        "ylabel": {
+            "label": "Cycles",
+            "rotation": "horizontal",
+            "position": [1.0, 1.05],
+            "horizontalalignment": "left",
+            "verticalalignment": "bottom"
+        },
+        "ylim": [
+            0,
+            5000
+        ],
+        "xticks": {
+            "labelrotation": 0
+        }
+    },
+    "legend": {
+        "ncol": 50,
+        "bbox_to_anchor": [0, 1, 1, 0],
+        "loc": "lower right"
+    },
+    "spines" : {
+        "left": {
+            "color": "black",
+            "linewidth": 0.4
+        },
+        "bottom": {
+            "color": "black",
+            "linewidth": 0.4
+        }
+    }
+}
