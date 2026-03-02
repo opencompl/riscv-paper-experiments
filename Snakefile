@@ -199,7 +199,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
     ),
     *expand(
         "exp/{N}xf{precision}/{variant}",
-        N=[16, 32, 64, 128, 256],
+        N=range(16, 128, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
@@ -249,7 +249,7 @@ TESTSET_ALL = [
     ),
     *expand(
         "exp/{N}xf{precision}/{variant}",
-        N=[16, 32, 64, 128, 256],
+        N=range(16, 128, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
