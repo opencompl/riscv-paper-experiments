@@ -39,6 +39,7 @@ MLIR_VARIANTS = [
 
 # Regular expressions to parse test shape (e.g.: 4x8xf64)
 # Make sure dimensions in code match capture group names below:
+SHAPE_1D = r"(?P<N>\d+)xf(?P<precision>\d+)"
 SHAPE_2D = r"(?P<M>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 
@@ -47,6 +48,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 # a templated kernel. Dict keys below are used to enable
 # source/data generation rules.
 KERNEL_SHAPE = {
+    "exp": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -137,6 +139,13 @@ TESTSET_FAST = [
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
     *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
+
+    *expand(
+        "exp/64xf{precision}/{variant}",
+        precision=[16, 32, 64],
+        variant=["baseline"],
+    ),
+
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -188,6 +197,12 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         N=[8, 16, 24, 32, 40],
         variant=["snitch_stream"],
     ),
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=range(16, 128, 16),
+        precision=[16, 32, 64],
+        variant=["baseline"],
+    ),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
@@ -231,6 +246,12 @@ TESTSET_ALL = [
         variant=["baseline", "linalg_xdsl"],
         M=[4, 8],
         N=range(4, 65, 4),
+    ),
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=range(16, 128, 16),
+        precision=[16, 32, 64],
+        variant=["baseline"],
     ),
 ]
 
