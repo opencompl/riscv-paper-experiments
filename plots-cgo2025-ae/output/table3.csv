@@ -1,8 +1,0 @@
-Optimizations, Allocated Registers (#),  , Assembly Operations (#), , , , Performance
-, FP, Integer, Loads, Stores, FMAdd, FRep, Cycles (#), Occupancy (%)
-Baseline (for MatMul), 3/20, 13/15, 0, 0, 1000, 0, 40102, 2.5
-+ Streams, 3/20, 11/15, 0, 0, 1000, 0, 19099, 5.27
-+ Scalar Replacement, 3/20, 10/15, 0, 0, 1000, 0, 4110, 24.5
-+ FRep, 3/20, 9/15, 0, 0, 1000, 2, 4088, 24.63
-+ Fuse Fill, 5/20, 8/15, 0, 0, 1000, 1, 4079, 24.81
-+ Unroll-and-Jam, 8/20, 7/15, 0, 0, 1000, 1, 1056, 95.74
