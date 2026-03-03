@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Plot exp vs relu comparison from kernels.exp.csv.
+Plot exp kernel results from kernels.exp.csv.
 
 Usage:
     python plot_exp.py [--input results/kernels.exp.csv] [--output output/exp_plots.pdf]
@@ -33,15 +33,8 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 
     df["total_elements"] = df.apply(get_total_elements, axis=1)
     df["precision"] = df.apply(get_precision, axis=1)
-    # Capitalize test names for display, distinguish relu implementations
-    def map_test_impl(row):
-        if row["test"] == "exp":
-            return "Exp"
-        if row["test"] == "relu" and row["impl"] in ("snitch_stream", "linalg_xdsl"):
-            return "ReLU Optimized"
-        return "ReLU"
-
-    df["test"] = df.apply(map_test_impl, axis=1)
+    df = df[df["test"] == "exp"].copy()
+    df["test"] = "Exp"
 
     df = df.sort_values("total_elements")
     return df
@@ -57,7 +50,7 @@ def make_pivoted_dfs(
         pivoted = prec_df.pivot_table(
             index="total_elements", columns="test", values=metric,
         )
-        cols = [c for c in ["Exp", "ReLU", "ReLU Optimized"] if c in pivoted.columns]
+        cols = [c for c in ["Exp"] if c in pivoted.columns]
         pivoted = pivoted[cols]
         pivoted.index.name = f"Exp N ({prec})"
         dfs.append(pivoted)
@@ -123,7 +116,7 @@ def plot_exp(fpu_dfs, cycles_dfs):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot exp vs relu comparison")
+    parser = argparse.ArgumentParser(description="Plot exp kernel results")
     parser.add_argument(
         "--input", "-i",
         default="results/kernels.exp.csv",

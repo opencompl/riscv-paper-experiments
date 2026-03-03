@@ -3,40 +3,7 @@ from matplotlib.axes import Axes
 import pandas as pd
 import numpy as np
 import numpy.typing as npt
-from data import Impl, Operator, get_operator_df, get_params_dfs
-from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined
-
-
-def all_plot_dfs(
-    pivoted_df: pd.DataFrame, operators: tuple[Operator, ...], *, bitwidth: int = 64
-) -> tuple[pd.DataFrame, ...]:
-    return tuple(
-        param_df
-        for operator in operators
-        for param_df in get_params_dfs(
-            get_operator_df(pivoted_df, operator, bitwidth=bitwidth)
-        )
-    )
-
-
-def get_fpu(pivoted_fpu_df: pd.DataFrame) -> tuple[pd.DataFrame, ...]:
-    filtered = pivoted_fpu_df.filter([Impl.OURS, Impl.CLANG, Impl.MLIR])
-    return (
-        *all_plot_dfs(
-            filtered,
-            (
-                Operator.SUM,
-                Operator.FILL,
-                Operator.RELU,
-                Operator.CONV,
-                Operator.MAX_POOL,
-                Operator.SUM_POOL,
-                # Operator.MATMUL, # Matmul included in other plot
-            ),
-        ),
-        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=32),
-        *all_plot_dfs(filtered, (Operator.EXP,), bitwidth=64),
-    )
+from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow
 
 
 class FPUGridPlotRow(GridPlotRow):
@@ -69,15 +36,3 @@ class FPUGridPlotRow(GridPlotRow):
     def get_roofline(cls, df: pd.DataFrame) -> float | None:
         df['Performance Roofline'] = 1.0
         return 1.0
-
-
-def plot_fpu(fpu_dfs: tuple[pd.DataFrame, ...]):
-    nrows = -(-len(fpu_dfs) // 6)  # ceil division
-    return plot_combined(
-        FPUGridPlotRow.get_rows(
-            fpu_dfs, 6,
-            hide_xtick_labels=[True] * (nrows - 1) + [False],
-        ),
-        legend_cols=4,
-        rcparams_cfg_file="config/gridplot.mplstyle",
-    )
