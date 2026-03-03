@@ -10,7 +10,6 @@ import abc
 from typing import Callable, Iterator, Literal, NamedTuple, ParamSpec, Any
 
 
-
 class Define(NamedTuple):
     name: str
     value: int
