@@ -8,6 +8,7 @@
 
 #define N_BUFFERS 2 // Not sure about the number of buffers here
 
+
 static inline void vexpf_optimized_v2(double *a, double *b) {
     int n_batches = LEN / BATCH_SIZE;
     int n_iterations = n_batches + 2;
@@ -91,7 +92,7 @@ static inline void vexpf_optimized_v2(double *a, double *b) {
 
                 asm volatile(
                     // clang-format off
-                    "csrsi   copift, 0x1               \n" // Enable COPIFT queues
+                    "csrsi   0x7C6, 0x1               \n" // Enable COPIFT queues (copift CSR = 0x7C6)
                     "fmul.d  fa3, %[InvLn2N], ft0      \n" // z = InvLn2N * xd
                     "fmul.d  ft3, %[InvLn2N], ft0      \n" // z = InvLn2N * xd
                     "fmul.d  ft4, %[InvLn2N], ft0      \n" // z = InvLn2N * xd
@@ -280,7 +281,7 @@ static inline void vexpf_optimized_v2(double *a, double *b) {
                     // Synchronize and disable COPIFT queues
                     "fmv.x.w a0, fs2                   \n" // FPU fence (part 1)
                     "mv      x0, t6                    \n" // FPU fence (part 2)
-                    "csrci   copift, 0x1               \n" // Disable COPIFT queues
+                    "csrci   0x7C6, 0x1               \n" // Disable COPIFT queues (copift CSR = 0x7C6)
                     // clang-format on
                     : [ n_iter ] "+r"(n_inner_iter_m2)
                     : [ t ] "r"(t), [ T ] "r"(T), [ InvLn2N ] "f"(InvLn2N),
@@ -306,3 +307,4 @@ static inline void vexpf_optimized_v2(double *a, double *b) {
         snrt_cluster_hw_barrier();
     }
 }
+

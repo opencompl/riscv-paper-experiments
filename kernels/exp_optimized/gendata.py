@@ -1,6 +1,7 @@
 # i need to generate an input data array X somehow here 
 import numpy as np
 from gendatautils import main, Define, Array
+from typing import Iterator
 
 def exp_data(
     N: int, rmin: float, rmax: float, precision: int

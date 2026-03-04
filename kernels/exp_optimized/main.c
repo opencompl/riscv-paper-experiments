@@ -3,11 +3,12 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 // Luca Colagrande <colluca@iis.ee.ethz.ch>
-
-#include "math.h"
-#include "snrt.h"
 #include "data.h"
-#include "vexpf.h"
+#include <math.h>
+#include <snrt.h>
+
+
+extern "C" void vexpf_kernel(double *a, double *b);
 
 double a[LEN], b_golden[LEN], b_actual[LEN];
 

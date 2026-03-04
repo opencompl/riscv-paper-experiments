@@ -1,2 +1,7 @@
+#pragma once
 
-#include "../vexpf_optimized_v2.h"
+#define LEN 64
+
+extern const double X[LEN];
+extern const double G[LEN];
+

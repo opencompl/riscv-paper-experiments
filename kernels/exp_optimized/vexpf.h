@@ -4,6 +4,8 @@
 //
 // Luca Colagrande <colluca@iis.ee.ethz.ch>
 
+#include <snrt.h>
+
 #ifndef LEN
 #define LEN 64
 #endif
@@ -36,12 +38,3 @@ __thread const double SHIFT = 0x1.8p+52;
 __thread const double C[4] = {0x1.c6af84b912394p-5 / N / N / N,
                               0x1.ebfce50fac4f3p-3 / N / N,
                               0x1.62e42ff0c52d6p-1 / N, 1.0};
-
-
-#include "vexpf_optimized_v2.h"
-
-static inline void vexpf_kernel(double *a, double *b) {
-    snrt_mcycle();
-    vexpf_optimized_v2(a, b);
-    snrt_mcycle();
-}
