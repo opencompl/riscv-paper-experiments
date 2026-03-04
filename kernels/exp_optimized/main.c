@@ -15,11 +15,13 @@ double a[LEN], b_golden[LEN], b_actual[LEN];
 int main() {
     uint32_t tstart, tend;
 
-    // Initialize input array from pre-generated data (core 0 only)
-    if (snrt_cluster_core_idx() == 0)
-        for (int i = 0; i < LEN; i++){
+    // Initialize input and golden arrays from pre-generated data (core 0 only)
+    if (snrt_cluster_core_idx() == 0) {
+        for (int i = 0; i < LEN; i++) {
             a[i] = X[i];
-        } 
+            b_golden[i] = G[i];
+        }
+    }
 
 
     // Synchronize cores
