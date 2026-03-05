@@ -31,7 +31,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Copying parent directories is more efficient than many individual sub-directories.
 
 COPY --from=snitch /tools/bin/snitch_cluster.vlt /opt/snitch_cluster.vlt
-COPY --from=builder /tools/riscv-llvm /opt/snitch-llvm
+COPY --from=snitch /tools/riscv-llvm /opt/snitch-llvm
+
+ENV PATH="/opt:/opt/snitch-llvm/bin:$PATH"
 
 # === Optimized Package Installation ===
 # Split apt commands into logical, cacheable layers.

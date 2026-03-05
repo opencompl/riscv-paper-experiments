@@ -43,29 +43,16 @@ cflags:
   - -fno-common
   - -O3
   - -D__DEFINED_uint64_t
-  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/rtl/src
-  - -Isnitch_cluster/target/snitch_cluster/sw/runtime/common
-  - -Isnitch_cluster/sw/snRuntime/api
-  - -Isnitch_cluster/sw/snRuntime/src
-  - -Isnitch_cluster/sw/snRuntime/src/omp/
-  - -Isnitch_cluster/sw/snRuntime/api/omp/
-  - -Isnitch_cluster/sw/math/arch/riscv64/bits/
-  - -Isnitch_cluster/sw/math/arch/generic
-  - -Isnitch_cluster/sw/math/src/include
-  - -Isnitch_cluster/sw/math/src/internal
-  - -Isnitch_cluster/sw/math/include/bits
-  - -Isnitch_cluster/sw/math/include
+  - -Isnitch_cluster/sw/runtime/impl
+  - -Isnitch_cluster/sw/runtime/src
+  - -Isnitch_cluster/sw/runtime/api
 ldflags:
   - -fuse-ld=/opt/snitch-llvm/bin/ld.lld
   - -nostartfiles
   - -nostdlib
   - -L/opt/snitch-llvm/lib/clang/15.0.0/lib/
-  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/
-  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/rtl
-  - -Lsnitch_cluster/target/snitch_cluster/sw/runtime/rtl/build
-  - -Tsnitch_cluster/sw/snRuntime/base.ld
+  - -Tsnitch_cluster/sw/runtime/base.ld
   - -lc
-  - -lsnRuntime
   - -lclang_rt.builtins-riscv32
 llvm-mcflags:
   - -disassemble
