@@ -21,7 +21,7 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 2, 0>
     }> ({
 
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
+    ^bb0(%X_stream : !snitch.readable<!riscv.freg<ft0>>, %Y_stream : !snitch.readable<!riscv.freg<ft1>>):
         %init1 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
         %init2 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
         %init3 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
