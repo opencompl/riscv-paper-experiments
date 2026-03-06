@@ -14,7 +14,7 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %G_moved = riscv.mv %G : (!riscv.reg<a2>) -> !riscv.reg
 
-    %zero = riscv.get_register : !riscv.reg<zero>
+    %zero = rv32.get_register : !riscv.reg<zero>
     %zero_float = riscv.fmv.w.x %zero : (!riscv.reg<zero>) -> !riscv.freg
 
     snitch_stream.streaming_region {
