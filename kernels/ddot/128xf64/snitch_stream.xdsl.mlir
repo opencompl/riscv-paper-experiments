@@ -11,7 +11,7 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %G_moved = riscv.mv %G : (!riscv.reg<a2>) -> !riscv.reg
 
-    %c0 = riscv.get_register : !riscv.reg<zero>
+    %c0 = rv32.get_register : !riscv.reg<zero>
     %init0 = riscv.fcvt.d.w %c0 : (!riscv.reg<zero>) -> !riscv.freg
 
     "snitch_stream.streaming_region"(%X_moved, %Y_moved) <{
@@ -21,12 +21,12 @@ riscv.assembly_section ".text" {
       "operandSegmentSizes" = array<i32: 2, 0>
     }> ({
 
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
+    ^bb0(%X_stream : !snitch.readable<!riscv.freg<ft0>>, %Y_stream : !snitch.readable<!riscv.freg<ft1>>):
         %init1 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
         %init2 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
         %init3 = riscv.fmv.d %init0 : (!riscv.freg) -> !riscv.freg
 
-        %c31 = riscv.li 31: !riscv.reg
+        %c31 = rv32.li 31: !riscv.reg
         %g0, %g1, %g2, %g3 = riscv_snitch.frep_outer %c31 iter_args(%acc0 = %init0, %acc1 = %init1, %acc2 = %init2, %acc3 = %init3) -> (!riscv.freg, !riscv.freg, !riscv.freg, !riscv.freg) {
           %x0 = riscv_snitch.read from %X_stream : !riscv.freg<ft0>
           %y0 = riscv_snitch.read from %Y_stream : !riscv.freg<ft1>
