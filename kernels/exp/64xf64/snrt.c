@@ -3,7 +3,7 @@
 #include <snrt.h>
 #include <stdint.h>
 
-#include "../optimized.h"
+#include "../optimized_simplified.h"
 
 
 #ifdef __cplusplus
@@ -25,9 +25,12 @@ void exp_kernel(const DTYPE* x, DTYPE* z) {
             x_mem[i] = (double)x[i];
         }
     }    
+    snrt_cluster_hw_barrier();
     // instead of operating on each element one by one by iterating over the array, 
     // we operate on multiple elements at a time.
     exp_optimized(x_mem, z_mem); 
+
+    snrt_cluster_hw_barrier();
 
     if (snrt_cluster_core_idx() == 0) {
         for (int i = 0; i < N; i++) {
