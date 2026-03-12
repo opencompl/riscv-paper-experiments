@@ -112,7 +112,6 @@ static inline void exp_optimized(double *a, double *b) {
         if (snrt_is_dm_core()) {
             // DMA in phase
             if (iteration < n_iterations - 4) {
-                printf("DMA in phase, iteration %d\n", iteration);
                 // Index buffers
                 dma_a_ptr = a_buffers[dma_a_idx];
 
@@ -129,7 +128,6 @@ static inline void exp_optimized(double *a, double *b) {
             // this correctly loads b_buffer into output array b
             // however the b_buffer is already all zeros
             if (iteration > 3) {
-                printf("DMA out phase, iteration %d\n", iteration);
                 // Index buffers
                 dma_b_ptr = b_buffers[dma_b_idx];
 
@@ -152,15 +150,12 @@ static inline void exp_optimized(double *a, double *b) {
             // FP0 phase
             if (iteration > 0 && iteration < 3 &&
                 iteration < n_iterations - 3) {
-                printf("FP0 phase, iteration %d\n", iteration);
                 // Index buffers
                 fp0_a_ptr = a_buffers[fp0_a_idx];
                 fp0_kd_ptr = kd_buffers[fp0_w_idx];
                 fp0_w_ptr = w_buffers[fp0_w_idx];
 
-                // FP0 computation
-                int unroll_factor = 4;
-
+                
                 // Configure SSRs
                 snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, BATCH_SIZE, sizeof(double));
 
@@ -169,10 +164,11 @@ static inline void exp_optimized(double *a, double *b) {
                 snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_1D, fp0_w_ptr);
                 snrt_ssr_enable();
                 
-                // original implementation with frep
+                // FP0 computation
+                int unroll_factor = 4;
                 asm volatile("frep.o %[n_frep], 36, 0, 0 \n" FP0_ASM_BODY
                              :
-                             : [ n_frep ] "r"(1),
+                             : [ n_frep ] "r"(BATCH_SIZE / unroll_factor - 1),
                                [ InvLn2N ] "f"(InvLn2N), [ SHIFT ] "f"(SHIFT),
                                [ C0 ] "f"(C[0]), [ C1 ] "f"(C[1]),
                                [ C2 ] "f"(C[2]), [ C3 ] "f"(C[3])
@@ -180,22 +176,6 @@ static inline void exp_optimized(double *a, double *b) {
                                "ft4", "ft5", "fa1", "fa2", "fa3", "fa4", "fa5",
                                "fa6", "fa7", "ft3", "ft4", "ft5", "ft6", "ft7",
                                "ft8", "fs0", "fs1", "fs2", "ft0", "ft1", "ft2");
-                
-                // 
-                // #pragma nounroll
-                // for (int i = 0; i < BATCH_SIZE / 4; i++) {
-                //     asm volatile(FP0_ASM_BODY
-                //                 :
-                //                 : [InvLn2N] "f"(InvLn2N), [SHIFT] "f"(SHIFT),
-                //                 [C0] "f"(C[0]), [C1] "f"(C[1]),
-                //                 [C2] "f"(C[2]), [C3] "f"(C[3])
-                //                 : "memory", "ft0", "ft1", "ft2", "fa3", "ft3",
-                //                 "ft4", "ft5", "fa1", "fa2", "fa4", "fa5",
-                //                 "fa6", "fa7", "ft6", "ft7", "ft8", "fs0", "fs1", "fs2");
-                // }       
-
-                snrt_ssr_disable();
-                snrt_fpu_fence();
                 
                 // Increment buffer index for next iteration
                 fp0_w_idx += 1;
@@ -206,7 +186,6 @@ static inline void exp_optimized(double *a, double *b) {
 
             // Both FP0 and FP1 phases
             if (iteration > 2 && iteration < n_iterations - 3) {
-                printf("FP0 and FP1 phases, iteration %d\n", iteration);
                 // Index buffers
                 fp0_a_ptr = a_buffers[fp0_a_idx];
                 fp0_kd_ptr = kd_buffers[fp0_w_idx];
@@ -256,7 +235,6 @@ static inline void exp_optimized(double *a, double *b) {
             if (iteration > 2 && iteration >= n_iterations - 3 &&
                 iteration < n_iterations - 1) {
                 // Index buffers
-                printf("FP1 phase, iteration %d\n", iteration);
                 fp1_w_ptr = w_buffers[fp1_w_idx];
                 fp1_t_ptr = t_buffers[fp1_t_idx];
                 fp1_b_ptr = b_buffers[fp1_w_idx];
@@ -275,17 +253,6 @@ static inline void exp_optimized(double *a, double *b) {
                              : [ n_frep ] "r"(BATCH_SIZE / unroll_factor - 1)
                              : "memory", "ft0", "ft1", "ft2");
                 
-                
-                // #pragma nounroll// 
-                // for (int i = 0; i < BATCH_SIZE / 4; i++) {
-                //     asm volatile(FP1_ASM_BODY
-                //                 :
-                //                 :// 
-                //                : "memory", "ft0", "ft1", "ft2");
-                // }
-                // for (int i = 0; i < BATCH_SIZE; i++) {
-                //     fp1_b_ptr[i] = fp1_w_ptr[i] * ((double *)fp1_t_ptr)[i];
-                // }
                 // Increment buffer indices for next iteration
                 fp1_w_idx += 1;
                 fp1_t_idx += 1;
@@ -295,7 +262,6 @@ static inline void exp_optimized(double *a, double *b) {
 
             // INT phase
             if (iteration > 1 && iteration < n_iterations - 2) {
-                printf("INT phase, iteration %d\n", iteration);
                 // Index buffers
                 int_ki_ptr = ki_buffers[int_ki_idx];
                 int_t_ptr = t_buffers[int_t_idx];
@@ -324,17 +290,6 @@ static inline void exp_optimized(double *a, double *b) {
             // Synchronize FP and integer threads
             snrt_ssr_disable();
             snrt_fpu_fence();
-            if(iteration == 1) {
-                for (int i = 0; i < 10; i++) {
-                    printf("kd[%d]=%f w[%d]=%f\n", i, (double)fp0_kd_ptr[i], i, (double)fp0_w_ptr[i]);
-                }
-            }
-            if(iteration == 3) {
-
-                for (int i = 0; i < 5; i++) {
-                    printf("b_buffer[0][%d] = %f\n", i, fp1_b_ptr[i]);
-                }
-            }
         }
 
         // Synchronize cores

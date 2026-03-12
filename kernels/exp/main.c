@@ -46,7 +46,6 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
-        if (local_z[i] == (DTYPE)0.0) nzero++;
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
 

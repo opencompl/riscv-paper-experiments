@@ -19,12 +19,8 @@ extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
-    // By avoiding allocators and bumping by a known offset a base pointer
-    // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
-    // essentially providing the same memory regions to all the cores in this cluster.
-    // DTYPE *local_x = (DTYPE *)snrt_l1_next();
-    // DTYPE *local_z = local_x + N;
-
+    // We use snrt_l1_alloc_cluster_local to ensure that the l1 local memory pointer advances 
+    // when we use it later to allocate l1 memory buffers 
     DTYPE *local_x = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
     DTYPE *local_z = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
 
@@ -43,16 +39,13 @@ int main() {
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-     // Only core 0, maybe we need to move this up.
+     // From this point only core 0 is running
     int thiscore = snrt_cluster_core_idx();
     if (thiscore != 0) return 0;
 
     // Correctness check
     int nerr = 0;
-    int nzero = 0;
     for (int i = 0; i < N; i++) {
-        if (i < 5) printf("z[%d]: %f, expected g[%d]: %f\n", i, (double)local_z[i], i, (double)G[i]);
-        if (local_z[i] == (DTYPE)0.0) nzero++;
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
 
@@ -60,7 +53,5 @@ int main() {
         DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)1E-2 : (DTYPE)1E-2;
         nerr += !(d <= tol);
     }
-    // If all outputs are zero, return 100 + nzero as a diagnostic signal
-    if (nzero == N) return 100 + nzero;
     return nerr;
 }

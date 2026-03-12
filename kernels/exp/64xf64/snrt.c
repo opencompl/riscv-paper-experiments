@@ -3,7 +3,7 @@
 #include <snrt.h>
 #include <stdint.h>
 
-#include "../optimized_simplified.h"
+#include "../optimized.h"
 
 
 #ifdef __cplusplus

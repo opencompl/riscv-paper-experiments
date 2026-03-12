@@ -125,6 +125,8 @@ static inline void exp_optimized(double *a, double *b) {
             }
 
             // DMA out phase
+            // this correctly loads b_buffer into output array b
+            // however the b_buffer is already all zeros
             if (iteration > 3) {
                 // Index buffers
                 dma_b_ptr = b_buffers[dma_b_idx];
@@ -136,9 +138,11 @@ static inline void exp_optimized(double *a, double *b) {
                 // Increment buffer index for next iteration
                 dma_b_idx += 1;
                 dma_b_idx %= N_W_BUFFERS;
+                
             }
 
             snrt_dma_wait_all();
+
         }
 
         // Compute cores
@@ -234,18 +238,19 @@ static inline void exp_optimized(double *a, double *b) {
                 fp1_b_ptr = b_buffers[fp1_w_idx];
 
                 // Configure SSRs
-                int unroll_factor = 4;
+               int unroll_factor = 4;
                 snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, BATCH_SIZE, sizeof(double));
                 snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, fp1_w_ptr);
                 snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, fp1_t_ptr);
                 snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_1D, fp1_b_ptr);
-                snrt_ssr_enable();
+               snrt_ssr_enable();
 
                 // FP1 computation
                 asm volatile("frep.o %[n_frep], 4, 0, 0 \n" FP1_ASM_BODY
                              :
                              : [ n_frep ] "r"(BATCH_SIZE / unroll_factor - 1)
                              : "memory", "ft0", "ft1", "ft2");
+                
 
                 // Increment buffer indices for next iteration
                 fp1_w_idx += 1;
@@ -288,5 +293,7 @@ static inline void exp_optimized(double *a, double *b) {
 
         // Synchronize cores
         snrt_cluster_hw_barrier();
+
+
     }
 }
