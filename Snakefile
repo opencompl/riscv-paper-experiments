@@ -83,10 +83,6 @@ MANUAL_KERNELS = [
         variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
     ),
     *expand(
-        "exp/64xf64/{variant}",
-        variant=["snrt"],
-    ),
-    *expand(
         "exp_experiment/64xf64/{variant}",
         variant=["snrt"],
     )
@@ -152,7 +148,7 @@ TESTSET_FAST = [
     *expand(
         "exp/64xf{precision}/{variant}",
         precision=[16, 32, 64],
-        variant=["baseline"],
+        variant=["baseline", "snrt"],
     ),
 
 ]
@@ -210,7 +206,7 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         "exp/{N}xf{precision}/{variant}",
         N=range(16, 128, 16),
         precision=[16, 32, 64],
-        variant=["baseline"],
+        variant=["baseline", "snrt"],
     ),
 ]
 
@@ -260,7 +256,7 @@ TESTSET_ALL = [
         "exp/{N}xf{precision}/{variant}",
         N=range(16, 128, 16),
         precision=[16, 32, 64],
-        variant=["baseline"],
+        variant=["baseline", "snrt"],
     ),
 ]
 
