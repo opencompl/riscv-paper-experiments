@@ -49,7 +49,6 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 # source/data generation rules.
 KERNEL_SHAPE = {
     "exp": SHAPE_1D,
-    "exp_experiment": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -81,10 +80,6 @@ MANUAL_KERNELS = [
     *expand(
         "dense/8x8xf64/{variant}",
         variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
-    ),
-    *expand(
-        "exp_experiment/64xf64/{variant}",
-        variant=["snrt"],
     )
 ]
 
