@@ -26,19 +26,18 @@ ARG SNITCH_COMMIT
 # The base image sets SN_LLVM_BINROOT, but commit 7f430f2 expects LLVM_BINROOT.
 ENV LLVM_BINROOT="/tools/riscv-llvm/bin"
 
-# Copy custom Snitch config (default + num_sequencer_instructions=64)
-COPY docker/snitch_cfg.json /tmp/snitch_cfg.json
-
 # Patch .gitmodules to replace SSH URLs with HTTPS
 # Clone the snitch_cluster repository into /repo
 # If the repo URL or commit hash doesn't change, this layer remains cached.
+# Patch num_sequencer_instructions from 32 to 64 in the default config to
+# support larger FREP bodies (e.g. FP0_ASM_BODY with 36 instructions).
 RUN git config --global url."https://github".insteadOf "git://github" \
    && git config --global url."https://github.com/".insteadOf "git@github.com:" \
    && git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo \
    && cd /repo \
    && git reset --hard ${SNITCH_COMMIT} \
-   && cp /tmp/snitch_cfg.json target/snitch_cluster/cfg/custom.json \
-   && make -C target/snitch_cluster CFG_OVERRIDE=cfg/custom.json verilator \
+   && sed -i 's/num_sequencer_instructions: 32/num_sequencer_instructions: 64/' target/snitch_cluster/cfg/default.hjson \
+   && make -C target/snitch_cluster verilator \
    && make -C target/snitch_cluster DEBUG=ON sw \
    && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
    && ./configure --prefix=/opt/snitch-spike \
