@@ -43,7 +43,8 @@ IMPL_COLORS = {
     "Min Cycles": dark_gray,
     "Overhead": dark_red,
     "Performance Roofline": dark_gray,
-    "Exp": light_blue,
+    "Exp_baseline": light_blue,
+    "Exp_snrt": dark_blue
 }
 
 IMPL_MARKERS = {
@@ -53,7 +54,8 @@ IMPL_MARKERS = {
     "Min Cycles": '^',
     "Overhead": 'x',
     "Performance Roofline": "",
-    "Exp": "o",
+    "Exp_baseline": "o",
+    "Exp_snrt": "s",
 }
 
 IMPL_LINESTYLES = {
@@ -63,7 +65,8 @@ IMPL_LINESTYLES = {
     "Min Cycles": '',
     "Overhead": '',
     "Performance Roofline": "--",
-    "Exp": "",
+    "Exp_baseline": "",
+    "Exp_snrt": "",
 }
 
 

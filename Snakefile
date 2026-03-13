@@ -145,7 +145,6 @@ TESTSET_FAST = [
         precision=[16, 32, 64],
         variant=["baseline", "snrt"],
     ),
-
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -201,7 +200,13 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         "exp/{N}xf{precision}/{variant}",
         N=range(16, 128, 16),
         precision=[16, 32, 64],
-        variant=["baseline", "snrt"],
+        variant=["baseline"],
+    ),
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=range(64, 128, 64),
+        precision=[16, 32, 64],
+        variant=["snrt"],
     ),
 ]
 
@@ -251,7 +256,28 @@ TESTSET_ALL = [
         "exp/{N}xf{precision}/{variant}",
         N=range(16, 128, 16),
         precision=[16, 32, 64],
-        variant=["baseline", "snrt"],
+        variant=["baseline"],
+    ),
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=range(64, 128, 64),
+        precision=[16, 32, 64],
+        variant=["snrt"],
+    ),
+]
+
+TESTSET_EXP = [
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=range(16, 128, 16),
+        precision=[16, 32, 64],
+        variant=["baseline"],
+    ),
+    *expand(
+        "exp/{N}xf{precision}/{variant}",
+        N=[N for N in range(16, 128, 16) if N % 64 == 0],
+        precision=[16, 32, 64],
+        variant=["snrt"],
     ),
 ]
 
@@ -264,6 +290,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "all": sorted(set(TESTSET_ALL)),
         "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
         "pipeline": sorted(set(TESTSET_PIPELINE)),
+        "exp": sorted(set(TESTSET_EXP)), 
     }
     name = wildcards.testset
     if name not in sets:
