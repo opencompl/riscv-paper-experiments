@@ -29,11 +29,14 @@ ENV LLVM_BINROOT="/tools/riscv-llvm/bin"
 # Patch .gitmodules to replace SSH URLs with HTTPS
 # Clone the snitch_cluster repository into /repo
 # If the repo URL or commit hash doesn't change, this layer remains cached.
+# Patch num_sequencer_instructions from 32 to 64 in the default config to
+# support larger FREP bodies (e.g. FP0_ASM_BODY with 36 instructions).
 RUN git config --global url."https://github".insteadOf "git://github" \
    && git config --global url."https://github.com/".insteadOf "git@github.com:" \
    && git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo \
    && cd /repo \
    && git reset --hard ${SNITCH_COMMIT} \
+   && sed -i 's/num_sequencer_instructions: 32/num_sequencer_instructions: 64/' target/snitch_cluster/cfg/default.hjson \
    && make -C target/snitch_cluster verilator \
    && make -C target/snitch_cluster DEBUG=ON sw \
    && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
