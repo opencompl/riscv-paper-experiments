@@ -36,6 +36,10 @@ int main() {
 
     snrt_cluster_hw_barrier();
 
+     // From this point only core 0 is running
+    int thiscore = snrt_cluster_core_idx();
+    if (thiscore != 0) return 0;
+
     // Launch kernel: we need DMA core to participate so i moved the core!=0 check to later
     snrt_fpu_fence();
     (void)snrt_mcycle();
@@ -43,9 +47,6 @@ int main() {
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-     // From this point only core 0 is running
-    int thiscore = snrt_cluster_core_idx();
-    if (thiscore != 0) return 0;
 
     // Correctness check
     int nerr = 0;
