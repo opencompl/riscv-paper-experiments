@@ -269,15 +269,9 @@ TESTSET_ALL = [
 TESTSET_EXP = [
     *expand(
         "exp/{N}xf{precision}/{variant}",
-        N=range(16, 128, 16),
+        N=range(64, 193, 64),
         precision=[16, 32, 64],
-        variant=["baseline"],
-    ),
-    *expand(
-        "exp/{N}xf{precision}/{variant}",
-        N=[N for N in range(16, 128, 16) if N % 64 == 0],
-        precision=[16, 32, 64],
-        variant=["snrt"],
+        variant=["baseline", "snrt"],
     ),
 ]
 

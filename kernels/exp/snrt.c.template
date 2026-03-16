@@ -12,7 +12,7 @@ extern "C" {
 
 double x_mem[N], z_mem[N];
 
-void exp_kernel(const DTYPE* x, DTYPE* z) {
+void exp_kernel(const DTYPE* x, DTYPE* z, double *workspace, size_t workspace_size) {
     // Remark 1: Luca Colagrande's implementation of exp ("exp_optimized") expects double pointers to memory,
     // but we pass pointers to the l1 scatchpad.
     // This is whycrea te arrays in memory and copy the data from l1 scratchpad back these arrays in memory.
@@ -28,7 +28,7 @@ void exp_kernel(const DTYPE* x, DTYPE* z) {
     snrt_cluster_hw_barrier();
     // instead of operating on each element one by one by iterating over the array,
     // we operate on multiple elements at a time.
-    exp_optimized(x_mem, z_mem);
+    exp_optimized(x_mem, z_mem, workspace, workspace_size);
 
     snrt_cluster_hw_barrier();
 

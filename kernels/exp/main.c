@@ -15,7 +15,7 @@ extern "C" {
 }
 
 // Kernel provided via external definition
-extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
+extern "C" void exp_kernel(const DTYPE *x, DTYPE *z, double *workspace, size_t workspace_size);
 
 int main() {
     // Allocate shared local memory
@@ -23,6 +23,10 @@ int main() {
     // when we use it later to allocate l1 memory buffers 
     DTYPE *local_x = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
     DTYPE *local_z = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
+
+    // Allocate buffer space for exp_optimized
+    size_t workspace_size = 13 * BATCH_SIZE * sizeof(double); 
+    double *workspace = (double *)snrt_l1_alloc_cluster_local(workspace_size, sizeof(double));
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
@@ -35,7 +39,7 @@ int main() {
     // Launch kernel: we need DMA core to participate so i moved the core!=0 check to later
     snrt_fpu_fence();
     (void)snrt_mcycle();
-    exp_kernel(local_x, local_z);
+    exp_kernel(local_x, local_z, workspace, workspace_size);
     snrt_fpu_fence();
     (void)snrt_mcycle();
 

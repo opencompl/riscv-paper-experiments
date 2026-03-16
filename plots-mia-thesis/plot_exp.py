@@ -43,15 +43,14 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 def make_pivoted_dfs(
     df: pd.DataFrame, metric: str, precisions: list[str],
 ) -> list[pd.DataFrame]:
-    """Create one pivoted DataFrame per precision, with kernels as columns."""
+    """Create one pivoted DataFrame per precision, with impl as columns."""
     dfs = []
     for prec in precisions:
         prec_df = df[df["precision"] == prec]
         pivoted = prec_df.pivot_table(
-            index="total_elements", columns="test", values=metric,
+            index="total_elements", columns="impl", values=metric,
         )
-        cols = [c for c in ["Exp"] if c in pivoted.columns]
-        pivoted = pivoted[cols]
+        pivoted.columns = [f"Exp_{c}" for c in pivoted.columns]
         pivoted.index.name = f"Exp N ({prec})"
         dfs.append(pivoted)
     return dfs

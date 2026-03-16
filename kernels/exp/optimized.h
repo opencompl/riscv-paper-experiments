@@ -45,7 +45,7 @@ __thread const double C[4] = {0x1.c6af84b912394p-5 / EXP_N / EXP_N / EXP_N,
                               0x1.62e42ff0c52d6p-1 / EXP_N, 1.0};
 
 
-static inline void exp_optimized(double *a, double *b) {
+static inline void exp_optimized(double *a, double *b, double *workspace, size_t workspace_size) {
 
     // Derived parameters
     unsigned int n_batches = LEN / BATCH_SIZE;
@@ -58,22 +58,22 @@ static inline void exp_optimized(double *a, double *b) {
     double *b_buffers[N_W_BUFFERS];
     double *a_buffers[N_T_BUFFERS];
     uint64_t *t_buffers[N_T_BUFFERS];
-    ki_buffers[0] = ALLOCATE_BUFFER(uint64_t, BATCH_SIZE);
-    ki_buffers[1] = ALLOCATE_BUFFER(uint64_t, BATCH_SIZE);
-    ki_buffers[2] = ALLOCATE_BUFFER(uint64_t, BATCH_SIZE);
+    ki_buffers[0] = (uint64_t *)(workspace +  0 * BATCH_SIZE);
+    ki_buffers[1] = (uint64_t *)(workspace +  1 * BATCH_SIZE);
+    ki_buffers[2] = (uint64_t *)(workspace +  2 * BATCH_SIZE);
     kd_buffers[0] = (double *)ki_buffers[0];
     kd_buffers[1] = (double *)ki_buffers[1];
     kd_buffers[2] = (double *)ki_buffers[2];
-    w_buffers[0] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    w_buffers[1] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    w_buffers[2] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    b_buffers[1] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    b_buffers[2] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    b_buffers[0] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    a_buffers[0] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    a_buffers[1] = ALLOCATE_BUFFER(double, BATCH_SIZE);
-    t_buffers[0] = ALLOCATE_BUFFER(uint64_t, BATCH_SIZE);
-    t_buffers[1] = ALLOCATE_BUFFER(uint64_t, BATCH_SIZE);
+    w_buffers[0] = (double *)(workspace + 3 * BATCH_SIZE);
+    w_buffers[1] = (double *)(workspace + 4 * BATCH_SIZE);
+    w_buffers[2] = (double *)(workspace + 5 * BATCH_SIZE);
+    b_buffers[1] = (double *)(workspace + 6 * BATCH_SIZE);
+    b_buffers[2] = (double *)(workspace + 7 * BATCH_SIZE);
+    b_buffers[0] = (double *)(workspace + 8 * BATCH_SIZE);
+    a_buffers[0] = (double *)(workspace + 9 * BATCH_SIZE);
+    a_buffers[1] = (double *)(workspace + 10 * BATCH_SIZE);
+    t_buffers[0] = (uint64_t *)(workspace + 11 * BATCH_SIZE);
+    t_buffers[1] = (uint64_t *)(workspace + 12 * BATCH_SIZE);
 
     // Define buffer pointers for every phase (fp0, int and fp1)
     unsigned int dma_a_idx = 0;
@@ -125,8 +125,6 @@ static inline void exp_optimized(double *a, double *b) {
             }
 
             // DMA out phase
-            // this correctly loads b_buffer into output array b
-            // however the b_buffer is already all zeros
             if (iteration > 3) {
                 // Index buffers
                 dma_b_ptr = b_buffers[dma_b_idx];

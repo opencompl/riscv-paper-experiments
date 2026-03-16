@@ -18,6 +18,7 @@
 #endif
 
 #define N {{N}}
+#define BATCH_SIZE 64
 
 #ifdef __cplusplus
 extern "C" {
