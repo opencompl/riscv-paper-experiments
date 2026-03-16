@@ -45,7 +45,7 @@ __thread const double C[4] = {0x1.c6af84b912394p-5 / EXP_N / EXP_N / EXP_N,
                               0x1.62e42ff0c52d6p-1 / EXP_N, 1.0};
 
 
-static inline void exp_optimized(double *a, double *b, double *workspace, size_t workspace_size) {
+static inline void exp_optimized(const double *a, double *b, double *workspace, size_t workspace_size) {
 
     // Derived parameters
     unsigned int n_batches = LEN / BATCH_SIZE;
@@ -56,7 +56,7 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
     double *kd_buffers[N_W_BUFFERS];
     double *w_buffers[N_W_BUFFERS];
     double *b_buffers[N_W_BUFFERS];
-    double *a_buffers[N_T_BUFFERS];
+    double const *a_buffers[N_T_BUFFERS];
     uint64_t *t_buffers[N_T_BUFFERS];
     ki_buffers[0] = (uint64_t *)(workspace +  0 * BATCH_SIZE);
     ki_buffers[1] = (uint64_t *)(workspace +  1 * BATCH_SIZE);
@@ -67,11 +67,11 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
     w_buffers[0] = (double *)(workspace + 3 * BATCH_SIZE);
     w_buffers[1] = (double *)(workspace + 4 * BATCH_SIZE);
     w_buffers[2] = (double *)(workspace + 5 * BATCH_SIZE);
-    b_buffers[1] = (double *)(workspace + 6 * BATCH_SIZE);
-    b_buffers[2] = (double *)(workspace + 7 * BATCH_SIZE);
-    b_buffers[0] = (double *)(workspace + 8 * BATCH_SIZE);
-    a_buffers[0] = (double *)(workspace + 9 * BATCH_SIZE);
-    a_buffers[1] = (double *)(workspace + 10 * BATCH_SIZE);
+    b_buffers[1] = b + 1 * BATCH_SIZE;
+    b_buffers[2] = b + 2 * BATCH_SIZE;
+    b_buffers[0] = b + 0 * BATCH_SIZE;
+    a_buffers[0] = a + 0 * BATCH_SIZE;
+    a_buffers[1] = a + 1 * BATCH_SIZE;
     t_buffers[0] = (uint64_t *)(workspace + 11 * BATCH_SIZE);
     t_buffers[1] = (uint64_t *)(workspace + 12 * BATCH_SIZE);
 
@@ -84,9 +84,9 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
     unsigned int int_t_idx = 0;
     unsigned int fp1_w_idx = 0;
     unsigned int fp1_t_idx = 0;
-    double *dma_a_ptr;
+    const double *dma_a_ptr;
     double *dma_b_ptr;
-    double *fp0_a_ptr;
+    const double *fp0_a_ptr;
     double *fp0_kd_ptr;
     double *fp0_w_ptr;
     uint64_t *int_ki_ptr;
@@ -109,15 +109,17 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
     for (int iteration = 0; iteration < n_iterations; iteration++) {
 
         // DMA cores
-        if (snrt_is_dm_core()) {
+        // if (snrt_is_dm_core()) {
             // DMA in phase
             if (iteration < n_iterations - 4) {
                 // Index buffers
-                dma_a_ptr = a_buffers[dma_a_idx];
+                // dma_a_ptr = a_buffers[dma_a_idx];
+
+                a_buffers[dma_a_idx] = a + iteration * BATCH_SIZE;
 
                 // DMA transfer
-                snrt_dma_load_1d_tile(dma_a_ptr, a, iteration, BATCH_SIZE,
-                                      sizeof(double));
+                // snrt_dma_load_1d_tile(dma_a_ptr, a, iteration, BATCH_SIZE,
+                                    //   sizeof(double));
 
                 // Increment buffer index for next iteration
                 dma_a_idx += 1;
@@ -127,11 +129,13 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
             // DMA out phase
             if (iteration > 3) {
                 // Index buffers
-                dma_b_ptr = b_buffers[dma_b_idx];
+                // dma_b_ptr = b_buffers[dma_b_idx];
+
+                b_buffers[dma_b_idx] = b + (iteration - 4) * BATCH_SIZE;
 
                 // DMA transfer
-                snrt_dma_store_1d_tile(b, dma_b_ptr, iteration - 4, BATCH_SIZE,
-                                       sizeof(double));
+                // snrt_dma_store_1d_tile(b, dma_b_ptr, iteration - 4, BATCH_SIZE,
+                                    //    sizeof(double));
 
                 // Increment buffer index for next iteration
                 dma_b_idx += 1;
@@ -141,10 +145,10 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
 
             snrt_dma_wait_all();
 
-        }
+        // }
 
         // Compute cores
-        if (snrt_cluster_core_idx() == 0) {
+        // if (snrt_cluster_core_idx() == 0) {
             // FP0 phase
             if (iteration > 0 && iteration < 3 &&
                 iteration < n_iterations - 3) {
@@ -155,7 +159,7 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
 
                 // Configure SSRs
                 snrt_ssr_loop_1d(SNRT_SSR_DM_ALL, BATCH_SIZE, sizeof(double));
-                snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, fp0_a_ptr);
+                snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_1D, (double *)fp0_a_ptr);
                 snrt_ssr_write(SNRT_SSR_DM1, SNRT_SSR_1D, fp0_kd_ptr);
                 snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_1D, fp0_w_ptr);
                 snrt_ssr_enable();
@@ -200,7 +204,7 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
                                      N_W_BUFFERS * BATCH_SIZE * sizeof(double),
                                      sizeof(double) * unroll_factor);
                 }
-                snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, fp0_a_ptr);
+                snrt_ssr_read(SNRT_SSR_DM0, SNRT_SSR_3D, (double *)fp0_a_ptr);
                 snrt_ssr_read(SNRT_SSR_DM1, SNRT_SSR_1D, fp1_w_ptr);
                 snrt_ssr_write(SNRT_SSR_DM2, SNRT_SSR_3D, fp0_kd_ptr);
                 snrt_ssr_enable();
@@ -293,5 +297,5 @@ static inline void exp_optimized(double *a, double *b, double *workspace, size_t
         snrt_cluster_hw_barrier();
 
 
-    }
+    // }
 }
