@@ -10,9 +10,8 @@
 extern "C" {
 #endif
 
-double x_mem[N], z_mem[N];
 
-void exp_kernel(const DTYPE* x, DTYPE* z, double *workspace, size_t workspace_size) {
+void exp_kernel(double* x, double* z, double *workspace, size_t workspace_size) {
     exp_optimized(x, z, workspace, workspace_size);
 }
 
