@@ -139,8 +139,21 @@ TESTSET_FAST = [
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
-    *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
-
+    *expand(
+        "sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]
+    ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 65, 16),
+        precision=[16, 32, 64],
+        variant=["baseline"],
+    ),
+    *expand(
+        "exp_macro/{N}xf{precision}/{variant}",
+        N=[64,128],
+        precision=[32],
+        variant=["snrt"],
+    ),
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -260,18 +273,6 @@ TESTSET_ALL = [
         variant=["baseline", "linalg_xdsl"],
         M=[4, 8],
         N=range(4, 65, 4),
-    ),
-    *expand(
-        "exp_micro/{N}xf{precision}/{variant}",
-        N=range(16, 65, 16),
-        precision=[16, 32, 64],
-        variant=["baseline"],
-    ),
-    *expand(
-        "exp_macro/{N}xf{precision}/{variant}",
-        N=[64,128],
-        precision=[32],
-        variant=["snrt"],
     ),
 ]
 
