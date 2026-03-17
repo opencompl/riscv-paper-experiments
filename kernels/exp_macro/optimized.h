@@ -107,7 +107,6 @@ static inline void exp_optimized(double *a, double *b) {
     snrt_cluster_hw_barrier();
 
     // Iterate over batches
-    // Iterate over batches
     for (int iteration = 0; iteration < n_iterations; iteration++) {
 
         // DMA cores
