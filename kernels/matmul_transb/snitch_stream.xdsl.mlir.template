@@ -14,7 +14,7 @@ riscv.assembly_section ".text" {
     %Y_moved = riscv.mv %Y : (!riscv.reg<a1>) -> !riscv.reg
     %G_moved = riscv.mv %G : (!riscv.reg<a2>) -> !riscv.reg
 
-    %zero = riscv.get_register : !riscv.reg<zero>
+    %zero = rv32.get_register : !riscv.reg<zero>
     %zero_float = riscv.fmv.w.x %zero : (!riscv.reg<zero>) -> !riscv.freg
 
     snitch_stream.streaming_region {
@@ -23,11 +23,11 @@ riscv.assembly_section ".text" {
         #snitch_stream.stride_pattern<ub = [{{M}}, {{N // 4}}, {{K // 2}}, {{4}}], strides = [0, {{4 * 4 * K}}, {{4 * 2}}, {{4 * K}}]>
       ]
     } ins(%X_moved, %Y_moved : !riscv.reg, !riscv.reg) {
-    ^bb0(%X_stream : !stream.readable<!riscv.freg<ft0>>, %Y_stream : !stream.readable<!riscv.freg<ft1>>):
-      %res_size = riscv.li {{M * N * 4}} : !riscv.reg
-      %row_size = riscv.li {{N * 4}} : !riscv.reg
-      %row_tile_stride = riscv.li {{4 * 4}} : !riscv.reg
-      %frep_count = riscv.li {{K // 2 - 1}} : !riscv.reg
+    ^bb0(%X_stream : !snitch.readable<!riscv.freg<ft0>>, %Y_stream : !snitch.readable<!riscv.freg<ft1>>):
+      %res_size = rv32.li {{M * N * 4}} : !riscv.reg
+      %row_size = rv32.li {{N * 4}} : !riscv.reg
+      %row_tile_stride = rv32.li {{4 * 4}} : !riscv.reg
+      %frep_count = rv32.li {{K // 2 - 1}} : !riscv.reg
       riscv_scf.for %row_offset : !riscv.reg = %zero to %res_size step %row_size {
         %row_start = riscv.add %G_moved, %row_offset : (!riscv.reg, !riscv.reg) -> !riscv.reg
         riscv_scf.for %row_tile_offset : !riscv.reg = %zero to %row_size step %row_tile_stride {
