@@ -9,8 +9,7 @@
 extern "C" {
 #endif
 
-void exp_kernel(const DTYPE* x, DTYPE* z, double *workspace, size_t workspace_size) {
-    if (snrt_cluster_core_idx() != 0) return;
+void exp_kernel(const DTYPE* x, DTYPE* z) {
     for (uint32_t i = 0; i < N; ++i) {
         z[i] = EXPF(x[i]);
     }

@@ -17,9 +17,6 @@
 #define BATCH_SIZE 64
 #endif
 
-#define ALLOCATE_BUFFER(type, size) \
-    (type *)snrt_l1_alloc_cluster_local(size * sizeof(type), sizeof(type))
-
 __thread uint64_t T[64] = {
     0x3ff0000000000000, 0x3fefd9b0d3158574, 0x3fefb5586cf9890f,
     0x3fef9301d0125b51, 0x3fef72b83c7d517b, 0x3fef54873168b9aa,

@@ -26,9 +26,21 @@ low_level_representation:
 pipeline:
 	snakemake --cores $(JOBS) --rerun-incomplete pipeline
 
+.PHONY: exp_micro
+exp_micro:
+	snakemake --cores $(JOBS) --rerun-incomplete exp_micro
+
+.PHONY: exp_macro
+exp_macro:
+	snakemake --cores $(JOBS) --rerun-incomplete exp_macro
+
+.PHONY: exp
+exp:
+	snakemake --cores $(JOBS) --rerun-incomplete exp_micro exp_macro
+
 .PHONY: clean
 clean:
-	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation
+	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation exp_micro exp_macro
 
 .PHONY: docker-build
 docker-build:
