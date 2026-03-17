@@ -19,14 +19,11 @@ extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
-    // We use snrt_l1_alloc_cluster_local to ensure that the l1 local memory pointer advances 
-    // when we use it later to allocate l1 memory buffers 
-    DTYPE *local_x = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
-    DTYPE *local_z = (DTYPE *)snrt_l1_alloc_cluster_local(N * sizeof(DTYPE), sizeof(DTYPE));
-
-    // Allocate buffer space for exp_optimized
-    size_t workspace_size = 13 * BATCH_SIZE * sizeof(double); 
-    double *workspace = (double *)snrt_l1_alloc_cluster_local(workspace_size, sizeof(double));
+    // By avoiding allocators and bumping by a known offset a base pointer
+    // (snrt_l1_next()) that is the same for all the cores in the cluster, we are
+    // essentially providing the same memory regions to all the cores in this cluster.
+    DTYPE *local_x = (DTYPE *)snrt_l1_next();
+    DTYPE *local_z = local_x + N;
 
     // Copy data in shared local memory
     if (snrt_is_dm_core()) {
@@ -36,11 +33,10 @@ int main() {
 
     snrt_cluster_hw_barrier();
 
-     // From this point only core 0 is running
+    // Launch kernel: from this point on only core 0 is required to be alive.
     int thiscore = snrt_cluster_core_idx();
     if (thiscore != 0) return 0;
 
-    // Launch kernel: we need DMA core to participate so i moved the core!=0 check to later
     snrt_fpu_fence();
     (void)snrt_mcycle();
     exp_kernel(local_x, local_z);
@@ -52,7 +48,6 @@ int main() {
     for (int i = 0; i < N; i++) {
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
-
         // Use relative error for large values, absolute for small
         DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)1E-2 : (DTYPE)1E-2;
         nerr += !(d <= tol);
