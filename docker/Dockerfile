@@ -36,7 +36,7 @@ RUN git config --global url."https://github".insteadOf "git://github" \
    && git clone --recursive https://github.com/pulp-platform/snitch_cluster /repo \
    && cd /repo \
    && git reset --hard ${SNITCH_COMMIT} \
-   && sed -i 's/num_sequencer_instructions: 32/num_sequencer_instructions: 64/' target/snitch_cluster/cfg/default.hjson \
+   && sed -i 's/num_sequencer_instructions: 32/num_sequencer_instructions: 64/' target/snitch_cluster/cfg/default.json \
    && make -C target/snitch_cluster verilator \
    && make -C target/snitch_cluster DEBUG=ON sw \
    && cd /repo/target/snitch_cluster/work-vlt/riscv-isa-sim \
