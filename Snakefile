@@ -151,7 +151,7 @@ TESTSET_FAST = [
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
         N=[64,128],
-        precision=[32],
+        precision=[64],
         variant=["snrt"],
     ),
 ]
@@ -205,18 +205,12 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         N=[8, 16, 24, 32, 40],
         variant=["snitch_stream"],
     ),
-    *expand(
-        "exp/{N}xf{precision}/{variant}",
-        N=range(16, 128, 16),
-        precision=[16, 32, 64],
-        variant=["baseline"],
-    ),
 ]
 
 TESTSET_EXP_MICRO = [
     *expand(
         "exp_micro/{N}xf{precision}/{variant}",
-        N=range(64, 193, 64),
+        N=range(26, 129, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
@@ -224,8 +218,8 @@ TESTSET_EXP_MICRO = [
 TESTSET_EXP_MACRO = [
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
-        N=range(64, 193, 64),
-        precision=[32],
+        N=range(64, 513, 64),
+        precision=[64],
         variant=["snrt"],
     ),
 ]
