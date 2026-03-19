@@ -69,6 +69,7 @@ ldflags:
   - -lclang_rt.builtins-riscv32
   - -lm
 xdsl-passes:
+  - expand-math-to-polynomials
   - test-lower-linalg-to-snitch
 mlir-opt-flags-linalg:
   - -opaque-pointers=0
