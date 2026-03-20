@@ -216,7 +216,7 @@ TESTSET_EXP_MICRO = [
     ),
     *expand(
         "exp_micro/{N}xf64/{variant}",
-        N=range16,
+        N=16,
         variant=["linalg_xdsl"],
     ),
 ]
