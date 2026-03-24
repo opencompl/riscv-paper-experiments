@@ -19,6 +19,9 @@ from fpu import FPUGridPlotRow
 from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined, savefig
 
 
+PRECISION_BYTES = {"f16": 2, "f32": 4, "f64": 8}
+
+
 def load_and_prepare(csv_path: str) -> pd.DataFrame:
     df = pd.read_csv(csv_path)
 
@@ -33,8 +36,13 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 
     df["total_elements"] = df.apply(get_total_elements, axis=1)
     df["precision"] = df.apply(get_precision, axis=1)
-    df = df[df["test"] == "exp"].copy()
+    df = df[df["test"] == "exp_macro"].copy()
     df["test"] = "Exp"
+
+    df["total_input_bytes"] = df.apply(
+        lambda row: row["total_elements"] * PRECISION_BYTES[row["precision"]], axis=1,
+    )
+    df["cycles_per_byte"] = df["cycles"] / df["total_input_bytes"]
 
     df = df.sort_values("total_elements")
     return df
@@ -43,15 +51,14 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 def make_pivoted_dfs(
     df: pd.DataFrame, metric: str, precisions: list[str],
 ) -> list[pd.DataFrame]:
-    """Create one pivoted DataFrame per precision, with kernels as columns."""
+    """Create one pivoted DataFrame per precision, with impl as columns."""
     dfs = []
     for prec in precisions:
         prec_df = df[df["precision"] == prec]
         pivoted = prec_df.pivot_table(
-            index="total_elements", columns="test", values=metric,
+            index="total_elements", columns="impl", values=metric,
         )
-        cols = [c for c in ["Exp"] if c in pivoted.columns]
-        pivoted = pivoted[cols]
+        pivoted.columns = [f"Exp_{c}" for c in pivoted.columns]
         pivoted.index.name = f"Exp N ({prec})"
         dfs.append(pivoted)
     return dfs
@@ -69,8 +76,8 @@ class ExpFPUPlotRow(FPUGridPlotRow):
             ax.set_xlabel(df.index.name)
 
 
-class ExpCyclesPlotRow(GridPlotRow):
-    ylabel = "Cycles"
+class ExpCyclesPerBytePlotRow(GridPlotRow):
+    ylabel = "Cycles / Byte"
 
     @classmethod
     def yrange(cls, dfs: Sequence[pd.DataFrame]) -> npt.NDArray[np.float64]:
@@ -96,16 +103,16 @@ def get_exp_dfs(df: pd.DataFrame) -> tuple[list[pd.DataFrame], list[pd.DataFrame
     precisions = sorted(df["precision"].unique())
 
     fpu_dfs = make_pivoted_dfs(df, "fpss_fpu_occupancy", precisions)
-    cycles_dfs = make_pivoted_dfs(df, "cycles", precisions)
+    cycles_per_byte_dfs = make_pivoted_dfs(df, "cycles_per_byte", precisions)
 
-    return fpu_dfs, cycles_dfs
+    return fpu_dfs, cycles_per_byte_dfs
 
 
-def plot_exp(fpu_dfs, cycles_dfs):
+def plot_exp(fpu_dfs, cycles_per_byte_dfs):
     ncols = len(fpu_dfs)
     rows = [
         ExpFPUPlotRow(fpu_dfs, hide_xtick_labels=True),
-        ExpCyclesPlotRow(cycles_dfs),
+        ExpCyclesPerBytePlotRow(cycles_per_byte_dfs),
     ]
     return plot_combined(
         rows,
@@ -119,7 +126,7 @@ def main():
     parser = argparse.ArgumentParser(description="Plot exp kernel results")
     parser.add_argument(
         "--input", "-i",
-        default="results/kernels.exp.csv",
+        default="results/kernels.exp_macro.csv",
         help="Input CSV file",
     )
     parser.add_argument(
@@ -132,8 +139,8 @@ def main():
     Path(args.output).parent.mkdir(exist_ok=True)
 
     df = load_and_prepare(args.input)
-    fpu_dfs, cycles_dfs = get_exp_dfs(df)
-    fig = plot_exp(fpu_dfs, cycles_dfs)
+    fpu_dfs, cycles_per_byte_dfs = get_exp_dfs(df)
+    fig = plot_exp(fpu_dfs, cycles_per_byte_dfs)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

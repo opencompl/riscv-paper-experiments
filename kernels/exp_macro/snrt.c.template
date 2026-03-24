@@ -1,0 +1,20 @@
+#include "data.h"
+
+#include <snrt.h>
+#include <stdint.h>
+
+#include "../optimized.h"
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+void exp_kernel(double* x, double* z) {
+    exp_optimized(x, z);
+}
+
+#ifdef __cplusplus
+}
+#endif

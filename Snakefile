@@ -48,7 +48,8 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 # a templated kernel. Dict keys below are used to enable
 # source/data generation rules.
 KERNEL_SHAPE = {
-    "exp": SHAPE_1D,
+    "exp_micro": SHAPE_1D,
+    "exp_macro": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -80,7 +81,7 @@ MANUAL_KERNELS = [
     *expand(
         "dense/8x8xf64/{variant}",
         variant=["baseline", "snrt", "snitch_stream", "linalg", "fused"],
-    ),
+    )
 ]
 
 ###########################################################
@@ -138,14 +139,21 @@ TESTSET_FAST = [
     *expand(
         "sum/4x8xf32/{variant}", variant=["baseline", "snrt", "linalg", "linalg_xdsl"]
     ),
-    *expand("sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]),
-
     *expand(
-        "exp/64xf{precision}/{variant}",
+        "sum/8x8xf16/{variant}", variant=["baseline", "linalg_xdsl"]
+    ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 65, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
-
+    *expand(
+        "exp_macro/{N}xf{precision}/{variant}",
+        N=[64,128],
+        precision=[64],
+        variant=["snrt"],
+    ),
 ]
 
 TESTSET_LOW_LEVEL_REPRESENTATION = [
@@ -197,11 +205,22 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
         N=[8, 16, 24, 32, 40],
         variant=["snitch_stream"],
     ),
+]
+
+TESTSET_EXP_MICRO = [
     *expand(
-        "exp/{N}xf{precision}/{variant}",
-        N=range(16, 128, 16),
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(26, 129, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
+    ),
+]
+TESTSET_EXP_MACRO = [
+    *expand(
+        "exp_macro/{N}xf{precision}/{variant}",
+        N=range(64, 513, 64),
+        precision=[64],
+        variant=["snrt"],
     ),
 ]
 
@@ -210,6 +229,8 @@ TESTSET_ALL = [
     *MANUAL_KERNELS,
     *TESTSET_LOW_LEVEL_REPRESENTATION,
     *TESTSET_PIPELINE,
+    *TESTSET_EXP_MICRO,
+    *TESTSET_EXP_MACRO,
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
@@ -247,14 +268,7 @@ TESTSET_ALL = [
         M=[4, 8],
         N=range(4, 65, 4),
     ),
-    *expand(
-        "exp/{N}xf{precision}/{variant}",
-        N=range(16, 128, 16),
-        precision=[16, 32, 64],
-        variant=["baseline"],
-    ),
 ]
-
 
 # Return the list of expected execution profile files according to the
 # selected 'testset' output wildcard
@@ -264,6 +278,8 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "all": sorted(set(TESTSET_ALL)),
         "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
         "pipeline": sorted(set(TESTSET_PIPELINE)),
+        "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
+        "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -278,6 +294,8 @@ def select_test_set_regalloc_jsons(wildcards) -> list[str]:
         "all": sorted(set(TESTSET_ALL)),
         "low_level_representation": sorted(set(TESTSET_LOW_LEVEL_REPRESENTATION)),
         "pipeline": sorted(set(TESTSET_PIPELINE)),
+        "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
+        "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -327,6 +345,14 @@ rule pipeline:
         "results/pipeline.csv",
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
+
+rule exp_micro:
+    input:
+        "results/kernels.exp_micro.csv"
+
+rule exp_macro:
+    input:
+        "results/kernels.exp_macro.csv"
 
 rule all:
     input:
