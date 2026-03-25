@@ -228,6 +228,14 @@ TESTSET_EXP_MACRO = [
         variant=["snrt"],
     ),
 ]
+TESTSET_EXP_MACRO = [
+    *expand(
+        "exp_macro/{N}xf{precision}/{variant}",
+        N=range(64, 513, 64),
+        precision=[64],
+        variant=["snrt"],
+    ),
+]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
