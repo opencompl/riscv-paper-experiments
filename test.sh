@@ -37,7 +37,7 @@ snakemake --cores 1 kernels/exp_micro/16xf32/params.json
 snakemake --cores 1 kernels/exp_micro/16xf32/linalg_xdsl.xdsl.mlir
 
 # assembly
-snakemake --cores 1 kernels/exp_micro/16xf32/linalg_xdsl.S
+snakemake --cores 1 --forceall kernels/exp_micro/16xf32/linalg_xdsl.S
 
 # object file
 

@@ -1131,7 +1131,7 @@ requires-dist = [
     { name = "pandas" },
     { name = "seaborn" },
     { name = "snakemake", specifier = "==8.14.0" },
-    { name = "xdsl", git = "https://github.com/xdslproject/xdsl.git?rev=802a20064f30d068c21a65b9e180af4cdecbbe01" },
+    { name = "xdsl", git = "https://github.com/xdslproject/xdsl.git?rev=ed1995a449486a2faa74194270392890b54701ff" },
 ]
 
 [[package]]
@@ -1512,8 +1512,8 @@ wheels = [
 
 [[package]]
 name = "xdsl"
-version = "0.59.1.dev31+g802a20064"
-source = { git = "https://github.com/xdslproject/xdsl.git?rev=802a20064f30d068c21a65b9e180af4cdecbbe01#802a20064f30d068c21a65b9e180af4cdecbbe01" }
+version = "0.59.1.dev44+ged1995a44"
+source = { git = "https://github.com/xdslproject/xdsl.git?rev=ed1995a449486a2faa74194270392890b54701ff#ed1995a449486a2faa74194270392890b54701ff" }
 dependencies = [
     { name = "immutabledict" },
     { name = "ordered-set" },
