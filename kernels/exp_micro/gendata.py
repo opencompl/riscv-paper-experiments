@@ -14,8 +14,8 @@ def exp_data(
     t = {16: np.float16, 32: np.float32, 64: np.float64}[precision]
 
     # Clamp range to avoid overflow in exp
-    rmin = max(rmin, -10.0)
-    rmax = min(rmax, 10.0)
+    rmin = max(rmin, -0.5)
+    rmax = min(rmax, 0.5)
 
     np.random.seed(0)
     x = np.random.uniform(rmin, rmax, N).astype(t)

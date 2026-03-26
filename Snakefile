@@ -210,9 +210,22 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
 TESTSET_EXP_MICRO = [
     *expand(
         "exp_micro/{N}xf{precision}/{variant}",
-        N=range(26, 129, 16),
+        N=range(16, 129, 16),
         precision=[16, 32, 64],
-        variant=["baseline"],
+        variant=["baseline", "linalg_xdsl"],
+    ),
+    *expand(
+        "exp_micro/{N}xf64/{variant}",
+        N=range(16,129,16),
+        variant=["linalg_xdsl"],
+    ),
+]
+TESTSET_EXP_MACRO = [
+    *expand(
+        "exp_macro/{N}xf{precision}/{variant}",
+        N=range(64, 513, 64),
+        precision=[64],
+        variant=["snrt"],
     ),
 ]
 TESTSET_EXP_MACRO = [

@@ -70,6 +70,7 @@ ldflags:
   - -lm
 xdsl-passes:
   - test-lower-linalg-to-snitch
+
 mlir-opt-flags-linalg:
   - -opaque-pointers=0
   - --linalg-generalize-named-ops

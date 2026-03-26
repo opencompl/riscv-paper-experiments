@@ -44,7 +44,8 @@ IMPL_COLORS = {
     "Overhead": dark_red,
     "Performance Roofline": dark_gray,
     "Exp_baseline": light_blue,
-    "Exp_snrt": dark_blue
+    "Exp_snrt": dark_blue,
+    "Exp_linalg_xdsl": dark_green,
 }
 
 IMPL_MARKERS = {
@@ -56,6 +57,7 @@ IMPL_MARKERS = {
     "Performance Roofline": "",
     "Exp_baseline": "o",
     "Exp_snrt": "s",
+    "Exp_linalg_xdsl": "D",
 }
 
 IMPL_LINESTYLES = {
@@ -67,6 +69,7 @@ IMPL_LINESTYLES = {
     "Performance Roofline": "--",
     "Exp_baseline": "",
     "Exp_snrt": "",
+    "Exp_linalg_xdsl": "",
 }
 
 
