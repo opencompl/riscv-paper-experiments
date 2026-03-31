@@ -16,9 +16,17 @@ XDSL_LINALG_OPT_VARIANTS = [
     "linalg_5_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
 ]
 
+XDSL_LINALG_TERMS_VARIANTS = [
+    "linalg_xdsl_t2",
+    "linalg_xdsl_t3",
+    "linalg_xdsl_t4",
+    "linalg_xdsl_t5",
+]
+
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
+    *XDSL_LINALG_TERMS_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -218,6 +226,12 @@ TESTSET_EXP_MICRO = [
         "exp_micro/{N}xf64/{variant}",
         N=range(16,129,16),
         variant=["linalg_xdsl"],
+    ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[16, 32, 64],
+        variant=XDSL_LINALG_TERMS_VARIANTS,
     ),
 ]
 TESTSET_EXP_MACRO = [
@@ -753,7 +767,7 @@ rule xdsl_kernel_generate_source:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(XDSL_LINALG_VARIANTS),
+        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
@@ -762,6 +776,38 @@ rule xdsl_kernel_generate_source:
     shell:
         """
         python3 {params.format_template} {input.template} {input.json} \
+        | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
+
+
+def get_terms_from_variant(wildcards):
+    """Extract terms number from variant name (e.g. linalg_xdsl_t3 -> 3)."""
+    import re
+    return re.search(r"_t(\d+)$", wildcards.variant).group(1)
+
+
+rule xdsl_kernel_generate_source_terms:
+    input:
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/linalg.mlir.template",
+    output:
+        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+        variant="|".join(XDSL_LINALG_TERMS_VARIANTS),
+    params:
+        format_template="scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+        terms=get_terms_from_variant,
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{terms = {params.terms} : i64}} :/g' \
         | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
