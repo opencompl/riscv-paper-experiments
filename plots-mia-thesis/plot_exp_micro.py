@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-Plot exp kernel results from kernels.exp.csv.
+Plot exp_micro kernel results: FPU utilization and cycles/byte
+for different numbers of Taylor terms (t=3,4,5,6), per precision.
 
 Usage:
-    python plot_exp.py [--input results/kernels.exp.csv] [--output output/exp_plots.pdf]
+    python plot_exp_micro.py [--input results/kernels.exp_micro.csv] [--output output/exp_micro_plots.pdf]
 """
 
 import argparse
@@ -16,10 +17,34 @@ import pandas as pd
 from matplotlib.axes import Axes
 
 from fpu import FPUGridPlotRow
-from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined, savefig
+from plot_utils import GridPlotRow, plot_combined, savefig
 
 
 PRECISION_BYTES = {"f16": 2, "f32": 4, "f64": 8}
+
+TERMS_VARIANTS = ["linalg_xdsl_t3", "linalg_xdsl_t4", "linalg_xdsl_t5", "linalg_xdsl_t6"]
+
+# Colors and markers for each terms variant (after pivoting, columns are "Exp_{impl}")
+TERMS_COLORS = {
+    "Exp_linalg_xdsl_t3": "#1f78b4",  # dark blue
+    "Exp_linalg_xdsl_t4": "#b2df8a",  # light green
+    "Exp_linalg_xdsl_t5": "#33a02c",  # dark green
+    "Exp_linalg_xdsl_t6": "#e31a1c",  # dark red
+}
+
+TERMS_MARKERS = {
+    "Exp_linalg_xdsl_t3": "s",
+    "Exp_linalg_xdsl_t4": "D",
+    "Exp_linalg_xdsl_t5": "^",
+    "Exp_linalg_xdsl_t6": "v",
+}
+
+TERMS_LABELS = {
+    "Exp_linalg_xdsl_t3": "t=3",
+    "Exp_linalg_xdsl_t4": "t=4",
+    "Exp_linalg_xdsl_t5": "t=5",
+    "Exp_linalg_xdsl_t6": "t=6",
+}
 
 
 def load_and_prepare(csv_path: str) -> pd.DataFrame:
@@ -37,7 +62,9 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
     df["total_elements"] = df.apply(get_total_elements, axis=1)
     df["precision"] = df.apply(get_precision, axis=1)
     df = df[df["test"] == "exp_micro"].copy()
-    df["test"] = "Exp"
+
+    # Keep only terms variants
+    df = df[df["impl"].isin(TERMS_VARIANTS)].copy()
 
     df["total_input_bytes"] = df.apply(
         lambda row: row["total_elements"] * PRECISION_BYTES[row["precision"]], axis=1,
@@ -51,7 +78,7 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 def make_pivoted_dfs(
     df: pd.DataFrame, metric: str, precisions: list[str],
 ) -> list[pd.DataFrame]:
-    """Create one pivoted DataFrame per precision, with impl as columns."""
+    """Create one pivoted DataFrame per precision, with terms variant as columns."""
     dfs = []
     for prec in precisions:
         prec_df = df[df["precision"] == prec]
@@ -59,24 +86,26 @@ def make_pivoted_dfs(
             index="total_elements", columns="impl", values=metric,
         )
         pivoted.columns = [f"Exp_{c}" for c in pivoted.columns]
-        pivoted.index.name = f"Exp N ({prec})"
+        pivoted.index.name = f"N ({prec})"
         dfs.append(pivoted)
     return dfs
 
-class ExpFPUPlotRow(FPUGridPlotRow):
+
+class ExpTermsFPUPlotRow(FPUGridPlotRow):
     @classmethod
     def plot_grid_cell(cls, ax: Axes, df: pd.DataFrame, *, hide_xlabel: bool) -> None:
         for col in df:
             ax.plot(
                 df.index, df[col],
-                color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+                color=TERMS_COLORS[col], marker=TERMS_MARKERS[col],
+                label=TERMS_LABELS.get(col, col),
             )
         ax.set_xticks(df.index)
         if not hide_xlabel:
             ax.set_xlabel(df.index.name)
 
 
-class ExpCyclesPerBytePlotRow(GridPlotRow):
+class ExpTermsCyclesPerBytePlotRow(GridPlotRow):
     ylabel = "Cycles / Byte"
 
     @classmethod
@@ -92,7 +121,8 @@ class ExpCyclesPerBytePlotRow(GridPlotRow):
         for col in df:
             ax.plot(
                 df.index, df[col],
-                color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+                color=TERMS_COLORS[col], marker=TERMS_MARKERS[col],
+                label=TERMS_LABELS.get(col, col),
             )
         ax.set_xticks(df.index)
         if not hide_xlabel:
@@ -111,19 +141,19 @@ def get_exp_dfs(df: pd.DataFrame) -> tuple[list[pd.DataFrame], list[pd.DataFrame
 def plot_exp(fpu_dfs, cycles_per_byte_dfs):
     ncols = len(fpu_dfs)
     rows = [
-        ExpFPUPlotRow(fpu_dfs, hide_xtick_labels=True),
-        ExpCyclesPerBytePlotRow(cycles_per_byte_dfs),
+        ExpTermsFPUPlotRow(fpu_dfs, hide_xtick_labels=True),
+        ExpTermsCyclesPerBytePlotRow(cycles_per_byte_dfs),
     ]
     return plot_combined(
         rows,
-        legend_cols=3,
+        legend_cols=4,
         rcparams_cfg_file="config/gridplot.mplstyle",
         figsize=(ncols * 6, len(rows) * 3.5),
     )
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot exp kernel results")
+    parser = argparse.ArgumentParser(description="Plot exp_micro kernel results by terms")
     parser.add_argument(
         "--input", "-i",
         default="results/kernels.exp_micro.csv",
@@ -131,7 +161,7 @@ def main():
     )
     parser.add_argument(
         "--output", "-o",
-        default="output/exp_plots.pdf",
+        default="output/exp_micro_plots.pdf",
         help="Output plot file",
     )
     args = parser.parse_args()

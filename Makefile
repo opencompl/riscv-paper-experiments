@@ -29,12 +29,13 @@ pipeline:
 .PHONY: exp_micro
 exp_micro:
 	snakemake --cores $(JOBS) --rerun-incomplete exp_micro
-	python plots-mia-thesis/plot_exp_micro_linalg.py --input results/kernels.exp_micro.csv --output plots-mia-thesis/exp_micro_plots_linalg.pdf
+	python plots-mia-thesis/plot_exp_micro_linalg.py --input results/kernels.exp_micro.csv --output plots-mia-thesis/output/exp_micro_linalg_plots.pdf
+	python plots-mia-thesis/plot_exp_accuracy.py -o plots-mia-thesis/output/exp_accuracy.pdf
 
 .PHONY: exp_macro
 exp_macro:
 	snakemake --cores $(JOBS) --rerun-incomplete exp_macro
-	python plots-mia-thesis/plot_exp_macro.py --input results/kernels.exp_macro.csv --output plots-mia-thesis/exp_macro_plots.pdf
+	python plots-mia-thesis/plot_exp_macro.py --input results/kernels.exp_macro.csv --output plots-mia-thesis/output/exp_macro_plots.pdf
 
 .PHONY: exp
 exp:

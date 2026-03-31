@@ -46,6 +46,10 @@ IMPL_COLORS = {
     "Exp_baseline": light_blue,
     "Exp_snrt": dark_blue,
     "Exp_linalg_xdsl": dark_green,
+    "Exp_linalg_xdsl_t3": dark_blue,
+    "Exp_linalg_xdsl_t4": light_green,
+    "Exp_linalg_xdsl_t5": dark_green,
+    "Exp_linalg_xdsl_t6": dark_red,
 }
 
 IMPL_MARKERS = {
@@ -58,6 +62,10 @@ IMPL_MARKERS = {
     "Exp_baseline": "o",
     "Exp_snrt": "s",
     "Exp_linalg_xdsl": "D",
+    "Exp_linalg_xdsl_t3": "s",
+    "Exp_linalg_xdsl_t4": "D",
+    "Exp_linalg_xdsl_t5": "^",
+    "Exp_linalg_xdsl_t6": "v",
 }
 
 IMPL_LINESTYLES = {
@@ -70,6 +78,10 @@ IMPL_LINESTYLES = {
     "Exp_baseline": "",
     "Exp_snrt": "",
     "Exp_linalg_xdsl": "",
+    "Exp_linalg_xdsl_t3": "",
+    "Exp_linalg_xdsl_t4": "",
+    "Exp_linalg_xdsl_t5": "",
+    "Exp_linalg_xdsl_t6": "",
 }
 
 

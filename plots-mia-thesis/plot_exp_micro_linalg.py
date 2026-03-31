@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Plot exp kernel results for the linalg variant (f64 only).
+Plot exp kernel results for all linalg variants across all precisions.
 
 Usage:
     python plot_exp_micro_linalg.py --input ../results/kernels.exp_micro.csv --output output/exp_linalg_plots.pdf
@@ -38,9 +38,9 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
     df = df[df["test"] == "exp_micro"].copy()
     df["test"] = "Exp"
 
-    # Filter to linalg_xdsl variant and f64 only
-    df = df[df["impl"] == "linalg_xdsl"].copy()
-    df = df[df["precision"] == "f64"].copy()
+    # Keep baseline and all linalg_xdsl variants (including t3-t6)
+    linalg_impls = df["impl"].str.startswith("linalg_xdsl") | (df["impl"] == "baseline")
+    df = df[linalg_impls].copy()
 
     df["total_input_bytes"] = df.apply(
         lambda row: row["total_elements"] * PRECISION_BYTES[row["precision"]], axis=1,
@@ -52,15 +52,21 @@ def load_and_prepare(csv_path: str) -> pd.DataFrame:
 
 
 def make_pivoted_dfs(
-    df: pd.DataFrame, metric: str,
+    df: pd.DataFrame, metric: str, precisions: list[str],
 ) -> list[pd.DataFrame]:
-    """Create a pivoted DataFrame with impl as columns (f64 only)."""
-    pivoted = df.pivot_table(
-        index="total_elements", columns="impl", values=metric,
-    )
-    pivoted.columns = [f"Exp_{c}" for c in pivoted.columns]
-    pivoted.index.name = "Exp N (f64)"
-    return [pivoted]
+    """Create one pivoted DataFrame per precision, with impl as columns."""
+    dfs = []
+    for prec in precisions:
+        prec_df = df[df["precision"] == prec]
+        if prec_df.empty:
+            continue
+        pivoted = prec_df.pivot_table(
+            index="total_elements", columns="impl", values=metric,
+        )
+        pivoted.columns = [f"Exp_{c}" for c in pivoted.columns]
+        pivoted.index.name = f"Exp N ({prec})"
+        dfs.append(pivoted)
+    return dfs
 
 
 class ExpFPUPlotRow(FPUGridPlotRow):
@@ -100,8 +106,9 @@ class ExpCyclesPerBytePlotRow(GridPlotRow):
 
 
 def get_exp_dfs(df: pd.DataFrame) -> tuple[list[pd.DataFrame], list[pd.DataFrame]]:
-    fpu_dfs = make_pivoted_dfs(df, "fpss_fpu_occupancy")
-    cycles_per_byte_dfs = make_pivoted_dfs(df, "cycles_per_byte")
+    precisions = sorted(df["precision"].unique())
+    fpu_dfs = make_pivoted_dfs(df, "fpss_fpu_occupancy", precisions)
+    cycles_per_byte_dfs = make_pivoted_dfs(df, "cycles_per_byte", precisions)
     return fpu_dfs, cycles_per_byte_dfs
 
 
@@ -113,14 +120,14 @@ def plot_exp(fpu_dfs, cycles_per_byte_dfs):
     ]
     return plot_combined(
         rows,
-        legend_cols=1,
+        legend_cols=3,
         rcparams_cfg_file="config/gridplot.mplstyle",
         figsize=(ncols * 6, len(rows) * 3.5),
     )
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Plot exp kernel results (linalg, f64)")
+    parser = argparse.ArgumentParser(description="Plot exp kernel results (linalg variants, all precisions)")
     parser.add_argument(
         "--input", "-i",
         default="results/kernels.exp_micro.csv",

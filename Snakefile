@@ -17,10 +17,10 @@ XDSL_LINALG_OPT_VARIANTS = [
 ]
 
 XDSL_LINALG_TERMS_VARIANTS = [
-    "linalg_xdsl_t2",
     "linalg_xdsl_t3",
     "linalg_xdsl_t4",
     "linalg_xdsl_t5",
+    "linalg_xdsl_t6",
 ]
 
 XDSL_LINALG_VARIANTS = [
