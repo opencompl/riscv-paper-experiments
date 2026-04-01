@@ -23,10 +23,18 @@ XDSL_LINALG_TERMS_VARIANTS = [
     "linalg_xdsl_t6",
 ]
 
+XDSL_LINALG_CHEBYSHEV_VARIANTS = [
+    "linalg_xdsl_c4",
+    "linalg_xdsl_c8",
+    "linalg_xdsl_c12",
+    "linalg_xdsl_c16",
+]
+
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
     *XDSL_LINALG_TERMS_VARIANTS,
+    *XDSL_LINALG_CHEBYSHEV_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -232,6 +240,12 @@ TESTSET_EXP_MICRO = [
         N=range(16, 129, 16),
         precision=[16, 32, 64],
         variant=XDSL_LINALG_TERMS_VARIANTS,
+    ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[16, 32, 64],
+        variant=XDSL_LINALG_CHEBYSHEV_VARIANTS,
     ),
 ]
 TESTSET_EXP_MACRO = [
@@ -767,7 +781,7 @@ rule xdsl_kernel_generate_source:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS),
+        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS and v not in XDSL_LINALG_CHEBYSHEV_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
@@ -783,13 +797,23 @@ rule xdsl_kernel_generate_source:
         """
 
 
-def get_terms_from_variant(wildcards):
-    """Extract terms number from variant name (e.g. linalg_xdsl_t3 -> 3)."""
+def get_exp_attrs_from_variant(wildcards):
+    """Return math.exp attribute string for the variant.
+
+    Taylor variants (linalg_xdsl_tN):    {terms = N : i64}
+    Chebyshev variants (linalg_xdsl_cN): {chebyshev_degree = N : i64, lower = -1.0 : f64, upper = 1.0 : f64}
+    """
     import re
-    return re.search(r"_t(\d+)$", wildcards.variant).group(1)
+    m = re.search(r"_t(\d+)$", wildcards.variant)
+    if m:
+        return f"terms = {m.group(1)} : i64"
+    m = re.search(r"_c(\d+)$", wildcards.variant)
+    if m:
+        return f"chebyshev_degree = {m.group(1)} : i64, lower = -1.0 : f64, upper = 1.0 : f64"
+    raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
 
 
-rule xdsl_kernel_generate_source_terms:
+rule xdsl_kernel_generate_source_exp_attrs:
     input:
         json="kernels/{kernel}/{shape}/params.json",
         template="kernels/{kernel}/linalg.mlir.template",
@@ -797,17 +821,17 @@ rule xdsl_kernel_generate_source_terms:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(XDSL_LINALG_TERMS_VARIANTS),
+        variant="|".join(XDSL_LINALG_TERMS_VARIANTS + XDSL_LINALG_CHEBYSHEV_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
         mlir_opt=config["mlir-opt"],
         mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
-        terms=get_terms_from_variant,
+        exp_attrs=get_exp_attrs_from_variant,
     shell:
         """
         python3 {params.format_template} {input.template} {input.json} \
-        | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{terms = {params.terms} : i64}} :/g' \
+        | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{{params.exp_attrs}}} :/g' \
         | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
