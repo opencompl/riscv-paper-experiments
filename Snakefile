@@ -809,7 +809,7 @@ def get_exp_attrs_from_variant(wildcards):
         return f"terms = {m.group(1)} : i64"
     m = re.search(r"_c(\d+)$", wildcards.variant)
     if m:
-        return f"chebyshev_degree = {m.group(1)} : i64, lower = -1.0 : f64, upper = 1.0 : f64"
+        return f"chebyshev_degree = {m.group(1)} : i64, lower = -10.0 : f64, upper = 0.0 : f64"
     raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
 
 
