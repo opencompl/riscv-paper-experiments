@@ -4,8 +4,8 @@ Plot accuracy of Chebyshev exp approximations vs np.exp baseline.
 
 One plot per precision (f16, f32, f64).
 Each plot has lines for degree={4,8,12,16} showing |np.exp(x) - chebyshev_d(x)| vs x.
-Uses the default Chebyshev interval [-10, 0].
-x range: [-10, 0].
+Uses the default Chebyshev interval [-30, 0].
+x range: [-30, 0].
 """
 
 import argparse
@@ -33,7 +33,7 @@ DEGREE_KEYS = {d: f"Exp_linalg_xdsl_c{d}" for d in DEGREES}
 
 
 def chebyshev_coefficients(
-    f, degree: int, lower: float = -10.0, upper: float = 0.0,
+    f, degree: int, lower: float = -700.0, upper: float = 0.0,
 ) -> list[float]:
     """Compute Chebyshev coefficients c_0..c_n for f on [lower, upper]."""
     n = degree
@@ -51,7 +51,7 @@ def chebyshev_coefficients(
     return coeffs
 
 
-def chebyshev_exp(x: np.ndarray, degree: int, lower: float = -10.0, upper: float = 0.0) -> np.ndarray:
+def chebyshev_exp(x: np.ndarray, degree: int, lower: float = -700.0, upper: float = 0.0) -> np.ndarray:
     """Evaluate Chebyshev polynomial approximation of exp via Clenshaw's algorithm."""
     coeffs = chebyshev_coefficients(pymath.exp, degree, lower, upper)
 
@@ -82,7 +82,7 @@ def build_accuracy_dfs(x_max: float, n_points: int) -> list[pd.DataFrame]:
 
         data = {}
         for d in DEGREES:
-            approx = chebyshev_exp(x.astype(np.float64), d)
+            approx = chebyshev_exp(x.astype(np.float64), d, lower=x_min, upper=x_max)
             error = np.abs(baseline.astype(np.float64) - approx)
             # Replace inf/nan with nan so they don't break plotting
             error[~np.isfinite(error)] = np.nan

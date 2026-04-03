@@ -801,15 +801,20 @@ def get_exp_attrs_from_variant(wildcards):
     """Return math.exp attribute string for the variant.
 
     Taylor variants (linalg_xdsl_tN):    {terms = N : i64}
-    Chebyshev variants (linalg_xdsl_cN): {chebyshev_degree = N : i64, lower = -1.0 : f64, upper = 1.0 : f64}
+    Chebyshev variants (linalg_xdsl_cN): {chebyshev_degree = N : i64, lower = L : f64, upper = 0.0 : f64}
+      where L = log(smallest_subnormal) for the precision in the shape.
     """
     import re
+    import numpy as np
     m = re.search(r"_t(\d+)$", wildcards.variant)
     if m:
         return f"terms = {m.group(1)} : i64"
     m = re.search(r"_c(\d+)$", wildcards.variant)
     if m:
-        return f"chebyshev_degree = {m.group(1)} : i64, lower = -10.0 : f64, upper = 0.0 : f64"
+        prec = int(re.search(r"f(\d+)$", wildcards.shape).group(1))
+        dtype = {16: np.float16, 32: np.float32, 64: np.float64}[prec]
+        lower = float(np.log(np.finfo(dtype).smallest_subnormal))
+        return f"chebyshev_degree = {m.group(1)} : i64, lower = {lower} : f64, upper = 0.0 : f64"
     raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
 
 

@@ -46,6 +46,7 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
+        printf("x[%d] = %f, z[%d] = %f, G[%d] = %f\n", i, (double)local_x[i], i, (double)local_z[i], i, (double)G[i]);
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
         // Use relative error for large values, absolute for small
