@@ -359,13 +359,33 @@ rule pipeline:
     shell:
         "python {input.pipeline_py} {input.kernels} {input.regalloc} {input.frep_count} -o {output}"
 
+rule plot_exp_micro:
+    input:
+        csv="results/kernels.exp_micro.csv",
+        script="plots-mia-thesis/plot_exp_micro_linalg.py",
+    output:
+        "plots-mia-thesis/output/exp_micro_plots_linalg.pdf",
+    shell:
+        "python {input.script} --input {input.csv} --output {output}"
+
+rule plot_exp_macro:
+    input:
+        csv="results/kernels.exp_macro.csv",
+        script="plots-mia-thesis/plot_exp_macro.py",
+    output:
+        "plots-mia-thesis/output/exp_macro_plots.pdf",
+    shell:
+        "python {input.script} --input {input.csv} --output {output}"
+
 rule exp_micro:
     input:
-        "results/kernels.exp_micro.csv"
+        "results/kernels.exp_micro.csv",
+        "plots-mia-thesis/output/exp_micro_plots_linalg.pdf",
 
 rule exp_macro:
     input:
-        "results/kernels.exp_macro.csv"
+        "results/kernels.exp_macro.csv",
+        "plots-mia-thesis/output/exp_macro_plots.pdf",
 
 rule all:
     input:
