@@ -41,3 +41,9 @@ snakemake --cores 1 --forceall kernels/exp_micro/16xf32/linalg_xdsl.S
 
 # object file
 
+
+
+# testing the chebyshev expansion:
+# 1. generate the xdsl mlir file, 2. lower to snitch using the xdsl passes
+snakemake --cores 1 kernels/exp_micro/16xf32/linalg_xdsl_c8.xdsl.mlir
+xdsl-opt -p test-lower-linalg-to-snitch kernels/exp_micro/16xf32/linalg_xdsl_c8.xdsl.mlir
