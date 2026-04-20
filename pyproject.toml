@@ -8,5 +8,5 @@ dependencies = [
     "seaborn",
     "numpy",
     "snakemake==8.14.0",
-    "xdsl @ git+https://github.com/szerdick/xdsl.git@61c69d5f716f441109fc04fea19ac99c62a2c844",
+    "xdsl @ git+https://github.com/szerdick/xdsl.git@0e467f528fc9254e5c116c7aa51e87cead2c3b41",
 ]
