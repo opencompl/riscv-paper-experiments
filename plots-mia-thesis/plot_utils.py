@@ -76,6 +76,17 @@ IMPL_MARKERS = {
     "Exp_linalg_xdsl_c16": "v",
 }
 
+IMPL_DISPLAY_NAMES = {
+    "Exp_linalg_xdsl_t3": "Taylor Approximation of Degree 3",
+    "Exp_linalg_xdsl_t4": "Taylor Approximation of Degree 4",
+    "Exp_linalg_xdsl_t5": "Taylor Approximation of Degree 5",
+    "Exp_linalg_xdsl_t6": "Taylor Approximation of Degree 6",
+    "Exp_linalg_xdsl_c4": "Chebyshev Approximation of Degree 4",
+    "Exp_linalg_xdsl_c8": "Chebyshev Approximation of Degree 8",
+    "Exp_linalg_xdsl_c12": "Chebyshev Approximation of Degree 12",
+    "Exp_linalg_xdsl_c16": "Chebyshev Approximation of Degree 16",
+}
+
 IMPL_LINESTYLES = {
     Impl.OURS.value: '',
     Impl.CLANG.value: '',
@@ -266,13 +277,13 @@ def plot_combined(
             [],
             color=color,
             marker=marker,
-            label=entry,
+            label=IMPL_DISPLAY_NAMES.get(entry, entry),
             linestyle=linestyle,
             markersize=6,
         )
         for entry, (color, marker, linestyle) in legend_entries.items()
     ]
-    labels = list(legend_entries.keys())
+    labels = [IMPL_DISPLAY_NAMES.get(k, k) for k in legend_entries.keys()]
     fig.legend(lines, labels, ncols=legend_cols, bbox_to_anchor=(0.5, 1.0))
 
     fig.tight_layout(pad=2.5)

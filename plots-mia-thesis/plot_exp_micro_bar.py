@@ -74,7 +74,8 @@ def compute_averages(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def plot_bars(avg_df: pd.DataFrame) -> plt.Figure:
-    plt.style.use("config/gridplot.mplstyle")
+    style_path = Path(__file__).parent / "config" / "gridplot.mplstyle"
+    plt.style.use(str(style_path))
 
     precisions = [p for p in PRECISIONS if p in avg_df["precision"].values]
     ncols = len(precisions)
