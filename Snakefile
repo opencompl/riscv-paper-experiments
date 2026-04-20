@@ -228,12 +228,7 @@ TESTSET_EXP_MICRO = [
         "exp_micro/{N}xf{precision}/{variant}",
         N=range(16, 129, 16),
         precision=[16, 32, 64],
-        variant=["baseline", "linalg_xdsl"],
-    ),
-    *expand(
-        "exp_micro/{N}xf64/{variant}",
-        N=range(16,129,16),
-        variant=["linalg_xdsl"],
+        variant=["baseline"],
     ),
     *expand(
         "exp_micro/{N}xf{precision}/{variant}",
