@@ -58,6 +58,9 @@ MLIR_VARIANTS = [
 SHAPE_1D = r"(?P<N>\d+)xf(?P<precision>\d+)"
 SHAPE_2D = r"(?P<M>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
+# Polynomial kernel: N x acc_exp x precision, where acc_exp encodes the
+# accuracy bound (acc_exp=k -> acc_bound = 10^-k).
+SHAPE_POLYNOMIAL = r"(?P<N>\d+)x(?P<acc_exp>\d+)xf(?P<precision>\d+)"
 
 # Shape regex for each kernel
 # Beware: the presence in the following dict makes the kernel
@@ -66,7 +69,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 KERNEL_SHAPE = {
     "exp_micro": SHAPE_1D,
     "exp_macro": SHAPE_1D,
-    "polynomial": SHAPE_1D,
+    "polynomial": SHAPE_POLYNOMIAL,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -263,9 +266,10 @@ TESTSET_EXP_MACRO = [
 
 TESTSET_POLYNOMIAL = [
     *expand(
-        "polynomial/{N}xf{precision}/{variant}",
+        "polynomial/{N}x{acc_exp}xf{precision}/{variant}",
         N=range(16, 129, 16),
-        precision=[32, 64],
+        acc_exp=[1, 2, 3, 4, 5, 6],
+        precision=[16, 32, 64],
         variant=["linalg_xdsl"],
     ),
 ]
@@ -791,7 +795,7 @@ rule xdsl_kernel_generate_source:
     output:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
-        kernel="|".join(k for k in KERNEL_TEMPLATES if k != "polynomial"),
+        kernel="|".join(KERNEL_TEMPLATES),
         variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS and v not in XDSL_LINALG_CHEBYSHEV_VARIANTS),
     params:
         format_template="scripts/format.py",
@@ -805,27 +809,6 @@ rule xdsl_kernel_generate_source:
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
         | sed 's/arith.maximumf/arith.maxf/g' > {output}
-        """
-
-
-# The polynomial kernel uses the xDSL-only `polynomial.eval` op, which
-# mlir-opt cannot parse. Bypass mlir-opt: the template is already at the
-# linalg-on-memref level, so no bufferization is needed.
-rule xdsl_kernel_generate_source_polynomial:
-    input:
-        json="kernels/polynomial/{shape}/params.json",
-        template="kernels/polynomial/linalg.mlir.template",
-    output:
-        "kernels/polynomial/{shape}/{variant}.xdsl.mlir",
-    wildcard_constraints:
-        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS and v not in XDSL_LINALG_CHEBYSHEV_VARIANTS),
-    params:
-        format_template="scripts/format.py",
-        xdsl_opt=config["xdsl-opt"],
-    shell:
-        """
-        python3 {params.format_template} {input.template} {input.json} \
-        | {params.xdsl_opt} -p arith-add-fastmath > {output}
         """
 
 

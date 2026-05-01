@@ -3,13 +3,14 @@
 Plot accuracy of Chebyshev exp approximations vs np.exp baseline.
 
 One plot per precision (f16, f32, f64).
-Each plot has lines for degree={4,8,12,16} showing |np.exp(x) - chebyshev_d(x)| vs x.
-Uses the default Chebyshev interval [-30, 0].
-x range: [-30, 0].
+Each plot has lines for degree={4,8,12,16,20,24,28} showing |np.exp(x) - chebyshev_d(x)| vs x.
+The Chebyshev interval per precision is [log(smallest_subnormal), 0], matching
+`lower-exp-to-polynomial`'s _UNDERFLOW_LOWER_BOUND.
 """
 
 import argparse
 import math as pymath
+from itertools import cycle
 from pathlib import Path
 from typing import Sequence
 
@@ -17,8 +18,16 @@ import numpy as np
 import numpy.typing as npt
 import pandas as pd
 from matplotlib.axes import Axes
+from matplotlib import pyplot as plt
 
-from plot_utils import IMPL_COLORS, IMPL_MARKERS, GridPlotRow, plot_combined, savefig
+from plot_utils import (
+    IMPL_COLORS,
+    IMPL_LINESTYLES,
+    IMPL_MARKERS,
+    GridPlotRow,
+    plot_combined,
+    savefig,
+)
 
 
 PRECISIONS = {
@@ -27,9 +36,21 @@ PRECISIONS = {
     "f64": np.float64,
 }
 
-DEGREES = [4, 8, 12, 16]
+DEGREES = [4, 8, 12, 16, 20, 24, 28]
 
 DEGREE_KEYS = {d: f"Exp_linalg_xdsl_c{d}" for d in DEGREES}
+
+
+# Inject styles for any degrees not already registered in plot_utils so the
+# shared legend builder can resolve them. Use viridis to keep colours distinct
+# and ordered with the degree.
+_marker_cycle = cycle(["s", "D", "^", "v", "o", "P", "X", "*", "h", "<", ">"])
+_cmap = plt.get_cmap("viridis")
+for _i, _d in enumerate(DEGREES):
+    _key = DEGREE_KEYS[_d]
+    IMPL_COLORS.setdefault(_key, _cmap(_i / max(1, len(DEGREES) - 1)))
+    IMPL_MARKERS.setdefault(_key, next(_marker_cycle))
+    IMPL_LINESTYLES.setdefault(_key, "")
 
 
 def chebyshev_coefficients(

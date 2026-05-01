@@ -1,5 +1,5 @@
 module {
-  func.func public @polynomial_kernel(
+  func.func public @exp_kernel(
         %arg0: memref<{{N}}xf{{precision}}> {llvm.noalias},
         %arg1: memref<{{N}}xf{{precision}}> {llvm.noalias}) -> memref<{{N}}xf{{precision}}> {
     linalg.generic {
@@ -9,7 +9,7 @@ module {
         iterator_types = ["parallel"]
     } ins(%arg0 : memref<{{N}}xf{{precision}}>) outs(%arg1 : memref<{{N}}xf{{precision}}>) {
     ^bb0(%in: f{{precision}}, %out: f{{precision}}):
-      %0 = polynomial.eval #polynomial.typed_chebyshev_polynomial<[2.5321317566051960e+00 : f64, 1.1303182190467211e+00 : f64, 2.7149553874759635e-01 : f64, 4.4340048285166224e-02 : f64, 5.5192177650495220e-03 : f64, 1.0858526238279654e-03 : f64]> : !polynomial.polynomial<ring = <coefficientType = f64>>, %in {scheme = "clenshaw", domain_lower = -1.000000e+00 : f64, domain_upper = 1.000000e+00 : f64} : f{{precision}}
+      %0 = math.exp %in {acc_bound = {{f"{10**(-acc_exp):.6e}"}} : f{{precision}}} : f{{precision}}
       linalg.yield %0 : f{{precision}}
     }
     return %arg1 : memref<{{N}}xf{{precision}}>

@@ -6,20 +6,19 @@ from typing import Iterator
 
 from gendatautils import main, Define, Array
 
-
-
-DOMAIN_LOWER: float = -1.0
-DOMAIN_UPPER: float = 1.0
-
 def polynomial_data(
-    N: int, rmin: float, rmax: float, precision: int
+    N: int, acc_exp: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array]:
     yield Define("N", N)
+    yield Define("ACC_EXP", acc_exp)
 
     t = {16: np.float16, 32: np.float32, 64: np.float64}[precision]
 
+    rmin = max(rmin, -1.0)
+    rmax = min(rmax, 0.0)
+
     np.random.seed(0)
-    x = np.random.uniform(DOMAIN_LOWER, DOMAIN_UPPER, N).astype(t)
+    x = np.random.uniform(rmin, rmax, N).astype(t)
 
     # Compute golden reference in float64 then cast down
     g = np.exp(x.astype(np.float64)).astype(t)

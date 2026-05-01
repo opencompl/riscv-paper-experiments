@@ -15,7 +15,7 @@ extern "C" {
 }
 
 // Kernel provided via external definition
-extern "C" void polynomial_kernel(const DTYPE *x, DTYPE *z);
+extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
@@ -39,18 +39,21 @@ int main() {
 
     snrt_fpu_fence();
     (void)snrt_mcycle();
-    polynomial_kernel(local_x, local_z);
+    exp_kernel(local_x, local_z);
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-    // Correctness check
+    // Correctness check. Tolerance is scaled by ACC_BOUND (= 10^-ACC_EXP)
+    // with a 20x margin to allow for finite-precision accumulation on top
+    // of the polynomial approximation error.
+    DTYPE tol_base = (DTYPE)(20.0 * ACC_BOUND);
     int nerr = 0;
     for (int i = 0; i < N; i++) {
-        printf("G[%d] = %f, local_z[%d] = %f\n", i, (double)G[i], i, (double)local_z[i]);
+        printf("x[%d] = %f, G[%d] = %f, z[%d] = %f\n", i, (double)local_x[i], i, (double)G[i], i, (double)local_z[i]);
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
         // Use relative error for large values, absolute for small
-        DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)2E-2 : (DTYPE)2E-2;
+        DTYPE tol = ref > (DTYPE)1.0 ? ref * tol_base : tol_base;
         nerr += !(d <= tol);
     }
     return nerr;
