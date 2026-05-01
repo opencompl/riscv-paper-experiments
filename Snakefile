@@ -66,6 +66,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 KERNEL_SHAPE = {
     "exp_micro": SHAPE_1D,
     "exp_macro": SHAPE_1D,
+    "polynomial": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -260,6 +261,15 @@ TESTSET_EXP_MACRO = [
     ),
 ]
 
+TESTSET_POLYNOMIAL = [
+    *expand(
+        "polynomial/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[32, 64],
+        variant=["linalg_xdsl"],
+    ),
+]
+
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
     *MANUAL_KERNELS,
@@ -316,6 +326,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "polynomial": sorted(set(TESTSET_POLYNOMIAL)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -332,6 +343,7 @@ def select_test_set_regalloc_jsons(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "polynomial": sorted(set(TESTSET_POLYNOMIAL)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -389,6 +401,10 @@ rule exp_micro:
 rule exp_macro:
     input:
         "results/kernels.exp_macro.csv"
+
+rule polynomial:
+    input:
+        "results/kernels.polynomial.csv"
 
 rule all:
     input:
@@ -775,7 +791,7 @@ rule xdsl_kernel_generate_source:
     output:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
-        kernel="|".join(KERNEL_TEMPLATES),
+        kernel="|".join(k for k in KERNEL_TEMPLATES if k != "polynomial"),
         variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS and v not in XDSL_LINALG_CHEBYSHEV_VARIANTS),
     params:
         format_template="scripts/format.py",
@@ -789,6 +805,27 @@ rule xdsl_kernel_generate_source:
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
         | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
+
+
+# The polynomial kernel uses the xDSL-only `polynomial.eval` op, which
+# mlir-opt cannot parse. Bypass mlir-opt: the template is already at the
+# linalg-on-memref level, so no bufferization is needed.
+rule xdsl_kernel_generate_source_polynomial:
+    input:
+        json="kernels/polynomial/{shape}/params.json",
+        template="kernels/polynomial/linalg.mlir.template",
+    output:
+        "kernels/polynomial/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_TERMS_VARIANTS and v not in XDSL_LINALG_CHEBYSHEV_VARIANTS),
+    params:
+        format_template="scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | {params.xdsl_opt} -p arith-add-fastmath > {output}
         """
 
 
