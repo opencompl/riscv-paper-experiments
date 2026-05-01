@@ -1,0 +1,11 @@
+func.func public @softmax_kernel(
+    %arg0: tensor<{{N}}xf{{precision}}> {"llvm.noalias"},
+    %arg1: tensor<{{N}}xf{{precision}}> {"llvm.noalias"})
+    -> tensor<{{N}}xf{{precision}}> {
+  %r = linalg.softmax dimension(0)
+       ins(%arg0 : tensor<{{N}}xf{{precision}}>)
+       outs(%arg1 : tensor<{{N}}xf{{precision}}>)
+       {acc_bound = 1.000000e-03 : f{{precision}}}
+       -> tensor<{{N}}xf{{precision}}>
+  func.return %r : tensor<{{N}}xf{{precision}}>
+}

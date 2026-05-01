@@ -66,6 +66,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 KERNEL_SHAPE = {
     "exp_micro": SHAPE_1D,
     "exp_macro": SHAPE_1D,
+    "softmax": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -785,6 +786,8 @@ rule xdsl_kernel_generate_source:
     shell:
         """
         python3 {params.format_template} {input.template} {input.json} \
+        | {params.xdsl_opt} -p decompose-softmax \
+        | sed 's/arith.maximumf/arith.maxf/g' \
         | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
@@ -827,6 +830,8 @@ rule xdsl_kernel_generate_source_exp_attrs:
         """
         python3 {params.format_template} {input.template} {input.json} \
         | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{{params.exp_attrs}}} :/g' \
+        | {params.xdsl_opt} -p decompose-softmax \
+        | sed 's/arith.maximumf/arith.maxf/g' \
         | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \

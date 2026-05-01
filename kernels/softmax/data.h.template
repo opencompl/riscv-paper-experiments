@@ -1,6 +1,6 @@
 #pragma once
 
-#define PRECISION 64
+#define PRECISION {{precision}}
 #if PRECISION == 16
 #define DTYPE __fp16
 #define EXPF expf
@@ -17,7 +17,7 @@
 #error Unsupported precision
 #endif
 
-#define N 16
+#define N {{N}}
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,4 +29,3 @@ extern const DTYPE G[N];
 #ifdef __cplusplus
 }
 #endif
-
