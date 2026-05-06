@@ -39,6 +39,7 @@ cflags:
   - -mcmodel=medany
   - -ftls-model=local-exec
   - -ffast-math
+  - -mno-fdiv
   - -fno-builtin-printf
   - -fno-common
   - -O3
