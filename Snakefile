@@ -16,9 +16,21 @@ XDSL_LINALG_OPT_VARIANTS = [
     "linalg_5_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
 ]
 
+# Accuracy-bound variants: linalg_xdsl_aN -> acc_bound = 10^-N.
+# The pipeline (exp -> polynomial -> arith) picks a polynomial degree from this bound.
+XDSL_LINALG_ACC_BOUND_VARIANTS = [
+    "linalg_xdsl_a1",
+    "linalg_xdsl_a2",
+    "linalg_xdsl_a3",
+    "linalg_xdsl_a4",
+    "linalg_xdsl_a5",
+    "linalg_xdsl_a6",
+]
+
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
+    *XDSL_LINALG_ACC_BOUND_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -210,11 +222,18 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
 TESTSET_EXP_MICRO = [
     *expand(
         "exp_micro/{N}xf{precision}/{variant}",
-        N=range(26, 129, 16),
+        N=range(16, 129, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[16, 32, 64],
+        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+    ),
 ]
+
 TESTSET_EXP_MACRO = [
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
@@ -740,7 +759,7 @@ rule xdsl_kernel_generate_source:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(XDSL_LINALG_VARIANTS),
+        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_ACC_BOUND_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
@@ -749,6 +768,44 @@ rule xdsl_kernel_generate_source:
     shell:
         """
         python3 {params.format_template} {input.template} {input.json} \
+        | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
+
+
+def get_exp_attrs_from_variant(wildcards):
+    """Return math.exp attribute string for the variant.
+
+    Accuracy-bound variants (linalg_xdsl_aN): {acc_bound = 10^-N : f64, lower = -2.0 : f64, upper = 0.0 : f64}
+    """
+    import re
+    m = re.search(r"_a(\d+)$", wildcards.variant)
+    if m:
+        return f"acc_bound = {10**(-int(m.group(1))):.6e} : f64, lower = -2.0 : f64, upper = 0.0 : f64"
+    raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
+
+
+rule xdsl_kernel_generate_source_exp_attrs:
+    input:
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/linalg.mlir.template",
+    output:
+        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+        variant="|".join(XDSL_LINALG_ACC_BOUND_VARIANTS),
+    params:
+        format_template="scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+        exp_attrs=get_exp_attrs_from_variant,
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{{params.exp_attrs}}} :/g' \
         | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
