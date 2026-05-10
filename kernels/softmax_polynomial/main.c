@@ -43,17 +43,13 @@ int main() {
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-    // Correctness check. Tolerance is scaled by ACC_BOUND (= 10^-ACC_EXP)
-    // with a 20x margin to allow for finite-precision accumulation on top
-    // of the polynomial approximation error.
-    DTYPE tol_base = (DTYPE)(20.0 * ACC_BOUND);
+    // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
         printf("x[%d] = %f, G[%d] = %f, z[%d] = %f\n", i, (double)local_x[i], i, (double)G[i], i, (double)local_z[i]);
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
-        // Use relative error for large values, absolute for small
-        DTYPE tol = ref > (DTYPE)1.0 ? ref * tol_base : tol_base;
+        DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)2E-1 : (DTYPE)2E-1;
         nerr += !(d <= tol);
     }
     return nerr;

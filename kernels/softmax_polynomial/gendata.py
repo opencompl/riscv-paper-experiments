@@ -7,10 +7,9 @@ from gendatautils import main, Define, Array
 
 
 def softmax_data(
-    N: int, acc_exp: int, rmin: float, rmax: float, precision: int
+    N: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array]:
     yield Define("N", N)
-    yield Define("ACC_EXP", acc_exp)
 
     t = {16: np.float16, 32: np.float32, 64: np.float64}[precision]
 

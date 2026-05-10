@@ -9,7 +9,7 @@ module {
         iterator_types = ["parallel"]
     } ins(%arg0 : memref<{{N}}xf{{precision}}>) outs(%arg1 : memref<{{N}}xf{{precision}}>) {
     ^bb0(%in: f{{precision}}, %out: f{{precision}}):
-      %0 = math.exp %in {acc_bound = {{f"{10**(-acc_exp):.6e}"}} : f{{precision}}} : f{{precision}}
+      %0 = math.exp %in : f{{precision}}
       linalg.yield %0 : f{{precision}}
     }
     return %arg1 : memref<{{N}}xf{{precision}}>

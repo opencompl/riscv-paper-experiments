@@ -15,8 +15,6 @@
 #endif
 
 #define N {{N}}
-#define ACC_EXP {{acc_exp}}
-#define ACC_BOUND 1e-{{acc_exp}}
 
 #ifdef __cplusplus
 extern "C" {
