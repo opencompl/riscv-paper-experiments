@@ -101,6 +101,7 @@ KERNEL_SHAPE = {
     "exp_micro": SHAPE_1D,
     "exp_macro": SHAPE_1D,
     "exp_polynomial": SHAPE_1D,
+    "softmax-mia": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -295,6 +296,15 @@ TESTSET_EXP_MACRO = [
     ),
 ]
 
+TESTSET_SOFTMAX_MIA = [
+    *expand(
+        "softmax-mia/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[16, 32, 64],
+        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+    ),
+]
+
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
 TESTSET_ALL = [
     *MANUAL_KERNELS,
@@ -303,6 +313,7 @@ TESTSET_ALL = [
     *TESTSET_EXP_MICRO,
     *TESTSET_EXP_MACRO,
     *TESTSET_EXP_POLYNOMIAL,
+    *TESTSET_SOFTMAX_MIA,
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
@@ -352,6 +363,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "softmax_mia": sorted(set(TESTSET_SOFTMAX_MIA)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -368,6 +380,7 @@ def select_test_set_regalloc_jsons(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "softmax_mia": sorted(set(TESTSET_SOFTMAX_MIA)),
     }
     name = wildcards.testset
     if name not in sets:
@@ -429,6 +442,10 @@ rule exp_macro:
 rule exp_polynomial:
     input:
         "results/kernels.exp_polynomial.csv"
+
+rule softmax_mia:
+    input:
+        "results/kernels.softmax_mia.csv"
 
 rule all:
     input:
@@ -601,11 +618,22 @@ rule optimization_pipelines:
 # Build rules
 
 
+def cc_link_inputs(wildcards):
+    base = [
+        f"kernels/{wildcards.kernel}/{wildcards.shape}/{wildcards.variant}.o",
+        f"kernels/{wildcards.kernel}/{wildcards.shape}/data.o",
+        f"kernels/{wildcards.kernel}/{wildcards.shape}/main.o",
+    ]
+    # softmax-mia ships an extra translation unit (softmax.c at the kernel
+    # root) that drives the xDSL-lowered exp_kernel.
+    if wildcards.kernel == "softmax-mia":
+        base.append(f"kernels/{wildcards.kernel}/{wildcards.shape}/softmax.o")
+    return base
+
+
 rule cc_link:
     input:
-        "kernels/{kernel}/{shape}/{variant}.o",
-        "kernels/{kernel}/{shape}/data.o",
-        "kernels/{kernel}/{shape}/main.o",
+        cc_link_inputs,
     output:
         "kernels/{kernel}/{shape}/{variant}.x",
     params:
@@ -735,6 +763,21 @@ rule cc_compile_shared_main:
         h="kernels/{kernel}/{shape}/data.h",
     output:
         "kernels/{kernel}/{shape}/main.S",
+    params:
+        cc=config["cc"],
+        cflags=config["cflags"],
+    shell:
+        "{params.cc} -I$(dirname {input.h}) {params.cflags} -S -x c++ -o {output} {input.c}"
+
+
+rule cc_compile_shared_softmax:
+    input:
+        c="kernels/{kernel}/softmax.c",
+        h="kernels/{kernel}/{shape}/data.h",
+    output:
+        "kernels/{kernel}/{shape}/softmax.S",
+    wildcard_constraints:
+        kernel="softmax-mia",
     params:
         cc=config["cc"],
         cflags=config["cflags"],
