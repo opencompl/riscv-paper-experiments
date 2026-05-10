@@ -784,12 +784,14 @@ rule xdsl_kernel_generate_source:
 def get_exp_attrs_from_variant(wildcards):
     """Return math.exp attribute string for the variant.
 
-    Accuracy-bound variants (linalg_xdsl_aN): {acc_bound = 10^-N : f64, lower = -2.0 : f64, upper = 0.0 : f64}
     """
     import re
     m = re.search(r"_a(\d+)$", wildcards.variant)
     if m:
-        return f"acc_bound = {10**(-int(m.group(1))):.6e} : f64, lower = -2.0 : f64, upper = 0.0 : f64"
+        return (
+            f"acc_bound = {10**(-int(m.group(1))):.6e} : f64, "
+            f"lower_bound = -2.0 : f64, upper_bound = 0.0 : f64"
+        )
     raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
 
 
