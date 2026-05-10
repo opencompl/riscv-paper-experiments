@@ -46,7 +46,6 @@ int main() {
     // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
-        printf("x[%d] = %f, G[%d] = %f, z[%d] = %f\n", i, (double)local_x[i], i, (double)G[i], i, (double)local_z[i]);
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
         DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)2E-1 : (DTYPE)2E-1;
