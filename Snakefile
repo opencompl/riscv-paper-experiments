@@ -161,6 +161,12 @@ TESTSET_FAST = [
         variant=["baseline"],
     ),
     *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 65, 16),
+        precision=[16, 32, 64],
+        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+    ),
+    *expand(
         "exp_macro/{N}xf{precision}/{variant}",
         N=[64,128],
         precision=[64],
