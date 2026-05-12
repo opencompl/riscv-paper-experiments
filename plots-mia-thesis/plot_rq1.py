@@ -12,51 +12,25 @@ Usage:
     python plot_rq1.py \
         [--exp-micro results/kernels.exp_micro.csv] \
         [--exp-polynomial results/kernels.exp_polynomial.csv] \
-        [--output output/rq1_plots.pdf]
+        [--output plots-mia-thesis/output/rq1_plots.pdf]
 """
 
 import argparse
-import re
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from plot_utils import savefig
+from plot_utils import (
+    PRECISIONS,
+    load_baseline_csv,
+    load_chebyshev_csv,
+    savefig,
+)
 
 
-PRECISION_BYTES = {"f16": 2, "f32": 4, "f64": 8}
-PRECISIONS = ["f16", "f32", "f64"]
-DEGREE_RE = re.compile(r"linalg_xdsl_d(\d+)$")
-
-
-def _annotate(df: pd.DataFrame) -> pd.DataFrame:
-    parts = df["params"].str.split("x")
-    df = df.copy()
-    df["precision"] = parts.str[-1]
-    df["total_elements"] = parts.apply(lambda ps: int(np.prod([int(p) for p in ps[:-1]])))
-    df["total_input_bytes"] = df.apply(
-        lambda r: r["total_elements"] * PRECISION_BYTES[r["precision"]], axis=1
-    )
-    df["cycles_per_byte"] = df["cycles"] / df["total_input_bytes"]
-    return df
-
-
-def load_polynomial(csv_path: str) -> pd.DataFrame:
-    df = pd.read_csv(csv_path)
-    df = df[df["impl"].str.match(DEGREE_RE)].copy()
-    df["degree"] = df["impl"].str.extract(DEGREE_RE).astype(int)
-    return _annotate(df)
-
-
-def load_micro_baseline(csv_path: str) -> pd.DataFrame:
-    df = pd.read_csv(csv_path)
-    df = df[df["impl"] == "baseline"].copy()
-    return _annotate(df)
-
-
-def avg_per_degree(df: pd.DataFrame, precision: str, metric: str) -> pd.DataFrame:
+def avg_per_degree(df: pd.DataFrame, precision: str, metric: str) -> pd.Series:
     return (
         df[df["precision"] == precision]
         .groupby("degree")[metric]
@@ -125,8 +99,8 @@ def main() -> None:
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
 
-    poly_df = load_polynomial(args.exp_polynomial)
-    baseline_df = load_micro_baseline(args.exp_micro)
+    poly_df = load_chebyshev_csv(args.exp_polynomial)
+    baseline_df = load_baseline_csv(args.exp_micro)
 
     fig = plot_rq1(poly_df, baseline_df)
     savefig(fig, args.output)

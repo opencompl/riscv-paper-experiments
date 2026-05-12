@@ -452,16 +452,6 @@ rule exp_polynomial:
         "plots-mia-thesis/output/rq1_plots.pdf",
 
 
-rule plot_rq1:
-    input:
-        micro="results/kernels.exp_micro.csv",
-        poly="results/kernels.exp_polynomial.csv",
-        script="plots-mia-thesis/plot_rq1.py",
-    output:
-        "plots-mia-thesis/output/rq1_plots.pdf",
-    shell:
-        "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} -o {output}"
-
 rule softmax_polynomial:
     input:
         "results/kernels.softmax_polynomial.csv"
@@ -1003,3 +993,55 @@ rule xdsl_kernel_generate_source_chebyshev:
         | sed 's/scheme = "clenshaw"/scheme = "clenshaw", {params.bounds}/g' \
         | {params.xdsl_opt} -p arith-add-fastmath > {output}
         """
+
+###########################################################
+# Mia Thesis plots rules
+###########################################################
+
+PLOTS_DIR    = "plots-mia-thesis"
+PLOTS_OUTPUT = PLOTS_DIR + "/output"
+
+rule plot_rq1:
+    input:
+        script = PLOTS_DIR + "/plot_rq1.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+        micro  = "results/kernels.exp_micro.csv",
+        poly   = "results/kernels.exp_polynomial.csv",
+    output:
+        PLOTS_OUTPUT + "/rq1_plots.pdf",
+    shell:
+        "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} -o {output}"
+
+rule plot_rq31:
+    input:
+        script = PLOTS_DIR + "/plot_rq31.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq31_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plot_rq32:
+    input:
+        script = PLOTS_DIR + "/plot_rq32.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq32_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plot_rq33:
+    input:
+        script = PLOTS_DIR + "/plot_rq33.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq33_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plots_mia_thesis:
+    input:
+        PLOTS_OUTPUT + "/rq1_plots.pdf",
+        PLOTS_OUTPUT + "/rq31_plots.pdf",
+        PLOTS_OUTPUT + "/rq32_plots.pdf",
+        PLOTS_OUTPUT + "/rq33_plots.pdf",
