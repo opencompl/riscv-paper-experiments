@@ -282,7 +282,7 @@ TESTSET_EXP_POLYNOMIAL = [
     *expand(
         "exp_polynomial/{N}xf{precision}/{variant}",
         N=range(64, 129, 16),
-        precision=[616, 32, 4],
+        precision=[16, 32, 64],
         variant=XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS,
     ),
 ]
@@ -368,6 +368,7 @@ def select_test_set_profiles(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "exp_polynomial": sorted(set(TESTSET_EXP_POLYNOMIAL)),
         "softmax_polynomial": sorted(set(TESTSET_SOFTMAX_POLYNOMIAL)),
     }
     name = wildcards.testset
@@ -385,6 +386,7 @@ def select_test_set_regalloc_jsons(wildcards) -> list[str]:
         "pipeline": sorted(set(TESTSET_PIPELINE)),
         "exp_micro": sorted(set(TESTSET_EXP_MICRO)),
         "exp_macro": sorted(set(TESTSET_EXP_MACRO)),
+        "exp_polynomial": sorted(set(TESTSET_EXP_POLYNOMIAL)),
         "softmax_polynomial": sorted(set(TESTSET_SOFTMAX_POLYNOMIAL)),
     }
     name = wildcards.testset
@@ -446,7 +448,19 @@ rule exp_macro:
 
 rule exp_polynomial:
     input:
-        "results/kernels.exp_polynomial.csv"
+        "results/kernels.exp_polynomial.csv",
+        "plots-mia-thesis/output/rq1_plots.pdf",
+
+
+rule plot_rq1:
+    input:
+        micro="results/kernels.exp_micro.csv",
+        poly="results/kernels.exp_polynomial.csv",
+        script="plots-mia-thesis/plot_rq1.py",
+    output:
+        "plots-mia-thesis/output/rq1_plots.pdf",
+    shell:
+        "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} -o {output}"
 
 rule softmax_polynomial:
     input:
