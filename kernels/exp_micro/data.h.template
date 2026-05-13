@@ -5,14 +5,20 @@
 #define DTYPE __fp16
 #define EXPF expf
 #define FABSF fabsf
+// ULP at value 1.0 in f16: 2^-(11 - 1) = 2^-10
+#define DTYPE_EPS 0x1.0p-10
 #elif PRECISION == 32
 #define DTYPE float
 #define EXPF expf
 #define FABSF fabsf
+// ULP at value 1.0 in f32: 2^-(24 - 1) = 2^-23  (== FLT_EPSILON)
+#define DTYPE_EPS 0x1.0p-23
 #elif PRECISION == 64
 #define DTYPE double
 #define EXPF exp
 #define FABSF fabs
+// ULP at value 1.0 in f64: 2^-(53 - 1) = 2^-52  (== DBL_EPSILON)
+#define DTYPE_EPS 0x1.0p-52
 #else
 #error Unsupported precision
 #endif

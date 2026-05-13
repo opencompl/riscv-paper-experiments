@@ -16,21 +16,36 @@ XDSL_LINALG_OPT_VARIANTS = [
     "linalg_5_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
 ]
 
-# Accuracy-bound variants: linalg_xdsl_aN -> acc_bound = 10^-N.
-# The pipeline (exp -> polynomial -> arith) picks a polynomial degree from this bound.
-XDSL_LINALG_ACC_BOUND_VARIANTS = [
-    "linalg_xdsl_a1",
-    "linalg_xdsl_a2",
-    "linalg_xdsl_a3",
-    "linalg_xdsl_a4",
-    "linalg_xdsl_a5",
-    "linalg_xdsl_a6",
+# Max-bits-lost variants: linalg_xdsl_bN -> max_bits_lost = N 
+# (number of low-order mantissa bits of the result the polynomial is allowed to corrupt)
+# N = -1 -> correctly-rounded, 
+# N = 0 -> libm-grade, 
+# N > 0 -> relaxed accuracy bound
+XDSL_LINALG_MAX_BITS_LOST_VARIANTS = [
+    "linalg_xdsl_b-1",
+    "linalg_xdsl_b0",
+    "linalg_xdsl_b1",
+    "linalg_xdsl_b2",
+    "linalg_xdsl_b3",
+    "linalg_xdsl_b4",
+    "linalg_xdsl_b5",
+    "linalg_xdsl_b6",
+    "linalg_xdsl_b7",
+    "linalg_xdsl_b8",
+    "linalg_xdsl_b9",
+    "linalg_xdsl_b10",
+    "linalg_xdsl_b11",
+    "linalg_xdsl_b12",
+    "linalg_xdsl_b13",
+    "linalg_xdsl_b14",
+    "linalg_xdsl_b15",
+    "linalg_xdsl_b16",
 ]
 
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
-    *XDSL_LINALG_ACC_BOUND_VARIANTS,
+    *XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -158,13 +173,7 @@ TESTSET_FAST = [
         "exp_micro/{N}xf{precision}/{variant}",
         N=range(16, 65, 16),
         precision=[16, 32, 64],
-        variant=["baseline"],
-    ),
-    *expand(
-        "exp_micro/{N}xf{precision}/{variant}",
-        N=range(16, 65, 16),
-        precision=[16, 32, 64],
-        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+        variant=["baseline", "linalg_xdsl_b4"],
     ),
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
@@ -236,7 +245,7 @@ TESTSET_EXP_MICRO = [
         "exp_micro/{N}xf{precision}/{variant}",
         N=range(16, 129, 16),
         precision=[16, 32, 64],
-        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
     ),
 ]
 
@@ -765,7 +774,7 @@ rule xdsl_kernel_generate_source:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_ACC_BOUND_VARIANTS),
+        variant="|".join(v for v in XDSL_LINALG_VARIANTS if v not in XDSL_LINALG_MAX_BITS_LOST_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
@@ -782,14 +791,13 @@ rule xdsl_kernel_generate_source:
 
 
 def get_exp_attrs_from_variant(wildcards):
-    """Return math.exp attribute string for the variant.
-
-    """
+    """Return math.exp attribute string for a `linalg_xdsl_b<N>` variant,
+    where <N> is the integer max_bits_lost (signed)."""
     import re
-    m = re.search(r"_a(\d+)$", wildcards.variant)
+    m = re.search(r"_b(-?\d+)$", wildcards.variant)
     if m:
         return (
-            f"acc_bound = {10**(-int(m.group(1))):.6e} : f64, "
+            f"max_bits_lost = {int(m.group(1))} : i64, "
             f"lower_bound = -2.0 : f64, upper_bound = 0.0 : f64"
         )
     raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
@@ -803,7 +811,7 @@ rule xdsl_kernel_generate_source_exp_attrs:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(XDSL_LINALG_ACC_BOUND_VARIANTS),
+        variant="|".join(XDSL_LINALG_MAX_BITS_LOST_VARIANTS),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
