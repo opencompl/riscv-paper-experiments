@@ -430,10 +430,6 @@ rule exp_polynomial:
     input:
         "results/kernels.exp_polynomial.csv"
 
-rule softmax_polynomial:
-    input:
-        "results/kernels.softmax_polynomial.csv"
-
 rule all:
     input:
         "results/kernels.all.csv",
