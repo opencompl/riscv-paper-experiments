@@ -16,9 +16,59 @@ XDSL_LINALG_OPT_VARIANTS = [
     "linalg_5_xdsl",  # should run the same passes as linalg_xdsl but via a fully expanded pipeline instead of xdsl-opt test passes/mini-pipelines
 ]
 
+# Max-bits-lost variants: linalg_xdsl_bN -> max_bits_lost = N 
+# (number of low-order mantissa bits of the result the polynomial is allowed to corrupt)
+# N = -1 -> correctly-rounded, 
+# N = 0 -> libm-grade, 
+# N > 0 -> relaxed accuracy bound
+XDSL_LINALG_MAX_BITS_LOST_VARIANTS = [
+    "linalg_xdsl_b-1",
+    "linalg_xdsl_b0",
+    "linalg_xdsl_b1",
+    "linalg_xdsl_b2",
+    "linalg_xdsl_b3",
+    "linalg_xdsl_b4",
+    "linalg_xdsl_b5",
+    "linalg_xdsl_b6",
+    "linalg_xdsl_b7",
+    "linalg_xdsl_b8",
+    "linalg_xdsl_b9",
+    "linalg_xdsl_b10",
+    "linalg_xdsl_b11",
+    "linalg_xdsl_b12",
+    "linalg_xdsl_b13",
+    "linalg_xdsl_b14",
+    "linalg_xdsl_b15",
+    "linalg_xdsl_b16",
+]
+
+# f16 has 11 mantissa bits: bN with N >= 11 asks the polynomial to corrupt
+# more bits than the type has, which makes the Chebyshev fit degenerate
+# (degree 0 -> ZeroDivisionError in the pass).
+XDSL_LINALG_MAX_BITS_LOST_VARIANTS_F16 = [
+    v for v in XDSL_LINALG_MAX_BITS_LOST_VARIANTS
+    if int(v.rsplit("_b", 1)[1]) < 11
+]
+
+XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS = [
+    "linalg_xdsl_d2",
+    "linalg_xdsl_d3",
+    "linalg_xdsl_d4",
+    "linalg_xdsl_d5",
+    "linalg_xdsl_d6",
+    "linalg_xdsl_d7",
+    "linalg_xdsl_d8",
+    "linalg_xdsl_d9",
+    "linalg_xdsl_d10",
+    "linalg_xdsl_d11",
+    "linalg_xdsl_d12",
+]
+
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
+    *XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
+    *XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS,
 ]
 
 XDSL_VARIANTS = [
@@ -50,6 +100,7 @@ SHAPE_3D = r"(?P<M>\d+)x(?P<K>\d+)x(?P<N>\d+)xf(?P<precision>\d+)"
 KERNEL_SHAPE = {
     "exp_micro": SHAPE_1D,
     "exp_macro": SHAPE_1D,
+    "exp_polynomial": SHAPE_1D,
     "sum": SHAPE_2D,
     "relu": SHAPE_2D,
     "fill": SHAPE_2D,
@@ -146,7 +197,7 @@ TESTSET_FAST = [
         "exp_micro/{N}xf{precision}/{variant}",
         N=range(16, 65, 16),
         precision=[16, 32, 64],
-        variant=["baseline"],
+        variant=["baseline", "linalg_xdsl_b4"],
     ),
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
@@ -210,11 +261,31 @@ TESTSET_LOW_LEVEL_REPRESENTATION = [
 TESTSET_EXP_MICRO = [
     *expand(
         "exp_micro/{N}xf{precision}/{variant}",
-        N=range(26, 129, 16),
+        N=range(16, 129, 16),
         precision=[16, 32, 64],
         variant=["baseline"],
     ),
+    *expand(
+        "exp_micro/{N}xf16/{variant}",
+        N=range(16, 129, 16),
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS_F16,
+    ),
+    *expand(
+        "exp_micro/{N}xf{precision}/{variant}",
+        N=range(16, 129, 16),
+        precision=[32, 64],
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
+    ),
 ]
+TESTSET_EXP_POLYNOMIAL = [
+    *expand(
+        "exp_polynomial/{N}xf{precision}/{variant}",
+        N=range(64, 129, 16),
+        precision=[616, 32, 4],
+        variant=XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS,
+    ),
+]
+
 TESTSET_EXP_MACRO = [
     *expand(
         "exp_macro/{N}xf{precision}/{variant}",
@@ -231,6 +302,7 @@ TESTSET_ALL = [
     *TESTSET_PIPELINE,
     *TESTSET_EXP_MICRO,
     *TESTSET_EXP_MACRO,
+    *TESTSET_EXP_POLYNOMIAL,
     # 3d templated kernels: baseline + linalg_xdsl
     *expand(
         "matmul/{M}x{K}x{N}xf64/{variant}",
@@ -353,6 +425,10 @@ rule exp_micro:
 rule exp_macro:
     input:
         "results/kernels.exp_macro.csv"
+
+rule exp_polynomial:
+    input:
+        "results/kernels.exp_polynomial.csv"
 
 rule all:
     input:
@@ -740,7 +816,12 @@ rule xdsl_kernel_generate_source:
         "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
     wildcard_constraints:
         kernel="|".join(KERNEL_TEMPLATES),
-        variant="|".join(XDSL_LINALG_VARIANTS),
+        variant="|".join(
+            v
+            for v in XDSL_LINALG_VARIANTS
+            if v not in XDSL_LINALG_MAX_BITS_LOST_VARIANTS
+            and v not in XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS
+        ),
     params:
         format_template="scripts/format.py",
         xdsl_opt=config["xdsl-opt"],
@@ -753,4 +834,112 @@ rule xdsl_kernel_generate_source:
         | sed 's/arith.maxf/arith.maximumf/g' \
         | {params.xdsl_opt} -p arith-add-fastmath \
         | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
+
+
+def get_exp_attrs_from_variant(wildcards):
+    """Return math.exp attribute string for a `linalg_xdsl_b<N>` variant,
+    where <N> is the integer max_bits_lost (signed)."""
+    import re
+    m = re.search(r"_b(-?\d+)$", wildcards.variant)
+    if m:
+        return (
+            f"max_bits_lost = {int(m.group(1))} : i64, "
+            f"lower_bound = -2.0 : f64, upper_bound = 0.0 : f64"
+        )
+    raise ValueError(f"Cannot extract exp attributes from variant: {wildcards.variant}")
+
+
+rule xdsl_kernel_generate_source_exp_attrs:
+    input:
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/linalg.mlir.template",
+    output:
+        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+        variant="|".join(XDSL_LINALG_MAX_BITS_LOST_VARIANTS),
+    params:
+        format_template="scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        mlir_opt=config["mlir-opt"],
+        mlir_opt_flags_linalg=config["mlir-opt-flags-linalg"],
+        exp_attrs=get_exp_attrs_from_variant,
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | sed 's/math.exp %\\([^ ]*\\) :/math.exp %\\1 {{{params.exp_attrs}}} :/g' \
+        | {params.mlir_opt} {params.mlir_opt_flags_linalg} \
+        | sed 's/arith.maxf/arith.maximumf/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath \
+        | sed 's/arith.maximumf/arith.maxf/g' > {output}
+        """
+
+
+# Chebyshev approximation domain for exp_polynomial. Must match the
+# DOMAIN_LOWER/DOMAIN_UPPER in kernels/exp_polynomial/gendata.py.
+CHEBYSHEV_DOMAIN_LOWER = -2.0
+CHEBYSHEV_DOMAIN_UPPER = 0.0
+
+
+def get_chebyshev_coeffs_from_variant(wildcards):
+    """Compute the Chebyshev coefficient list for the variant.
+
+    Uses Chebyshev-Lobatto nodes via DCT-I.
+    (Can not use numpy's Chebyshev.interpolate here because it returns standard 
+    (single-prime) coefficients.
+    """
+    import math
+    import re
+
+    m = re.search(r"_d(\d+)$", wildcards.variant)
+    if not m:
+        raise ValueError(
+            f"Cannot extract Chebyshev degree from variant: {wildcards.variant}"
+        )
+    degree = int(m.group(1))
+    n = degree
+    lower = CHEBYSHEV_DOMAIN_LOWER
+    upper = CHEBYSHEV_DOMAIN_UPPER
+    nodes = [math.cos(math.pi * j / n) for j in range(n + 1)]
+    mid = (upper + lower) / 2.0
+    half = (upper - lower) / 2.0
+    values = [math.exp(half * t + mid) for t in nodes]
+    coeffs: list[float] = []
+    for k in range(n + 1):
+        s = 0.0
+        for j in range(n + 1):
+            w = 0.5 if (j == 0 or j == n) else 1.0
+            s += w * values[j] * math.cos(math.pi * k * j / n)
+        coeffs.append(2.0 * s / n)
+    return ", ".join(f"{c:.16e} : f64" for c in coeffs)
+
+
+def get_chebyshev_bounds_string(wildcards):
+    return (
+        f"domain_lower = {CHEBYSHEV_DOMAIN_LOWER:.6e} : f64, "
+        f"domain_upper = {CHEBYSHEV_DOMAIN_UPPER:.6e} : f64"
+    )
+
+
+rule xdsl_kernel_generate_source_chebyshev:
+    input:
+        json="kernels/{kernel}/{shape}/params.json",
+        template="kernels/{kernel}/linalg.mlir.template",
+    output:
+        "kernels/{kernel}/{shape}/{variant}.xdsl.mlir",
+    wildcard_constraints:
+        kernel="|".join(KERNEL_TEMPLATES),
+        variant="|".join(XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS),
+    params:
+        format_template="scripts/format.py",
+        xdsl_opt=config["xdsl-opt"],
+        coeffs=get_chebyshev_coeffs_from_variant,
+        bounds=get_chebyshev_bounds_string,
+    shell:
+        """
+        python3 {params.format_template} {input.template} {input.json} \
+        | sed 's/__COEFFS__/{params.coeffs}/g' \
+        | sed 's/scheme = "clenshaw"/scheme = "clenshaw", {params.bounds}/g' \
+        | {params.xdsl_opt} -p arith-add-fastmath > {output}
         """
