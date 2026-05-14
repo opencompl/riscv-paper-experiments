@@ -15,7 +15,7 @@ extern "C" {
 }
 
 // Kernel provided via external definition
-extern "C" void exp_kernel(const DTYPE *x, DTYPE *z);
+extern "C" void softmax_kernel(const DTYPE *x, DTYPE *z);
 
 int main() {
     // Allocate shared local memory
@@ -39,17 +39,17 @@ int main() {
 
     snrt_fpu_fence();
     (void)snrt_mcycle();
-    exp_kernel(local_x, local_z);
+    softmax_kernel(local_x, local_z);
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-    // Correctness check: We emit this part because some variants allow large to fully wrong results 
+    // Correctness check
     int nerr = 0;
     for (int i = 0; i < N; i++) {
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
-        // DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)1E-2 : (DTYPE)1E-2;        
-        // nerr += !(d <= tol);
+        DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)2E-1 : (DTYPE)2E-1;
+        nerr += !(d <= tol);
     }
     return nerr;
 }

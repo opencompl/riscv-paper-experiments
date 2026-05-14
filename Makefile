@@ -30,17 +30,25 @@ pipeline:
 exp_micro:
 	snakemake --cores $(JOBS) --rerun-incomplete exp_micro
 
+.PHONY: exp_polynomial
+exp_polynomial:
+	snakemake --cores $(JOBS) --rerun-incomplete exp_polynomial
+
 .PHONY: exp_macro
 exp_macro:
 	snakemake --cores $(JOBS) --rerun-incomplete exp_macro
 
 .PHONY: exp
 exp:
-	snakemake --cores $(JOBS) --rerun-incomplete exp_micro exp_macro
+	snakemake --cores $(JOBS) --rerun-incomplete exp_micro exp_macro exp_polynomial
+
+.PHONY: softmax_polynomial
+softmax_polynomial:
+	snakemake --cores $(JOBS) --rerun-incomplete softmax_polynomial
 
 .PHONY: clean
 clean:
-	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation exp_micro exp_macro
+	snakemake --delete-all-output --rerun-incomplete fast all pipeline low_level_representation exp_micro exp_macro exp_polynomial
 
 .PHONY: docker-build
 docker-build:
