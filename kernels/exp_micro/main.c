@@ -43,7 +43,7 @@ int main() {
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-    // Correctness check: We emit this part because some variants allow large to fully wrong results 
+    // Correctness check: We emit this part because some variants allow large to fully wrong results
     int nerr = 0;
     for (int i = 0; i < N; i++) {
         DTYPE d = FABSF(local_z[i] - G[i]);
