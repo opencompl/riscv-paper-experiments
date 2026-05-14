@@ -298,10 +298,15 @@ TESTSET_EXP_MACRO = [
 
 TESTSET_SOFTMAX_POLYNOMIAL = [
     *expand(
+        "softmax_polynomial/{N}xf16/{variant}",
+        N=range(16, 129, 16),
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS_F16,
+    ),
+    *expand(
         "softmax_polynomial/{N}xf{precision}/{variant}",
         N=range(16, 129, 16),
-        precision=[16, 32, 64],
-        variant=XDSL_LINALG_ACC_BOUND_VARIANTS,
+        precision=[32, 64],
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
     ),
 ]
 
