@@ -77,7 +77,7 @@ def plot_rq35(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
         if not series.empty:
             ax.plot(
                 series.index, series.values,
-                marker="o", color="#33a02c", linewidth=1.4,
+                marker="o", linestyle="none", color="#33a02c",
                 label="Chebyshev polynomial",
             )
         if not np.isnan(baseline):
@@ -94,7 +94,7 @@ def plot_rq35(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
         ax.grid(True, alpha=0.3)
         ax.legend(loc="best", fontsize=8)
 
-    fig.suptitle("Accuracy / performance Pareto for exp_micro")
+    fig.suptitle("Accuracy vs performance Pareto for our polynomial approximation of exp(x)")
     fig.tight_layout()
     return fig
 

@@ -1039,9 +1039,29 @@ rule plot_rq33:
     shell:
         "python {input.script} -o {output}"
 
+rule plot_rq34:
+    input:
+        script = PLOTS_DIR + "/plot_rq34.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq34_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plot_rq35:
+    input:
+        script = PLOTS_DIR + "/plot_rq35.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq35_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+
 rule plots_mia_thesis:
     input:
         PLOTS_OUTPUT + "/rq1_plots.pdf",
         PLOTS_OUTPUT + "/rq31_plots.pdf",
         PLOTS_OUTPUT + "/rq32_plots.pdf",
         PLOTS_OUTPUT + "/rq33_plots.pdf",
+        PLOTS_OUTPUT + "/rq34_plots.pdf",
