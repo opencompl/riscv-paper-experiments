@@ -42,6 +42,14 @@ XDSL_LINALG_MAX_BITS_LOST_VARIANTS = [
     "linalg_xdsl_b16",
 ]
 
+# f16 has 11 mantissa bits: bN with N >= 11 asks the polynomial to corrupt
+# more bits than the type has, which makes the Chebyshev fit degenerate
+# (degree 0 -> ZeroDivisionError in the pass).
+XDSL_LINALG_MAX_BITS_LOST_VARIANTS_F16 = [
+    v for v in XDSL_LINALG_MAX_BITS_LOST_VARIANTS
+    if int(v.rsplit("_b", 1)[1]) < 11
+]
+
 XDSL_LINALG_VARIANTS = [
     "linalg_xdsl",  # xDSL lowering from linalg on tensors
     *XDSL_LINALG_OPT_VARIANTS,
@@ -242,9 +250,14 @@ TESTSET_EXP_MICRO = [
         variant=["baseline"],
     ),
     *expand(
+        "exp_micro/{N}xf16/{variant}",
+        N=range(16, 129, 16),
+        variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS_F16,
+    ),
+    *expand(
         "exp_micro/{N}xf{precision}/{variant}",
         N=range(16, 129, 16),
-        precision=[16, 32, 64],
+        precision=[32, 64],
         variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
     ),
 ]
