@@ -70,6 +70,7 @@ class ExpFPUPlotRow(FPUGridPlotRow):
             ax.plot(
                 df.index, df[col],
                 color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+                linestyle="none",
             )
         ax.set_xticks(df.index)
         if not hide_xlabel:
@@ -93,6 +94,7 @@ class ExpCyclesPerBytePlotRow(GridPlotRow):
             ax.plot(
                 df.index, df[col],
                 color=IMPL_COLORS[col], marker=IMPL_MARKERS[col],
+                linestyle="none",
             )
         ax.set_xticks(df.index)
         if not hide_xlabel:

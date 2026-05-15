@@ -633,7 +633,7 @@ def cc_link_inputs(wildcards):
         f"kernels/{wildcards.kernel}/{wildcards.shape}/data.o",
         f"kernels/{wildcards.kernel}/{wildcards.shape}/main.o",
     ]
-    if wildcards.kernel == "softmax-polynomial":
+    if wildcards.kernel == "softmax_polynomial":
         base.append(f"kernels/{wildcards.kernel}/{wildcards.shape}/softmax.o")
     return base
 
@@ -784,7 +784,7 @@ rule cc_compile_shared_softmax:
     output:
         "kernels/{kernel}/{shape}/softmax.S",
     wildcard_constraints:
-        kernel="softmax-polynomial",
+        kernel="softmax_polynomial",
     params:
         cc=config["cc"],
         cflags=config["cflags"],
@@ -1057,6 +1057,26 @@ rule plot_rq35:
     shell:
         "python {input.script} -o {output}"
 
+rule plot_rq41:
+    input:
+        script = PLOTS_DIR + "/plot_rq41.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq41_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plot_rq42:
+    input:
+        script   = PLOTS_DIR + "/plot_rq42.py",
+        utils    = PLOTS_DIR + "/plot_utils.py",
+        rq34     = PLOTS_DIR + "/plot_rq34.py",
+        softmax  = "results/kernels.softmax_polynomial.csv",
+    output:
+        PLOTS_OUTPUT + "/rq42_plots.pdf",
+    shell:
+        "python {input.script} -i {input.softmax} -o {output}"
+
 
 rule plots_mia_thesis:
     input:
@@ -1065,3 +1085,5 @@ rule plots_mia_thesis:
         PLOTS_OUTPUT + "/rq32_plots.pdf",
         PLOTS_OUTPUT + "/rq33_plots.pdf",
         PLOTS_OUTPUT + "/rq34_plots.pdf",
+        PLOTS_OUTPUT + "/rq41_plots.pdf",
+        PLOTS_OUTPUT + "/rq42_plots.pdf",
