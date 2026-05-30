@@ -62,7 +62,7 @@ CHEBYSHEV_DEGREES: list[int] = list(range(2, 13))
 # Regex matching the variant names in XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS.
 CHEBYSHEV_DEGREE_RE: re.Pattern[str] = re.compile(r"linalg_xdsl_d(\d+)$")
 
-# One (color, linestyle) per Chebyshev degree — used by plot_rq31 / plot_rq3 to
+# One (color, linestyle) per Chebyshev degree — used by plot_rq11 / plot_rq3 to
 # keep curves directly comparable across plots. There are 11 degrees but only
 # 8 colors in the project palette, so we cycle the colors and switch to a
 # dashed style on wrap-around — every (color, linestyle) pair is unique.
@@ -117,6 +117,66 @@ def eval_chebyshev(coeffs: Sequence[float], x: np.ndarray) -> np.ndarray:
     return result
 
 
+def eval_chebyshev_clenshaw_lowered(
+    coeffs: Sequence[float],
+    x: np.ndarray,
+    precision: str,
+    domain_lower: float = CHEBYSHEV_DOMAIN_LOWER,
+    domain_upper: float = CHEBYSHEV_DOMAIN_UPPER,
+) -> np.ndarray:
+    """Evaluate the Chebyshev series the way the xDSL lowering actually does.
+
+    Mirrors, bit-for-bit, the arithmetic emitted by the two passes
+    `lower-exp-to-polynomial` -> `expand-polynomial-eval` (function
+    `expand_clenshaw` in xdsl/transforms/expand_polynomial_eval.py):
+
+      * `coeffs` are the *double-precision* Chebyshev-Lobatto coefficients
+        carried by the `polynomial.eval` op (see `chebyshev_lobatto_coeffs` —
+        the same DCT-I values the Snakefile bakes into the IR);
+      * the domain-map scale/offset, the constant 2.0, every coefficient and
+        `coeffs[0]/2` are materialised as `arith.constant`s of the *element
+        type*, i.e. each is rounded to `precision` (exactly what `FloatAttr`
+        does);
+      * every `mulf`/`addf`/`subf` rounds its result back to `precision`.
+
+    Unlike `eval_chebyshev` (which sums the double-prime series in f64 and only
+    rounds the final result), this reproduces the rounding error introduced at
+    every operation, so it measures the error of the code the compiler emits.
+
+    Validated bit-identical to running `expand-polynomial-eval` on the
+    generated IR for f16/f32/f64 and degrees 2..12 across [domain_lower,
+    domain_upper].
+    """
+    dtype = PRECISION_NUMPY_DTYPE[precision]
+    R = lambda v: dtype(v)  # round a python float to the element type  # noqa: E731
+    xt = np.asarray(x, dtype=dtype)
+    n = len(coeffs) - 1
+
+    # domain map: t = x * scale + offset (each op in the element type)
+    scale = R(2.0 / (domain_upper - domain_lower))
+    offset = R(-(domain_upper + domain_lower) / (domain_upper - domain_lower))
+    scaled = (xt * scale).astype(dtype)
+    t = (scaled + offset).astype(dtype)
+
+    # Clenshaw recurrence, all arithmetic in the element type
+    two = R(2.0)
+    two_t = (two * t).astype(dtype)
+    b_prev2 = np.full_like(xt, R(0.0))  # b_{n+2}
+    b_prev1 = np.full_like(xt, R(0.0))  # b_{n+1}
+    for k in range(n, 0, -1):
+        c_k = R(coeffs[k])
+        two_t_b = (two_t * b_prev1).astype(dtype)
+        sub = (two_t_b - b_prev2).astype(dtype)
+        b_k = (sub + c_k).astype(dtype)
+        b_prev2, b_prev1 = b_prev1, b_k
+
+    # final: result = c_0/2 + t * b_1 - b_2
+    c0_half = R(coeffs[0] / 2.0)
+    t_b1 = (t * b_prev1).astype(dtype)
+    add = (c0_half + t_b1).astype(dtype)
+    return (add - b_prev2).astype(dtype)
+
+
 def ulp(values: np.ndarray, precision: str) -> np.ndarray:
     """ULP of each value, evaluated in the given precision (f16/f32/f64)."""
     dtype = PRECISION_NUMPY_DTYPE[precision]
@@ -154,6 +214,17 @@ def load_baseline_csv(csv_path: str) -> pd.DataFrame:
     """Load exp_micro measurements and keep only the libm baseline rows."""
     df = pd.read_csv(csv_path)
     df = df[df["impl"] == "baseline"].copy()
+    return annotate_kernel_df(df)
+
+
+def load_vendor_csv(csv_path: str) -> pd.DataFrame:
+    """Load exp_macro measurements and keep only the vendor kernel (snrt) rows.
+
+    The vendor kernel is only measured in f64, so the returned frame contains
+    f64 rows only.
+    """
+    df = pd.read_csv(csv_path)
+    df = df[df["impl"] == "snrt"].copy()
     return annotate_kernel_df(df)
 
 

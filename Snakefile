@@ -1007,26 +1007,36 @@ rule plot_rq1:
         utils  = PLOTS_DIR + "/plot_utils.py",
         micro  = "results/kernels.exp_micro.csv",
         poly   = "results/kernels.exp_polynomial.csv",
+        macro  = "results/kernels.exp_macro.csv",
     output:
         PLOTS_OUTPUT + "/rq1_plots.pdf",
     shell:
-        "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} -o {output}"
+        "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} --exp-macro {input.macro} -o {output}"
 
-rule plot_rq31:
+rule plot_rq11:
     input:
-        script = PLOTS_DIR + "/plot_rq31.py",
+        script = PLOTS_DIR + "/plot_rq11.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq31_plots.pdf",
+        PLOTS_OUTPUT + "/rq11_plots.pdf",
     shell:
         "python {input.script} -o {output}"
 
-rule plot_rq32:
+rule plot_rq12:
     input:
-        script = PLOTS_DIR + "/plot_rq32.py",
+        script = PLOTS_DIR + "/plot_rq12.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq32_plots.pdf",
+        PLOTS_OUTPUT + "/rq12_plots.pdf",
+    shell:
+        "python {input.script} -o {output}"
+
+rule plot_rq13:
+    input:
+        script = PLOTS_DIR + "/plot_rq13.py",
+        utils  = PLOTS_DIR + "/plot_utils.py",
+    output:
+        PLOTS_OUTPUT + "/rq13_plots.pdf",
     shell:
         "python {input.script} -o {output}"
 
@@ -1081,8 +1091,9 @@ rule plot_rq42:
 rule plots_mia_thesis:
     input:
         PLOTS_OUTPUT + "/rq1_plots.pdf",
-        PLOTS_OUTPUT + "/rq31_plots.pdf",
-        PLOTS_OUTPUT + "/rq32_plots.pdf",
+        PLOTS_OUTPUT + "/rq11_plots.pdf",
+        PLOTS_OUTPUT + "/rq12_plots.pdf",
+        PLOTS_OUTPUT + "/rq13_plots.pdf",
         PLOTS_OUTPUT + "/rq33_plots.pdf",
         PLOTS_OUTPUT + "/rq34_plots.pdf",
         PLOTS_OUTPUT + "/rq41_plots.pdf",

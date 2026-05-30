@@ -7,11 +7,14 @@ For each precision (f16, f32, f64) produce two plots:
   - degree vs. avg cycles/byte (averaged across input sizes N)
   - degree vs. avg FPU utilization (averaged across input sizes N)
 The libm baseline (from exp_micro) is drawn as a horizontal reference line.
+The vendor kernel (snrt, from exp_macro) is drawn as a second horizontal
+reference line; it is only measured in f64, so it appears on the f64 plots.
 
 Usage:
     python plot_rq1.py \
         [--exp-micro results/kernels.exp_micro.csv] \
         [--exp-polynomial results/kernels.exp_polynomial.csv] \
+        [--exp-macro results/kernels.exp_macro.csv] \
         [--output plots-mia-thesis/output/rq1_plots.pdf]
 """
 
@@ -26,6 +29,7 @@ from plot_utils import (
     PRECISIONS,
     load_baseline_csv,
     load_chebyshev_csv,
+    load_vendor_csv,
     savefig,
 )
 
@@ -43,7 +47,11 @@ def avg_baseline(df: pd.DataFrame, precision: str, metric: str) -> float:
     return df.loc[df["precision"] == precision, metric].mean()
 
 
-def plot_rq1(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
+def plot_rq1(
+    poly_df: pd.DataFrame,
+    baseline_df: pd.DataFrame,
+    vendor_df: pd.DataFrame,
+) -> plt.Figure:
     fig, axes = plt.subplots(2, len(PRECISIONS), figsize=(len(PRECISIONS) * 5, 8))
 
     metrics = [
@@ -56,6 +64,7 @@ def plot_rq1(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
             ax = axes[row_idx, col_idx]
             series = avg_per_degree(poly_df, precision, metric)
             baseline = avg_baseline(baseline_df, precision, metric)
+            vendor = avg_baseline(vendor_df, precision, metric)
 
             if not series.empty:
                 ax.plot(
@@ -67,6 +76,12 @@ def plot_rq1(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
                 ax.axhline(
                     baseline, color="#1f78b4", linestyle="--",
                     label=f"libm baseline ({baseline:.3g})",
+                )
+            # vendor kernel (snrt) is only measured in f64 -> NaN elsewhere
+            if not np.isnan(vendor):
+                ax.axhline(
+                    vendor, color="#e31a1c", linestyle="-.",
+                    label=f"vendor kernel ({vendor:.3g})",
                 )
 
             ax.set_title(f"{precision}")
@@ -92,6 +107,10 @@ def main() -> None:
         help="Input CSV with Chebyshev polynomial degree-variant measurements",
     )
     parser.add_argument(
+        "--exp-macro", default="results/kernels.exp_macro.csv",
+        help="Input CSV with vendor kernel (snrt) measurements",
+    )
+    parser.add_argument(
         "--output", "-o", default="plots-mia-thesis/output/rq1_plots.pdf",
         help="Output plot file",
     )
@@ -101,8 +120,9 @@ def main() -> None:
 
     poly_df = load_chebyshev_csv(args.exp_polynomial)
     baseline_df = load_baseline_csv(args.exp_micro)
+    vendor_df = load_vendor_csv(args.exp_macro)
 
-    fig = plot_rq1(poly_df, baseline_df)
+    fig = plot_rq1(poly_df, baseline_df, vendor_df)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

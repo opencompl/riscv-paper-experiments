@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RQ32 plot: bits of mantissa lost by the Chebyshev approximation, per precision.
+RQ12 plot: bits of mantissa lost by the Chebyshev approximation, per precision.
 
 For each precision (f16, f32, f64) and each degree d we compute
     ulp_err(x) = |approx_DTYPE(x) − exp_rn_DTYPE(x)|  /  ulp_DTYPE(exp_rn(x))
@@ -17,7 +17,7 @@ ULP, so the lowest bits_lost values for f64 conflate polynomial error with
 libm's residual roundoff. Use mpmath for a strictly-correct f64 reference.
 
 Usage:
-    python plot_rq32.py [--output plots-mia-thesis/output/rq32_plots.pdf]
+    python plot_rq12.py [--output plots-mia-thesis/output/rq12_plots.pdf]
 """
 
 import argparse
@@ -42,7 +42,7 @@ from plot_utils import (
 )
 
 
-def plot_rq32(xmin: float, xmax: float, npoints: int) -> plt.Figure:
+def plot_rq12(xmin: float, xmax: float, npoints: int) -> plt.Figure:
     x = np.linspace(xmin, xmax, npoints)
     exp_true = np.exp(x.astype(np.float64))  # high-precision reference value
 
@@ -92,7 +92,7 @@ def plot_rq32(xmin: float, xmax: float, npoints: int) -> plt.Figure:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output", "-o", default="plots-mia-thesis/output/rq32_plots.pdf",
+        "--output", "-o", default="plots-mia-thesis/output/rq12_plots.pdf",
         help="Output plot file",
     )
     parser.add_argument(
@@ -110,7 +110,7 @@ def main() -> None:
     args = parser.parse_args()
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-    fig = plot_rq32(args.xmin, args.xmax, args.npoints)
+    fig = plot_rq12(args.xmin, args.xmax, args.npoints)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

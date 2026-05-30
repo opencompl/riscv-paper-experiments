@@ -20,7 +20,7 @@ processing as rq35. Accuracy is measured offline:
 
 Caveat: the float64 reference is itself ~1 ULP off correctly-rounded for
 f64; the bottom of the f64 accuracy curve conflates polynomial error with
-libm's residual roundoff (same caveat as plot_rq32).
+libm's residual roundoff (same caveat as plot_rq12).
 
 Usage:
     python plot_rq42.py [-i results/kernels.softmax_polynomial.csv] \\
@@ -80,7 +80,7 @@ def softmax_approx(x: np.ndarray, degree: int, precision: str) -> np.ndarray:
         s  = sum(e)                       (in dtype)
         z  = e / s                        (in dtype)
     Polynomial eval is done in float64 and cast to dtype — same approach
-    plot_rq32 uses; the kernel's Clenshaw eval in DTYPE differs slightly but
+    plot_rq12 uses; the kernel's Clenshaw eval in DTYPE differs slightly but
     not enough to matter for the translation question."""
     dtype = PRECISION_NUMPY_DTYPE[precision]
     x = x.astype(dtype)

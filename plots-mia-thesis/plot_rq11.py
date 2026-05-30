@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RQ31 plot: signed approximation error p_d(x) - exp(x) on the interval
+RQ11 plot: signed approximation error p_d(x) - exp(x) on the interval
 [CHEBYSHEV_DOMAIN_LOWER, CHEBYSHEV_DOMAIN_UPPER] for each Chebyshev degree d
 in XDSL_LINALG_CHEBYSHEV_DEGREE_VARIANTS.
 
@@ -10,7 +10,7 @@ xdsl_kernel_generate_source_chebyshev — so the curves here correspond exactly
 to what the xDSL pipeline emits.
 
 Usage:
-    python plot_rq31.py [--output plots-mia-thesis/output/rq31_plots.pdf]
+    python plot_rq11.py [--output plots-mia-thesis/output/rq11_plots.pdf]
 """
 
 import argparse
@@ -31,7 +31,7 @@ from plot_utils import (
 )
 
 
-def plot_rq31() -> plt.Figure:
+def plot_rq11() -> plt.Figure:
     x = np.linspace(CHEBYSHEV_DOMAIN_LOWER, CHEBYSHEV_DOMAIN_UPPER, 2001)
     exp_x = np.exp(x)
 
@@ -60,13 +60,13 @@ def plot_rq31() -> plt.Figure:
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output", "-o", default="plots-mia-thesis/output/rq31_plots.pdf",
+        "--output", "-o", default="plots-mia-thesis/output/rq11_plots.pdf",
         help="Output plot file",
     )
     args = parser.parse_args()
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-    fig = plot_rq31()
+    fig = plot_rq11()
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 
