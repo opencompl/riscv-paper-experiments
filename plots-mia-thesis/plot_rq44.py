@@ -42,7 +42,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from plot_rq34 import chosen_degree
+from plot_rq31 import chosen_degree
 from plot_rq40 import (
     F16_BITS_LOST_CAP,
     per_vector_mean_ulp_err,

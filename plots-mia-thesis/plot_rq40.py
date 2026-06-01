@@ -24,7 +24,7 @@ Two runs differ only in `exp_target`:
                   eval_chebyshev_clenshaw_lowered (every coefficient
                   rounded to DTYPE, every mul/add/sub rounded back to
                   DTYPE). The degree d is the one the pass picks at
-                  this (precision, max_bits_lost) — see plot_rq34's
+                  this (precision, max_bits_lost) — see plot_rq31's
                   chosen_degree.
 
 Per (precision, max_bits_lost) we draw `samples` input vectors of size
@@ -59,7 +59,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 
-from plot_rq34 import chosen_degree
+from plot_rq31 import chosen_degree
 from plot_utils import (
     CHEBYSHEV_DOMAIN_LOWER,
     CHEBYSHEV_DOMAIN_UPPER,

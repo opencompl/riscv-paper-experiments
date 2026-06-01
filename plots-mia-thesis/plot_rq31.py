@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RQ34 plot: table of Chebyshev polynomial degrees picked by the
+RQ31 plot: table of Chebyshev polynomial degrees picked by the
 xdsl `lower-exp-to-polynomial` pass for every (precision, max_bits_lost) pair.
 
 Rows are precision formats (f16/f32/f64). Columns are values of the
@@ -19,9 +19,9 @@ Mirrors `_choose_polynomial` in
 verbatim, so the numbers here are exactly what the pass picks at compile time.
 
 Usage:
-    python plot_rq34.py [--xmin -2.0] [--xmax 0.0] \\
+    python plot_rq31.py [--xmin -2.0] [--xmax 0.0] \\
         [--bits-lost -1 0 1 2 4 8 16] \\
-        [-o plots-mia-thesis/output/rq34_plots.pdf]
+        [-o plots-mia-thesis/output/rq31_plots.pdf]
 """
 
 import argparse
@@ -69,7 +69,7 @@ def chosen_degree(
     return degree, capped
 
 
-def plot_rq34(
+def plot_rq31(
     xmin: float, xmax: float, bits_lost_values: list[int],
 ) -> plt.Figure:
     rows = PRECISIONS
@@ -130,7 +130,7 @@ def plot_rq34(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--output", "-o", default="plots-mia-thesis/output/rq34_plots.pdf",
+        "--output", "-o", default="plots-mia-thesis/output/rq31_plots.pdf",
         help="Output plot file",
     )
     parser.add_argument(
@@ -148,7 +148,7 @@ def main() -> None:
     args = parser.parse_args()
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
-    fig = plot_rq34(args.xmin, args.xmax, args.bits_lost)
+    fig = plot_rq31(args.xmin, args.xmax, args.bits_lost)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

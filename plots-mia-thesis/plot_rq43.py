@@ -2,7 +2,7 @@
 """
 RQ43 plot: per-precision performance of the softmax_polynomial kernel as a
 function of the `max_bits_lost` attribute attached to math.exp. Mirrors
-plot_rq2's layout for the exp kernel — same x-axis (max_bits_lost),
+plot_rq32's layout for the exp kernel — same x-axis (max_bits_lost),
 same y-axis (avg cycles / byte), one panel per precision (f16/f32/f64) —
 but draws softmax_polynomial measurements instead of exp_micro.
 
@@ -40,8 +40,8 @@ from plot_utils import (
 
 BITS_LOST_VARIANT_RE = re.compile(r"linalg_xdsl_b(-?\d+)$")
 
-POLY_COLOR = "#33a02c"     # matches rq2
-BASELINE_COLOR = "#1f78b4"  # matches rq2
+POLY_COLOR = "#33a02c"     # matches rq32
+BASELINE_COLOR = "#1f78b4"  # matches rq32
 
 
 def load_bits_lost_csv(csv_path: str) -> pd.DataFrame:

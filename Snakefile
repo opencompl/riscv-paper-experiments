@@ -456,7 +456,7 @@ rule exp_macro:
 rule exp_polynomial:
     input:
         "results/kernels.exp_polynomial.csv",
-        "plots-mia-thesis/output/rq1_plots.pdf",
+        "plots-mia-thesis/output/rq2_plots.pdf",
 
 
 rule softmax_polynomial:
@@ -1008,15 +1008,15 @@ rule xdsl_kernel_generate_source_chebyshev:
 PLOTS_DIR    = "plots-mia-thesis"
 PLOTS_OUTPUT = PLOTS_DIR + "/output"
 
-rule plot_rq1:
+rule plot_rq2:
     input:
-        script = PLOTS_DIR + "/plot_rq1.py",
+        script = PLOTS_DIR + "/plot_rq2.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
         micro  = "results/kernels.exp_micro.csv",
         poly   = "results/kernels.exp_polynomial.csv",
         macro  = "results/kernels.exp_macro.csv",
     output:
-        PLOTS_OUTPUT + "/rq1_plots.pdf",
+        PLOTS_OUTPUT + "/rq2_plots.pdf",
     shell:
         "python {input.script} --exp-micro {input.micro} --exp-polynomial {input.poly} --exp-macro {input.macro} -o {output}"
 
@@ -1047,30 +1047,21 @@ rule plot_rq13:
     shell:
         "python {input.script} -o {output}"
 
-rule plot_rq33:
+rule plot_rq31:
     input:
-        script = PLOTS_DIR + "/plot_rq33.py",
+        script = PLOTS_DIR + "/plot_rq31.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq33_plots.pdf",
+        PLOTS_OUTPUT + "/rq31_plots.pdf",
     shell:
         "python {input.script} -o {output}"
 
-rule plot_rq34:
+rule plot_rq32:
     input:
-        script = PLOTS_DIR + "/plot_rq34.py",
+        script = PLOTS_DIR + "/plot_rq32.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq34_plots.pdf",
-    shell:
-        "python {input.script} -o {output}"
-
-rule plot_rq2:
-    input:
-        script = PLOTS_DIR + "/plot_rq2.py",
-        utils  = PLOTS_DIR + "/plot_utils.py",
-    output:
-        PLOTS_OUTPUT + "/rq2_plots.pdf",
+        PLOTS_OUTPUT + "/rq32_plots.pdf",
     shell:
         "python {input.script} -o {output}"
 
@@ -1087,7 +1078,7 @@ rule plot_rq42:
     input:
         script   = PLOTS_DIR + "/plot_rq42.py",
         utils    = PLOTS_DIR + "/plot_utils.py",
-        rq34     = PLOTS_DIR + "/plot_rq34.py",
+        rq31     = PLOTS_DIR + "/plot_rq31.py",
         softmax  = "results/kernels.softmax_polynomial.csv",
     output:
         PLOTS_OUTPUT + "/rq42_plots.pdf",
@@ -1108,7 +1099,7 @@ rule plot_rq44:
     input:
         script   = PLOTS_DIR + "/plot_rq44.py",
         utils    = PLOTS_DIR + "/plot_utils.py",
-        rq34     = PLOTS_DIR + "/plot_rq34.py",
+        rq31     = PLOTS_DIR + "/plot_rq31.py",
         rq40     = PLOTS_DIR + "/plot_rq40.py",
         rq43     = PLOTS_DIR + "/plot_rq43.py",
         softmax  = "results/kernels.softmax_polynomial.csv",
@@ -1120,12 +1111,12 @@ rule plot_rq44:
 
 rule plots_mia_thesis:
     input:
-        PLOTS_OUTPUT + "/rq1_plots.pdf",
+        PLOTS_OUTPUT + "/rq2_plots.pdf",
         PLOTS_OUTPUT + "/rq11_plots.pdf",
         PLOTS_OUTPUT + "/rq12_plots.pdf",
         PLOTS_OUTPUT + "/rq13_plots.pdf",
-        PLOTS_OUTPUT + "/rq33_plots.pdf",
-        PLOTS_OUTPUT + "/rq34_plots.pdf",
+        PLOTS_OUTPUT + "/rq31_plots.pdf",
+        PLOTS_OUTPUT + "/rq32_plots.pdf",
         PLOTS_OUTPUT + "/rq41_plots.pdf",
         PLOTS_OUTPUT + "/rq42_plots.pdf",
         PLOTS_OUTPUT + "/rq43_plots.pdf",

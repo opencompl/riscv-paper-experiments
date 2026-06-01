@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
 RQ42 plot: Does the kernel-level exp accuracy/perf trade-off translate to
-the softmax operator? Mirrors rq2's layout so the two plots can be
+the softmax operator? Mirrors rq32's layout so the two plots can be
 compared directly: same x-axis (`max_bits_lost`), same left y-axis
 (avg cycles/byte). Adds a twin right y-axis showing the end-to-end softmax
 output accuracy (avg bits lost in the softmax output across 100 sampled
 input vectors).
 
 Performance is loaded from `results/kernels.softmax_polynomial.csv` — same
-processing as rq2. Accuracy is measured offline:
+processing as rq32. Accuracy is measured offline:
     for each (precision, max_bits_lost):
         1. recover the Chebyshev degree the pass picks (chosen_degree)
         2. sample 100 input vectors of size DEFAULT_N from uniform(-1, 1)
@@ -36,7 +36,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from plot_rq34 import chosen_degree
+from plot_rq31 import chosen_degree
 from plot_utils import (
     CHEBYSHEV_DOMAIN_LOWER,
     CHEBYSHEV_DOMAIN_UPPER,
@@ -57,7 +57,7 @@ DEFAULT_N = 64
 DEFAULT_SAMPLES = 100
 DEFAULT_SEED = 0
 
-PERF_COLOR = "#33a02c"   # matches rq2
+PERF_COLOR = "#33a02c"   # matches rq32
 ACC_COLOR = "#e31a1c"
 
 
@@ -166,7 +166,7 @@ def plot_rq42(agg: pd.DataFrame) -> plt.Figure:
             ax.grid(True, alpha=0.3)
             continue
 
-        # Left axis: avg cycles/byte (mirrors rq2).
+        # Left axis: avg cycles/byte (mirrors rq32).
         l_perf, = ax.plot(
             sub["max_bits_lost"], sub["cycles_per_byte_mean"],
             marker="o", linestyle="-", color=PERF_COLOR,
