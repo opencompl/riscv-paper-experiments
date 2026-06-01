@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RQ35 plot: accuracy vs performance Pareto, one panel per precision (f16/f32/f64).
+RQ2 plot: accuracy vs performance Pareto, one panel per precision (f16/f32/f64).
 
   x = max_bits_lost (the accuracy bound passed to lower-exp-to-polynomial;
       moving right = looser accuracy)
@@ -17,8 +17,8 @@ not yet emit these variants — once it does, the plot picks them up
 automatically. Until then only the libm baseline reference line is drawn.
 
 Usage:
-    python plot_rq35.py [-i results/kernels.exp_micro.csv] \\
-        [-o plots-mia-thesis/output/rq35_plots.pdf]
+    python plot_rq2.py [-i results/kernels.exp_micro.csv] \\
+        [-o plots-mia-thesis/output/rq2_plots.pdf]
 """
 
 import argparse
@@ -64,7 +64,7 @@ def avg_baseline(df: pd.DataFrame, precision: str, metric: str) -> float:
     return df.loc[df["precision"] == precision, metric].mean()
 
 
-def plot_rq35(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
+def plot_rq2(poly_df: pd.DataFrame, baseline_df: pd.DataFrame) -> plt.Figure:
     fig, axes = plt.subplots(
         1, len(PRECISIONS), figsize=(len(PRECISIONS) * 4.5, 4.0), sharey=False
     )
@@ -108,7 +108,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output", "-o",
-        default="plots-mia-thesis/output/rq35_plots.pdf",
+        default="plots-mia-thesis/output/rq2_plots.pdf",
         help="Output plot file",
     )
     args = parser.parse_args()
@@ -116,7 +116,7 @@ def main() -> None:
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     poly_df = load_bits_lost_csv(args.input)
     baseline_df = load_baseline_csv(args.input)
-    fig = plot_rq35(poly_df, baseline_df)
+    fig = plot_rq2(poly_df, baseline_df)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

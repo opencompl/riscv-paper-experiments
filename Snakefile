@@ -308,6 +308,13 @@ TESTSET_SOFTMAX_POLYNOMIAL = [
         precision=[32, 64],
         variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
     ),
+    # libm reference (exp_kernel calls expf/exp directly) for the perf
+    # comparison in plot_rq43 / plot_rq44.
+    *expand(
+        "softmax_polynomial/{N}xf{precision}/baseline",
+        N=range(16, 129, 16),
+        precision=[16, 32, 64],
+    ),
 ]
 
 # Full set. Contains all tests needed by plots in the paper. Beware: it's huge.
@@ -1058,12 +1065,12 @@ rule plot_rq34:
     shell:
         "python {input.script} -o {output}"
 
-rule plot_rq35:
+rule plot_rq2:
     input:
-        script = PLOTS_DIR + "/plot_rq35.py",
+        script = PLOTS_DIR + "/plot_rq2.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq35_plots.pdf",
+        PLOTS_OUTPUT + "/rq2_plots.pdf",
     shell:
         "python {input.script} -o {output}"
 
@@ -1087,6 +1094,29 @@ rule plot_rq42:
     shell:
         "python {input.script} -i {input.softmax} -o {output}"
 
+rule plot_rq43:
+    input:
+        script   = PLOTS_DIR + "/plot_rq43.py",
+        utils    = PLOTS_DIR + "/plot_utils.py",
+        softmax  = "results/kernels.softmax_polynomial.csv",
+    output:
+        PLOTS_OUTPUT + "/rq43_plots.pdf",
+    shell:
+        "python {input.script} -i {input.softmax} -o {output}"
+
+rule plot_rq44:
+    input:
+        script   = PLOTS_DIR + "/plot_rq44.py",
+        utils    = PLOTS_DIR + "/plot_utils.py",
+        rq34     = PLOTS_DIR + "/plot_rq34.py",
+        rq40     = PLOTS_DIR + "/plot_rq40.py",
+        rq43     = PLOTS_DIR + "/plot_rq43.py",
+        softmax  = "results/kernels.softmax_polynomial.csv",
+    output:
+        PLOTS_OUTPUT + "/rq44_plots.pdf",
+    shell:
+        "python {input.script} -i {input.softmax} -o {output}"
+
 
 rule plots_mia_thesis:
     input:
@@ -1098,3 +1128,5 @@ rule plots_mia_thesis:
         PLOTS_OUTPUT + "/rq34_plots.pdf",
         PLOTS_OUTPUT + "/rq41_plots.pdf",
         PLOTS_OUTPUT + "/rq42_plots.pdf",
+        PLOTS_OUTPUT + "/rq43_plots.pdf",
+        PLOTS_OUTPUT + "/rq44_plots.pdf",
