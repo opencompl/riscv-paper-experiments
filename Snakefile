@@ -309,7 +309,7 @@ TESTSET_SOFTMAX_POLYNOMIAL = [
         variant=XDSL_LINALG_MAX_BITS_LOST_VARIANTS,
     ),
     # libm reference (exp_kernel calls expf/exp directly) for the perf
-    # comparison in plot_rq43 / plot_rq44.
+    # comparison in plot_rq42 / plot_rq43.
     *expand(
         "softmax_polynomial/{N}xf{precision}/baseline",
         N=range(16, 129, 16),
@@ -1065,12 +1065,12 @@ rule plot_rq32:
     shell:
         "python {input.script} -o {output}"
 
-rule plot_rq41:
+rule plot_softmax_appendix:
     input:
-        script = PLOTS_DIR + "/plot_rq41.py",
+        script = PLOTS_DIR + "/softmax_appendix.py",
         utils  = PLOTS_DIR + "/plot_utils.py",
     output:
-        PLOTS_OUTPUT + "/rq41_plots.pdf",
+        PLOTS_OUTPUT + "/softmax_appendix.pdf",
     shell:
         "python {input.script} -o {output}"
 
@@ -1078,7 +1078,6 @@ rule plot_rq42:
     input:
         script   = PLOTS_DIR + "/plot_rq42.py",
         utils    = PLOTS_DIR + "/plot_utils.py",
-        rq31     = PLOTS_DIR + "/plot_rq31.py",
         softmax  = "results/kernels.softmax_polynomial.csv",
     output:
         PLOTS_OUTPUT + "/rq42_plots.pdf",
@@ -1089,22 +1088,12 @@ rule plot_rq43:
     input:
         script   = PLOTS_DIR + "/plot_rq43.py",
         utils    = PLOTS_DIR + "/plot_utils.py",
+        rq31     = PLOTS_DIR + "/plot_rq31.py",
+        rq41     = PLOTS_DIR + "/plot_rq41.py",
+        rq42     = PLOTS_DIR + "/plot_rq42.py",
         softmax  = "results/kernels.softmax_polynomial.csv",
     output:
         PLOTS_OUTPUT + "/rq43_plots.pdf",
-    shell:
-        "python {input.script} -i {input.softmax} -o {output}"
-
-rule plot_rq44:
-    input:
-        script   = PLOTS_DIR + "/plot_rq44.py",
-        utils    = PLOTS_DIR + "/plot_utils.py",
-        rq31     = PLOTS_DIR + "/plot_rq31.py",
-        rq40     = PLOTS_DIR + "/plot_rq40.py",
-        rq43     = PLOTS_DIR + "/plot_rq43.py",
-        softmax  = "results/kernels.softmax_polynomial.csv",
-    output:
-        PLOTS_OUTPUT + "/rq44_plots.pdf",
     shell:
         "python {input.script} -i {input.softmax} -o {output}"
 
@@ -1117,7 +1106,6 @@ rule plots_mia_thesis:
         PLOTS_OUTPUT + "/rq13_plots.pdf",
         PLOTS_OUTPUT + "/rq31_plots.pdf",
         PLOTS_OUTPUT + "/rq32_plots.pdf",
-        PLOTS_OUTPUT + "/rq41_plots.pdf",
+        PLOTS_OUTPUT + "/softmax_appendix.pdf",
         PLOTS_OUTPUT + "/rq42_plots.pdf",
         PLOTS_OUTPUT + "/rq43_plots.pdf",
-        PLOTS_OUTPUT + "/rq44_plots.pdf",
