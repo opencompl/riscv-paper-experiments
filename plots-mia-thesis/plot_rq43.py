@@ -60,6 +60,7 @@ from plot_utils import (
     CHEBYSHEV_DOMAIN_UPPER,
     PRECISION_MANTISSA_BITS,
     PRECISIONS,
+    despine,
     savefig,
 )
 
@@ -242,6 +243,7 @@ def main() -> None:
     baseline_df = load_baseline_csv(args.input)
     points = collect_points(poly_df, n=args.n, samples=args.samples, seed=args.seed)
     fig = plot_rq43(points, baseline_df)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

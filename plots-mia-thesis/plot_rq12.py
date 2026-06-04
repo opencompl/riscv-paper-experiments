@@ -36,6 +36,7 @@ from plot_utils import (
     PRECISION_NUMPY_DTYPE,
     PRECISIONS,
     chebyshev_lobatto_coeffs,
+    despine,
     eval_chebyshev,
     savefig,
     ulp,
@@ -111,6 +112,7 @@ def main() -> None:
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     fig = plot_rq12(args.xmin, args.xmax, args.npoints)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

@@ -32,6 +32,7 @@ import pandas as pd
 from plot_utils import (
     PRECISIONS,
     annotate_kernel_df,
+    despine,
     load_baseline_csv,
     savefig,
 )
@@ -117,6 +118,7 @@ def main() -> None:
     poly_df = load_bits_lost_csv(args.input)
     baseline_df = load_baseline_csv(args.input)
     fig = plot_rq32(poly_df, baseline_df)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

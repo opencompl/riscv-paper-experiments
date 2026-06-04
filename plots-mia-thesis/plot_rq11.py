@@ -26,6 +26,7 @@ from plot_utils import (
     DEGREE_COLORS,
     DEGREE_LINESTYLES,
     chebyshev_lobatto_coeffs,
+    despine,
     eval_chebyshev,
     savefig,
 )
@@ -67,6 +68,7 @@ def main() -> None:
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     fig = plot_rq11()
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

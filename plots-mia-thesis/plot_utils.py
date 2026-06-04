@@ -382,6 +382,11 @@ def get_legend_entries(dfs: Sequence[pd.DataFrame]) -> dict[str, tuple[str, str,
     }
 
 
+def despine(fig: Figure):
+    """Drop the top and right spines on every axis of `fig`."""
+    sns.despine(fig=fig, top=True, right=True)
+
+
 def savefig(fig: Figure, filename: str):
     fig.savefig(filename)
 

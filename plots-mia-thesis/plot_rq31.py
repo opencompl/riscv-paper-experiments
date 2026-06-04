@@ -37,6 +37,7 @@ from plot_utils import (
     CHEBYSHEV_DOMAIN_UPPER,
     PRECISION_MANTISSA_BITS,
     PRECISIONS,
+    despine,
     savefig,
 )
 
@@ -149,6 +150,7 @@ def main() -> None:
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     fig = plot_rq31(args.xmin, args.xmax, args.bits_lost)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

@@ -27,6 +27,7 @@ import matplotlib.pyplot as plt
 
 from plot_utils import (
     PRECISIONS,
+    despine,
     load_baseline_csv,
     load_chebyshev_csv,
     load_vendor_csv,
@@ -123,6 +124,7 @@ def main() -> None:
     vendor_df = load_vendor_csv(args.exp_macro)
 
     fig = plot_rq2(poly_df, baseline_df, vendor_df)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 

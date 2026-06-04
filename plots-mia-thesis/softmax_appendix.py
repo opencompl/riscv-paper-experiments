@@ -41,6 +41,7 @@ from plot_utils import (
     PRECISION_NUMPY_DTYPE,
     PRECISIONS,
     chebyshev_lobatto_coeffs,
+    despine,
     eval_chebyshev_clenshaw_lowered,
     savefig,
 )
@@ -139,6 +140,7 @@ def main() -> None:
 
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     fig = plot_softmax_appendix(args.n, args.seeds)
+    despine(fig)
     savefig(fig, args.output)
     print(f"Saved plot to {args.output}")
 
