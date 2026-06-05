@@ -1,0 +1,17 @@
+module {
+  func.func public @exp_kernel(
+        %arg0: memref<{{N}}xf{{precision}}> {llvm.noalias},
+        %arg1: memref<{{N}}xf{{precision}}> {llvm.noalias}) -> memref<{{N}}xf{{precision}}> {
+    linalg.generic {
+      indexing_maps = [
+        affine_map<(d0) -> (d0)>,
+        affine_map<(d0) -> (d0)>],
+        iterator_types = ["parallel"]
+    } ins(%arg0 : memref<{{N}}xf{{precision}}>) outs(%arg1 : memref<{{N}}xf{{precision}}>) {
+    ^bb0(%in: f{{precision}}, %out: f{{precision}}):
+      %0 = math.exp %in : f{{precision}}
+      linalg.yield %0 : f{{precision}}
+    }
+    return %arg1 : memref<{{N}}xf{{precision}}>
+  }
+}

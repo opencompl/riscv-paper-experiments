@@ -41,6 +41,7 @@ cflags:
   - -ffast-math
   - -fno-builtin-printf
   - -fno-common
+  - -mno-fdiv
   - -O3
   - -D__DEFINED_uint64_t
   - -I/opt/snitch_cluster/target/snitch_cluster/sw/runtime/rtl/src

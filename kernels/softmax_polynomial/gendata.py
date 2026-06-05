@@ -6,26 +6,28 @@ from typing import Iterator
 from gendatautils import main, Define, Array
 
 
-def exp_data(
+def softmax_data(
     N: int, rmin: float, rmax: float, precision: int
 ) -> Iterator[Define | Array]:
     yield Define("N", N)
 
     t = {16: np.float16, 32: np.float32, 64: np.float64}[precision]
 
-    # Clamp range to avoid overflow in exp
-    rmin = max(rmin, -2.0)
-    rmax = min(rmax, 0.0)
+    # Clamp to a range that yields a numerically reasonable softmax
+    # (also keeps the polynomial exp approximation in its accurate region).
+    rmin = max(rmin, -1.0)
+    rmax = min(rmax, 1.0)
 
     np.random.seed(0)
     x = np.random.uniform(rmin, rmax, N).astype(t)
 
-    # Compute golden reference in float64 then cast down
-    g = np.exp(x.astype(np.float64)).astype(t)
+    x64 = x.astype(np.float64)
+    e = np.exp(x64 - np.max(x64))
+    g = (e / e.sum()).astype(t)
 
     yield Array("X", ("N",), x)
     yield Array("G", ("N",), g)
 
 
 if __name__ == "__main__":
-    main(exp_data)
+    main(softmax_data)

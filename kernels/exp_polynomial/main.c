@@ -43,13 +43,14 @@ int main() {
     snrt_fpu_fence();
     (void)snrt_mcycle();
 
-    // Correctness check: We emit this part because some variants allow large to fully wrong results
+    // Correctness check.
     int nerr = 0;
     for (int i = 0; i < N; i++) {
+        // printf("x[%d] = %f, G[%d] = %f, z[%d] = %f\n", i, local_x[i], i, G[i], i, local_z[i]);
         DTYPE d = FABSF(local_z[i] - G[i]);
         DTYPE ref = FABSF(G[i]);
-        // DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)1E-2 : (DTYPE)1E-2;        
-        // nerr += !(d <= tol);
+        DTYPE tol = ref > (DTYPE)1.0 ? ref * (DTYPE)2E-1 : (DTYPE)2E-1;
+        nerr += !(d <= tol);
     }
     return nerr;
 }
